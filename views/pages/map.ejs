@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Map</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="static/css/design.css">
+</head>
+<body>
+    <%- include('../partial/header') %>
+    <div id="map"></div>
+
+        <!-- description_id	event_id	added_by	event_name	start_date	end_date	start_time	end_time	event_description	photo	video	 -->
+    <div class="popup" id="addEvent">
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup(addEventDiv, 'active')">&times;</div>
+            <h1 class="description-title">Add an event</h1>
+            <br>
+            <form action="" method="post" id="event-description" enctype="multipart/form-data">
+                <input type="text" name="event_name" placeholder="Name Event (Use key words)" required>
+                <br>
+                <input type="text" name="start_date" placeholder="Start Date" required>
+                <br>
+                <input type="text" name="start_time" placeholder="Start Time" required>
+                <br>
+                <input type="text" name="end_date" placeholder="End Date" required>
+                <br>
+                <input type="text" name="end_time" placeholder="End Time" required>
+                <br>
+                <textarea placeholder="Describe the event" name="event_description" row=12></textarea>
+                <br>
+                <label for="event-media">Add pictures or video</label>
+                <br>
+                <input type="file" name="video" id="file">
+                <br>
+                <!-- <input type="submit" name="add-event" value="Add Event"> -->
+                <button type="submit" name="add-event">Add Event</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup" id="confirm-location">
+        <div class="overlay"></div>
+        <div class="content" id="address">
+            <div class="close-btn" onclick="togglePopup(confirmLocation, 'active')">&times;</div>
+            <form action="" class="" id="event-location">
+                <h1>Confirm the Location</h1>
+                <br>
+                <input type="number" name="street_number" placeholder="Street Number">
+                <br>
+                <input type="text" name="street_name" placeholder="Street Name">
+                <br>
+                <input type="text" name="locality" placeholder="Locality">
+                <br>
+                <input type="text" name="place" placeholder="Place">
+                <br>
+                <input type="text" name="region" placeholder="region">
+                <br>
+                <input type="text" name="country" placeholder="Country">
+                <br>
+                <input type="text" name="lat" placeholder="Latitude">
+                <br>
+                <input type="text" name="lng" placeholder="Longitude">
+                <br>
+                <button type="submit" name="confirm-location">Confirm Location</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+    type="text/css"
+    />
+
+    <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+    <script type="text/javascript" src="static/js/main.js"></script>
+</body>
+</html>
