@@ -25,6 +25,10 @@ eventLocationModel.deleteEventLocation = function(eventLocation) {
 
 }
 
+eventLocationModel.getAllEvents = function() {
+
+}
+
 const eventDescriptionModel = function(eventDescription) {
     this.description_id = eventDescription.description_id, 
     this.event_id = eventDescription.event_id, 
