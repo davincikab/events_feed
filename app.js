@@ -43,6 +43,6 @@ app.get("/map", (req, res, next) => {
 });
 
 // listen on a given port
-app.listen(3000, function() {
-    console.log("App listening at port 3000");
+app.listen(process.env.PORT, function() {
+    console.log("App listening at port " + process.env.PORT);
 });
