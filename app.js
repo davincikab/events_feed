@@ -4,6 +4,8 @@ const session = require('express-session');
 const path = require('path');
 const { read } = require('fs');
 
+require('dotenv').config();
+
 const app = express();
 
 // templating engine
