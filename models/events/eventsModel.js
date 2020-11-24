@@ -31,7 +31,6 @@ eventLocationModel.getAllEvents = function(result) {
 }
 
 const eventDescriptionModel = function(eventDescription) {
-    this.description_id = eventDescription.description_id, 
     this.event_id = eventDescription.event_id, 
     this.added_by = eventDescription.added_by, 
     this.event_name = eventDescription.event_name, 
@@ -39,7 +38,7 @@ const eventDescriptionModel = function(eventDescription) {
     this.end_date = eventDescription.end_date, 
     this.start_time = eventDescription.start_time, 
     this.end_time = eventDescription.end_time, 
-    this.event_description = eventDescription.eventDescription, 
+    this.event_description = eventDescription.event_description, 
     this.photo = eventDescription.photo, 
     this.video = eventDescription.video
 };

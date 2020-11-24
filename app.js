@@ -25,6 +25,7 @@ app.use("/static/", express.static(path.join(__dirname, '/views')));
 app.use("/uploads/", express.static(path.join(__dirname, '/uploads')));
 
 // http request body parser
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 // consfigure session

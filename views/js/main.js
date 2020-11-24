@@ -133,6 +133,7 @@ geocoderControl.on('result', function({result}) {
 		let streetNumber = placeName.match(/([0-9]{1,7})/g);
 		let streetName = placeName.match(/([a-zA-Z]{1,})/g);
 
+		// sort the: Cannot read property '0' of null
 		if(streetNumber[0]) {
 			eventLocation.street_number = streetNumber[0];
 		} 
@@ -504,8 +505,6 @@ $(confirmLocationForm).on('submit' , function(e) {
 	// update the database with event location
 	commitEventLocationToDb(eventLocation);
 
-	// toggle event description tab
-	togglePopup(addEventDiv, "active");
 });
 
 
@@ -528,17 +527,21 @@ function commitEventLocationToDb(eventLocation) {
 
 	// ajax call
 	$.ajax({
-		url:'files/eventLocation.php',
+		url:'/create_event_location/',
 		data:{data:data},
 		type:'POST',
 		success:function(response) {
 			console.log(response);
 
 			try {
-				let res = JSON.parse(response);
+				let res = response;
 
 				// update eventDescription object
-				eventDescription.event_id = res.id;
+				eventDescription.event_id = res.insertId;
+
+				// toggle event description tab
+				togglePopup(addEventDiv, "active");
+
 			} catch (error) {
 				console.log(error);
 			}
@@ -567,11 +570,11 @@ $(eventDescriptionForm).on("submit", function(e) {
 	});
 
 	// 
-	let url = 'files/eventDescription.php';
+	let url = '/create_event_description/';
 	eventDescription.added_by = userName.innerText;
 
 	 if(isUpdate) {
-		url = 'files/eventDescriptionUpdate.php';
+		url = '/update_event_description/';
 		eventDescription.event_id = updateEventObject.event_id;
 		eventDescription.description_id = updateEventObject.description_id;
 		eventDescription.added_by = updateEventObject.added_by;
@@ -593,7 +596,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 	// add file
 	var files = $('#file')[0].files[0];
-	fd.append('file',files);
+	fd.append('photo',files);
 
 	console.log(fd);
 
