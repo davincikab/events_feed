@@ -78,7 +78,7 @@ map.on('load', function(e) {
 var el = document.createElement("div");
 
 	el.classList.add("custom-marker");
-	el.innerHTML += "<img src='img/location.png'>";
+	el.innerHTML += "<img src='/static/img/location.png'>";
 
 var eventMarker = new mapboxgl.Marker(
 	{
@@ -158,13 +158,13 @@ geocoderControl.on('result', function({result}) {
 // ______________________ Get Events from the database ______________________________________________________
 function loadEvents() {
 	$.ajax({
-		url:'files/events.php',
+		url:'/events/',
 		type:'GET',
 		success:function(response) {
 			console.log(response);
 
 			try {
-				allEvents = JSON.parse(response);
+				allEvents = response;
 			} catch (error) {
 				console.log(error);
 			}
@@ -237,7 +237,7 @@ function addEventToMap(event) {
 	var el = document.createElement("div");
 
 	el.classList.add("custom-marker");
-	el.innerHTML += "<img src='img/location.png'>";
+	el.innerHTML += "<img src='/static/img/location.png'>";
 
 	console.log(event);
 
@@ -311,7 +311,7 @@ var updateEventButton = document.getElementById("update-event");
 var addEventButton = document.getElementById("add-event");
 
 $(addEventButton).on("click", function(e) {
-	map.getCanvas().style.cursor = "url(img/add_button.png), auto";
+	map.getCanvas().style.cursor = "url(/static/img/add_button.png), auto";
 });
 
 $(updateEventButton).on("click", function(e) {

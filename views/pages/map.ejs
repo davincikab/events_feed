@@ -7,7 +7,7 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="static/css/design.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/design.css">
 </head>
 <body>
     <%- include('../partial/header') %>
@@ -35,7 +35,7 @@
                 <br>
                 <label for="event-media">Add pictures or video</label>
                 <br>
-                <input type="file" name="video" id="file">
+                <input type="file" name="photo" id="file">
                 <br>
                 <!-- <input type="submit" name="add-event" value="Add Event"> -->
                 <button type="submit" name="add-event">Add Event</button>
@@ -80,6 +80,6 @@
     <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-    <script type="text/javascript" src="static/js/main.js"></script>
+    <script type="text/javascript" src="/static/js/main.js"></script>
 </body>
 </html>

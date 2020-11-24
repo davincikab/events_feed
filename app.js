@@ -2,17 +2,27 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const path = require('path');
-const { read } = require('fs');
+const fileUpload = require('express-fileupload');
 
+// router
+const userRouter = require("./routes/user/userRoute");
+const router = require("./routes/events/eventsRoute");
+
+// config doteve module
 require('dotenv').config();
 
+// express app instance
 const app = express();
+
+// add file upload middleware
+app.use(fileUpload());
 
 // templating engine
 app.set('view engine', 'ejs');
 
 // stati files 
 app.use("/static/", express.static(path.join(__dirname, '/views')));
+app.use("/uploads/", express.static(path.join(__dirname, '/uploads')));
 
 // http request body parser
 app.use(bodyParser.json());
@@ -27,15 +37,11 @@ app.use(session({
 
 
 // configure the routes
+app.use('', userRouter);
+app.use('', router);
+
 app.get("/", (req, res, next) => {
     res.render("pages/index");
-});
-
-app.get("/login", (req, res, next) => {
-    res.render("pages/login")
-});
-app.get("/register", (req, res, next) => {
-    res.render("pages/register")
 });
 
 app.get("/map", (req, res, next) => {

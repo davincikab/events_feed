@@ -13,20 +13,21 @@ const eventLocationModel = function(eventLocation){
     this.longitude = eventLocation.longitude
 };
 
-eventLocationModel.createEvent = function(eventLocation) {
+eventLocationModel.createEvent = function(eventLocation, result) {
+    connection.query("INSERT INTO event_location set ?", eventLocation, function(error, response) {
+        if(error) throw error;
+        result(null, response);
+    });
 
 }
 
-eventLocationModel.updateEvent = function(eventLocation) {
+eventLocationModel.getAllEvents = function(result) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
+        if (error) throw error;
+        console.log('The solution is: ', results[0].solution);
 
-}
-
-eventLocationModel.deleteEventLocation = function(eventLocation) {
-
-}
-
-eventLocationModel.getAllEvents = function() {
-
+        result(null, results);
+    });
 }
 
 const eventDescriptionModel = function(eventDescription) {
@@ -43,18 +44,39 @@ const eventDescriptionModel = function(eventDescription) {
     this.video = eventDescription.video
 };
 
-eventDescriptionModel.createEvent = function(eventLocation) {
+eventDescriptionModel.createEventDescription = function(eventDescription, result) {
 
+    // file upload
+    connection.query('INSERT INTO event_description set ?', eventDescription, function (error, results, fields) {
+        if (error) throw error;
+        console.log('The solution is: ', results);
+
+        result(null, results);
+    });
 }
 
-eventDescriptionModel.updateEvent = function(eventLocation) {
+eventDescriptionModel.updateEventDescription = function(eventDescription, description_id, result) {
+    let values = Object.values(eventDescription);
+    console.log(values);
 
+     // file upload
+     connection.query("UPDATE event_description SET event_id=?,added_by=?,event_name=?,start_date=?,end_date=?,start_time=?,end_time=?,event_description=?,photo=?,video=? WHERE description_id = ?", [...values, description_id], function (error, results, fields) {
+        if (error) throw error;
+        console.log('The solution is: ', results);
+
+        result(null, results);
+    });
 }
 
-eventDescriptionModel.deleteEventLocation = function(eventLocation) {
+eventDescriptionModel.deleteEvent = function(event_id) {
+    // connection.query("UPDATE event_description SET event_id=?,added_by=?,event_name=?,start_date=?,end_date=?,start_time=?,end_time=?,event_description=?,photo=?,video=? WHERE description_id = ?", [...values, description_id], function (error, results, fields) {
+    //     if (error) throw error;
+    //     console.log('The solution is: ', results);
 
+    //     result(null, results);
+    // });
 }
 
 
-moudle.exports = { eventLocationModel, eventDescriptionModel}
+module.exports = { eventLocationModel, eventDescriptionModel}
 
