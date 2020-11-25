@@ -7,6 +7,9 @@ exports.getAllEvents = function(req, res) {
             res.send(err);
         }
 
+        console.log("Events");
+        console.log(events);
+
         res.send(events)
     });
 }

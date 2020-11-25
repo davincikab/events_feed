@@ -14,24 +14,24 @@ userModel.login = function(username, password) {
 }
 
 // register 
-userModel.register = function(user, result) {
-    connection.query('INSERT INTO users set = ?', user, function(err, respons) {
+userModel.createUser = function(user, result) {
+    connection.query('INSERT INTO users SET?', user, function(err, response) {
         if(err) throw err;
 
         result(null, response);
     });
 }  
 
-userModel.findOne = function(username, result) {
-    connection.query('SELECT * FROM users WHERE username = ?', username, function(err, respons) {
+userModel.findOne = function(username, email, result) {
+    connection.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], function(err, response) {
         if(err) throw err;
 
         result(null, response);
     });
 }
 
-userModel.findOne = function(user_id, result) {
-    connection.query('SELECT * FROM users WHERE user_id = ?', user_id, function(err, respons) {
+userModel.findById = function(user_id, result) {
+    connection.query('SELECT * FROM users WHERE user_id = ?', user_id, function(err, response) {
         if(err) throw err;
 
         result(null, response);

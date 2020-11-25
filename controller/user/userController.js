@@ -1,15 +1,22 @@
 const userModel = require("../../models/user/userModel");
-const router = require("../../routes/events/eventsRoute");
 const passport  = require('passport');
 const { render } = require("ejs");
 const { response } = require("express");
+const bcrypt = require('bcrypt');
 
 exports.login = function(req, res) {
     res.render("pages/login");
 }
 
 exports.register = function(req, res){
-    res.render("pages/register");
+    res.render("pages/register", {
+        username:'',
+        email:'',
+        email2:'',
+        country:'',
+        password:'',
+        password2:''
+    });
 }
 
 // post request
@@ -46,9 +53,21 @@ exports.post_register = function(req, res, next) {
             password2:password2
         });
     } else {
-        userModel.findOne(username, function(err, user) {
-            if(user) {
-                errors.push({msg: 'username already registered'});
+        userModel.findOne(username, email, function(err, response) {
+            if(err) throw err;
+
+            if(response[0]) {
+                let users = [...response];
+                users.forEach(user => {
+                    if(user.username == username) {
+                        errors.push({msg: 'username already registered'});
+                    } 
+                    
+                    if(user.email == email) {
+                        errors.push({msg: 'email already registered'});   
+                    }
+                });        
+                
                 res.render('pages/register', {
                     errors:errors,
                     username:username,
@@ -67,7 +86,23 @@ exports.post_register = function(req, res, next) {
                 });
 
                 // encrypt password
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(user.password, salt, function(err, encrypted_password) {
+                        if(err) throw err;
 
+                        // update with the encrypted data
+                        user.password = encrypted_password;
+
+                        // add the data to the database
+                        userModel.createUser(user, function(err, response) {
+                            if(err) throw err;
+
+                            // redirect the user to login page
+                            res.redirect("/login");
+                        })
+
+                    })
+                });
             }
 
             
