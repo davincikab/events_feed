@@ -24,7 +24,7 @@ eventLocationModel.createEvent = function(eventLocation, result) {
 eventLocationModel.getAllEvents = function(result) {
     connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
         if (error) throw error;
-        console.log('The solution is: ', results[0]);
+        // console.log('The solution is: ', results[0]);
 
         result(null, results);
     });
@@ -48,7 +48,7 @@ eventDescriptionModel.createEventDescription = function(eventDescription, result
     // file upload
     connection.query('INSERT INTO event_description set ?', eventDescription, function (error, results, fields) {
         if (error) throw error;
-        console.log('The solution is: ', results);
+        // console.log('The solution is: ', results);
 
         result(null, results);
     });

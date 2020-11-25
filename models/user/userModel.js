@@ -26,6 +26,7 @@ userModel.findOne = function(username, email, result) {
     connection.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], function(err, response) {
         if(err) throw err;
 
+        console.log(response);
         result(null, response);
     });
 }

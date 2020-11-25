@@ -4,8 +4,7 @@ module.exports = {
             next();
         }
 
+        req.flash('success_msg', 'login to access the page');
         res.redirect('/login');
     }
 }
-
-module.exports = auth;

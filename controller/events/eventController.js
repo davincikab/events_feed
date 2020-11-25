@@ -7,17 +7,16 @@ exports.getAllEvents = function(req, res) {
             res.send(err);
         }
 
-        console.log("Events");
-        console.log(events);
-
         res.send(events)
     });
 }
 
 exports.createEventLocation = function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     let eventLocation = new eventLocationModel(req.body.data);
-    console.log(eventLocation);
+    eventLocation.added_by = req.user.username;
+    // console.log(eventLocation);
+
     eventLocationModel.createEvent(eventLocation, function(err, response) {
         if(err) {
             res.send(err);
@@ -30,8 +29,8 @@ exports.createEventLocation = function(req, res) {
 
 // event description
 exports.createEventDescription = function(req, res) {
-    console.log(req.body);
-    console.log(req.files.photo.name);
+    // console.log(req.body);
+    // console.log(req.files.photo.name);
 
     let imagePath = './uploads/' + req.files.photo.name;
     let imageFile = req.files.photo;
@@ -44,6 +43,7 @@ exports.createEventDescription = function(req, res) {
         let eventDescription = new eventDescriptionModel(req.body);
         eventDescription.photo = imagePath;
         eventDescription.video = "";
+        eventLocation.added_by = req.user.username;
 
         console.log(eventDescription);
 
@@ -59,8 +59,8 @@ exports.createEventDescription = function(req, res) {
 }
 
 exports.updateEventDescription = function(req, res) {
-    console.log(req.body);
-    console.log(req.files.photo.name);
+    // console.log(req.body);
+    // console.log(req.files.photo.name);
 
     let imagePath = './uploads/' + req.files.photo.name;
     let imageFile = req.files.photo;
@@ -76,6 +76,8 @@ exports.updateEventDescription = function(req, res) {
 
         eventDescription.photo = imagePath;
         eventDescription.video = "";
+        // eventLocation.added_by = req.user.username;
+
         let description_id = req.body.description_id;
 
         // update the description object

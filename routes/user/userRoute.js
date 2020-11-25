@@ -1,5 +1,7 @@
 const express = require("express");
+
 const user = require("../../controller/user/userController");
+
 
 const userRouter = express.Router();
 
@@ -12,6 +14,7 @@ userRouter.get("/logout", function(req, res) {
 });
 
 userRouter.post("/login", user.post_login);
+
 userRouter.post("/register", user.post_register);
 
 module.exports = userRouter;

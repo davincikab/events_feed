@@ -4,12 +4,13 @@ const userModel = require("../models/user/userModel");
 
 module.exports = function(passport) {
     passport.use(
-        new LocalStrategy({userNameField:'email'}, (email, password, done) => {
+        new LocalStrategy({usernameField:'email'}, (email, password, done) => {
             userModel.findOne('', email, function(err, users) {
                 if(err) throw err;
 
+                console.log(users);
                 if(!users[0]) {
-                    return done(null,false,{message : 'that email is not registered'});
+                    return done(null, false, {message : 'email is not registered'});
                 }
 
                 let user = users[0];
@@ -34,7 +35,7 @@ module.exports = function(passport) {
         return done(null, user.user_id);
     });
 
-    passport.deserializeUser(function(user_id, none) {
+    passport.deserializeUser(function(user_id, done) {
         userModel.findById(user_id, function(err, user) {
             return done(err, user);
         });

@@ -4,9 +4,9 @@ const session = require('express-session');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const passport  = require('passport');
-const flash = require('flash');
+const flash = require('connect-flash');
 
-require("./config/passport")(passport)
+require("./config/passport")(passport);
 
 // router
 const userRouter = require("./routes/user/userRoute");
@@ -56,14 +56,6 @@ app.use((req, res, next) => {
 // configure the routes
 app.use('', userRouter);
 app.use('', router);
-
-app.get("/", (req, res, next) => {
-    res.render("pages/index");
-});
-
-app.get("/map", (req, res, next) => {
-    res.render("pages/map")
-});
 
 // listen on a given port
 app.listen(process.env.PORT, function() {

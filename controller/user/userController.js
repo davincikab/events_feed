@@ -1,8 +1,6 @@
 const userModel = require("../../models/user/userModel");
-const passport  = require('passport');
-const { render } = require("ejs");
-const { response } = require("express");
 const bcrypt = require('bcrypt');
+const passport  = require('passport');
 
 exports.login = function(req, res) {
     res.render("pages/login");
@@ -115,10 +113,12 @@ exports.post_register = function(req, res, next) {
 }
 
 exports.post_login = function(req, res, next) {
-    passport.authenticate('local', {
-        successRedirect:'/map',
-        failureRedirect:'/login',
-        failureFlash:true
-    }); 
-    
+    console.log(req.body);
+    passport.authenticate('local',{
+        successRedirect : '/map',
+        failureRedirect : '/login',
+        failureFlash : true,
+    })(req,res,next);
 }
+    
+    
