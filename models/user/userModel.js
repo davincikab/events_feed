@@ -34,7 +34,7 @@ userModel.findById = function(user_id, result) {
     connection.query('SELECT * FROM users WHERE user_id = ?', user_id, function(err, response) {
         if(err) throw err;
 
-        result(null, response);
+        result(null, response[0]);
     });
 }
 

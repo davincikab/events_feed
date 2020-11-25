@@ -6,6 +6,7 @@ module.exports = function(passport) {
     passport.use(
         new LocalStrategy({userNameField:'email'}, (email, password, done) => {
             userModel.findOne('', email, function(err, users) {
+                if(err) throw err;
 
                 if(!users[0]) {
                     return done(null,false,{message : 'that email is not registered'});
@@ -35,7 +36,7 @@ module.exports = function(passport) {
 
     passport.deserializeUser(function(user_id, none) {
         userModel.findById(user_id, function(err, user) {
-            return done(err, user[0]);
+            return done(err, user);
         });
     });
 }

@@ -62,7 +62,7 @@ exports.post_register = function(req, res, next) {
                     if(user.username == username) {
                         errors.push({msg: 'username already registered'});
                     } 
-                    
+
                     if(user.email == email) {
                         errors.push({msg: 'email already registered'});   
                     }
@@ -96,6 +96,9 @@ exports.post_register = function(req, res, next) {
                         // add the data to the database
                         userModel.createUser(user, function(err, response) {
                             if(err) throw err;
+
+                            // flash message
+                            req.flash('success_msg','You have now registered!')
 
                             // redirect the user to login page
                             res.redirect("/login");
