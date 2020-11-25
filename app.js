@@ -3,6 +3,10 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const path = require('path');
 const fileUpload = require('express-fileupload');
+const passport  = require('passport');
+const flash = require('flash');
+
+require("./config/passport")(passport)
 
 // router
 const userRouter = require("./routes/user/userRoute");
@@ -36,6 +40,11 @@ app.use(session({
     cookie:{ path: '/', httpOnly: true, secure: false, maxAge: null },
 }));
 
+// configure passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
 
 // configure the routes
 app.use('', userRouter);
