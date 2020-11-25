@@ -17,6 +17,7 @@ exports.createEventLocation = function(req, res) {
     eventLocation.added_by = req.user.username;
     // console.log(eventLocation);
 
+    // create the event location
     eventLocationModel.createEvent(eventLocation, function(err, response) {
         if(err) {
             res.send(err);
@@ -40,10 +41,13 @@ exports.createEventDescription = function(req, res) {
             return res.status(500).send(err);
         } 
 
+        // create event description instance
         let eventDescription = new eventDescriptionModel(req.body);
+
+        // update event description properties
         eventDescription.photo = imagePath;
         eventDescription.video = "";
-        eventLocation.added_by = req.user.username;
+        eventDescription.added_by = req.user.username;
 
         console.log(eventDescription);
 
@@ -65,15 +69,16 @@ exports.updateEventDescription = function(req, res) {
     let imagePath = './uploads/' + req.files.photo.name;
     let imageFile = req.files.photo;
 
+    // move file to directory on your server
     imageFile.mv(imagePath, function(err) {
         if(err) {
             return res.status(500).send(err);
         } 
 
+        // event description instance
         let eventDescription = new eventDescriptionModel(req.body);
 
-        console.log(eventDescription);
-
+        // update event description properties
         eventDescription.photo = imagePath;
         eventDescription.video = "";
         // eventLocation.added_by = req.user.username;

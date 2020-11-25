@@ -1,6 +1,6 @@
 <% if(typeof errors!= 'undefined') { %>
     <% errors.forEach(error => { %>
-        <p> <%= error.msg %> </p>
+        <p class="text-danger"> <%= error.msg %> </p>
     <% }) %>
 <% } %>
 
@@ -13,5 +13,5 @@
 <% } %> 
 
 <% if(error != '') { %>
-    <%= error %>
+    <p class="text-danger"> <%= error %> </p>
 <% } %>

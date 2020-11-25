@@ -65,7 +65,7 @@ map.on('load', function(e) {
 
 		let location = e.lngLat;
 		// update eventMarker location
-		eventMarker.setLngLat(location);
+		// eventMarker.setLngLat(location);
 
 		// geocode the address
 		let address = location.lat +", "+ location.lng;
@@ -78,24 +78,7 @@ map.on('load', function(e) {
 var el = document.createElement("div");
 
 	el.classList.add("custom-marker");
-	el.innerHTML += "<img src='/static/img/location.png'>";
-
-var eventMarker = new mapboxgl.Marker(
-	{
-		el:el,
-		draggable: true
-	}
-)
-.setLngLat([0, 0])
-.addTo(map);
-
-function onDragEnd() {
-	var lngLat = eventMarker.getLngLat();
-
-	// geocode the coordinates
-}
-
-eventMarker.on('dragend', onDragEnd);
+	el.innerHTML += "<img src='/static/img/location.png' class='marker-sm' >";
 
 // ___________________________________ Geocoder Control ___________________________________________________ 
 var geocoderControl = new MapboxGeocoder({
@@ -125,11 +108,12 @@ geocoderControl.on('result', function({result}) {
 
 	// add street name and number
 	let placeName = result.place_name;
+	console.log(placeName);
 	placeName = placeName.split(',')[0];
 
 	// .endsWith("Street") || placeName.endsWith("Avenue")  || placeName.endsWith("Road")
 	console.log(placeName);
-	if(placeName) {
+	if(placeName && result.address) {
 		let streetNumber = placeName.match(/([0-9]{1,7})/g);
 		let streetName = placeName.match(/([a-zA-Z]{1,})/g);
 
@@ -514,7 +498,7 @@ function commitEventLocationToDb(eventLocation) {
 	let data = {
 		street_number:eventLocation.street_number,
 		street_name:eventLocation.street_name,	
-		added_by:userName.innerText,
+		added_by:"",
 		suburb:eventLocation.locality,
 		city:eventLocation.place,
 		state:eventLocation.region,
@@ -571,7 +555,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 	// 
 	let url = '/create_event_description/';
-	eventDescription.added_by = userName.innerText;
+	eventDescription.added_by = "";
 
 	 if(isUpdate) {
 		url = '/update_event_description/';
@@ -613,6 +597,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 			if(response.message.includes="success") {
 				updateEventMarkers();
 				togglePopup(addEventDiv, "active");
+				map.getCanvas().style.cursor = "";
 			} else {
 				alert(response.message);
 			}

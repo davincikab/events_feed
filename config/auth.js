@@ -1,7 +1,8 @@
 module.exports = {
     isAuthenticated:function(req, res, next) {
         if(req.isAuthenticated()) {
-            next();
+            console.log
+            return next();
         }
 
         req.flash('success_msg', 'login to access the page');

@@ -22,6 +22,7 @@ exports.post_register = function(req, res, next) {
     const { username, email, email2, country, password, password2 } = req.body;
     let errors = [];
 
+    // Validate the input fields
     if(!username || !email || !country || !password || !password2) {
         errors.push({msg : "Please fill in all fields"})
     }
@@ -51,6 +52,7 @@ exports.post_register = function(req, res, next) {
             password2:password2
         });
     } else {
+        // check id user with the submited name or email exists in the database
         userModel.findOne(username, email, function(err, response) {
             if(err) throw err;
 
@@ -76,6 +78,7 @@ exports.post_register = function(req, res, next) {
                     password2:password2
                 });
             } else {
+                // user instance
                 let user = new userModel({
                     username:username,
                     email:email,
@@ -113,7 +116,7 @@ exports.post_register = function(req, res, next) {
 }
 
 exports.post_login = function(req, res, next) {
-    console.log(req.body);
+    // authenticate user using passport local strategy
     passport.authenticate('local',{
         successRedirect : '/map',
         failureRedirect : '/login',

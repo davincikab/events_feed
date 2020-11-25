@@ -5,14 +5,18 @@ const path = require('path');
 const fileUpload = require('express-fileupload');
 const passport  = require('passport');
 const flash = require('connect-flash');
+var MySQLStore = require('express-mysql-session')(session);
 
 require("./config/passport")(passport);
+
+// connection pool
+const connection = require("./db");
 
 // router
 const userRouter = require("./routes/user/userRoute");
 const router = require("./routes/events/eventsRoute");
 
-// config doteve module
+// config dotenv module
 require('dotenv').config();
 
 // express app instance
@@ -24,7 +28,7 @@ app.use(fileUpload());
 // templating engine
 app.set('view engine', 'ejs');
 
-// stati files 
+// static files 
 app.use("/static/", express.static(path.join(__dirname, '/views')));
 app.use("/uploads/", express.static(path.join(__dirname, '/uploads')));
 
@@ -32,11 +36,21 @@ app.use("/uploads/", express.static(path.join(__dirname, '/uploads')));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-// consfigure session
+// configure session
+var options = {
+    host:process.env.HOST,
+    user:process.env.DB_USER,
+    password:process.env.DB_PASSWORD,
+    database:process.env.DB_NAME
+};
+
+var sessionStore = new MySQLStore(options, connection);
+
 app.use(session({
     secret:'azsADD1hdjdunGLhdjd',
     resave:true,
     saveUninitialized:false,
+    store:sessionStore,
     cookie:{ path: '/', httpOnly: true, secure: false, maxAge: null },
 }));
 

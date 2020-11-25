@@ -4,6 +4,7 @@ const mysql = require('mysql');
 // config doteve module
 require('dotenv').config();
 
+// create a connection pool
 const connection = mysql.createPool({
     connectionLimit:100,
     host:process.env.HOST,

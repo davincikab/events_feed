@@ -14,7 +14,7 @@ p {
 	position: absolute; 
 	width: 100%;
 	font-family: inherit;
-	cursor: url('img/location.png'), auto;
+	cursor: url('static/img/location.png'), auto;
 }
 
 
@@ -40,6 +40,11 @@ p {
 	padding:0.4em 0em;
 }
 
+.h1 {
+	font-size: 1.7em; 
+	font-weight: 700;
+	color: #a87619; 
+}
 .top-bar h1 {
 	font-size: 1.7em; 
 	color: #a87619; 
@@ -57,7 +62,7 @@ p {
 
 
 .container {
-    text-align: center;
+    /* text-align: center; */
     margin: 50px auto 0;
     max-width: 500px;
     box-shadow: 2px 2px 0.3em #ddd;
@@ -271,7 +276,7 @@ p {
 }
 
 .custom-marker img {
-	height: 40px;
+	height: 30px;
 }
 
 .custom-marker .user-count {
@@ -339,12 +344,14 @@ p {
 
 .media-section img{
 	height: 100px;
-    width: 100%;
+	width: 100%;
+	object-fit: contain;
 }
 
 /* utils clasee */
 .text-danger {
-	color: red	;
+	color: red;
+	font-size: 0.8em;
 }
 
 .d-none {
@@ -374,7 +381,7 @@ p {
 		width: 65%;
 		align-items: center;
 		display: flex;
-		justify-content: space-evenly;
+		/* justify-content: space-evenly; */
 		margin-left: 10%;
 	}
 

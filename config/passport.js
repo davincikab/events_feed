@@ -1,4 +1,4 @@
-const LocalStrategy = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user/userModel");
 
@@ -8,7 +8,7 @@ module.exports = function(passport) {
             userModel.findOne('', email, function(err, users) {
                 if(err) throw err;
 
-                console.log(users);
+                // console.log(users);
                 if(!users[0]) {
                     return done(null, false, {message : 'email is not registered'});
                 }
