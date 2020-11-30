@@ -578,9 +578,13 @@ $(eventDescriptionForm).on("submit", function(e) {
 		fd.append(key, eventDescription[key]);
 	});
 
-	// add file
+	// add the image file
 	var files = $('#file')[0].files[0];
 	fd.append('photo',files);
+
+	// add the video file
+	var video = $('#video')[0].files[0];
+	fd.append('video',video);
 
 	console.log(fd);
 

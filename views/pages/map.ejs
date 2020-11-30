@@ -33,9 +33,13 @@
                 <br>
                 <textarea placeholder="Describe the event" name="event_description" row=12 required></textarea>
                 <br>
-                <label for="event-media">Add pictures or video</label>
+                <label for="event-media">Add pictures</label>
                 <br>
-                <input type="file" name="photo" id="file" required>
+                <input type="file" name="photo" id="file" accept="image/*" required>
+                <br>
+                <label for="event-media">Add video</label>
+                <br>
+                <input type="file" name="video" id="video" accept="video/*" required>
                 <br>
                 <!-- <input type="submit" name="add-event" value="Add Event"> -->
                 <button type="submit" name="add-event">Add Event</button>

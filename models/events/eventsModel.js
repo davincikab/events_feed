@@ -1,7 +1,7 @@
 const connection = require('../../db.js');
 
 const eventLocationModel = function(eventLocation){
-    this.event_id = eventLocation.event_id, 
+    // this.event_id = eventLocation.event_id, 
     this.added_by = eventLocation.added_by, 
     this.street_number = eventLocation.street_number, 
     this.street_name = eventLocation.street_name, 
