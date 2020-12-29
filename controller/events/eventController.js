@@ -28,6 +28,21 @@ exports.createEventLocation = function(req, res) {
     });
 }
 
+exports.getEventsDetails = function(req, res) {
+    // get the route params
+    let title = req.params.event_name;
+    let id = req.params.event_id;
+
+    eventLocationModel.getEventDetails(title, id, function(err, response) {
+        if(err) {
+            res.send(err);
+        }
+
+        res.send(response);
+    });
+
+}
+
 
 // event description
 exports.createEventDescription = function(req, res) {
