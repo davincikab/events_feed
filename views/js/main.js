@@ -266,7 +266,14 @@ function addEventToMap(event) {
 				updateEventObject = searchEvent
 			} else {
 				updateEventObject = {
-					event_id:event.event_id
+					event_id:event.event_id,
+					added_by:username,	
+					event_name:event.event_name,
+					start_date:"",
+					end_date:"",
+					start_time:"",
+					end_time:"",
+					new_user:true
 				}
 			}
 
@@ -280,6 +287,7 @@ function addEventToMap(event) {
 				end_date:"",
 				start_time:"",
 				end_time:"",
+				new_user:true
 			}
 		}
 
@@ -373,7 +381,7 @@ function updateEventDescriptionForm(event) {
 		}
 
 		if(event[name]) {
-			input.value = event[name]
+			input.value = event[name];
 		} else {
 			input.value = "";
 		}
@@ -596,11 +604,16 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 	 if(isUpdate) {
 		url = '/update_event_description/';
+		
+		if(updateEventObject.new_user) {
+			url = '/create_event_description/';
+		}
+		
 		eventDescription.event_id = updateEventObject.event_id;
 		eventDescription.description_id = updateEventObject.description_id;
 		eventDescription.added_by = updateEventObject.added_by;
 
-		let user = userName.innerText;
+		let user = userName.innerText.trim();
 		if(eventDescription.added_by.indexOf(user) == -1) {
 			eventDescription.added_by += "," + user;
 
