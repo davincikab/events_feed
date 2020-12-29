@@ -16,7 +16,7 @@ router.post("/update_event_description/", events.updateEventDescription);
 
 // default path
 router.get("/", (req, res, next) => {
-    res.render("pages/index");
+    res.render("pages/index", {user:req.user, section:"home"});
 });
 
 router.get("/map", isAuthenticated, (req, res) => {

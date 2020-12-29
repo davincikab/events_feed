@@ -9,6 +9,7 @@ var confirmLocationForm = document.getElementById("address");
 var eventDescriptionForm = document.getElementById("event-description");
 var userName = document.getElementById("user-name");
 var descriptionFormTitle = document.querySelector(".description-title");
+var accountSection = document.getElementById("account-section");
 var activePopup;
 var isUpdate = false;
 
@@ -604,7 +605,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 	 if(isUpdate) {
 		url = '/update_event_description/';
-		
+
 		if(updateEventObject.new_user) {
 			url = '/create_event_description/';
 		}
@@ -686,6 +687,32 @@ $(eventDescriptionForm).on("submit", function(e) {
 		}
 	});
 
+});
+
+// display user account information
+$(userName).on("click", function(e) {
+	e.preventDefault();
+
+	// toggle user account modal
+	togglePopup(accountSection, "active");
+});
+
+let tabItems = document.querySelectorAll(".tab-item");
+tabItems.forEach(tabItem => {
+	
+	$(tabItem).on("click", function(e) {
+		tabItems.forEach(tb => tb.classList.remove("active"));
+		
+		if(tabItem.id == "stats") {
+			tabItem.classList.add("active");
+			$("#account-statistics").removeClass("d-none");
+			$("#account-info").addClass("d-none")
+		} else {
+			tabItem.classList.add("active");
+			$("#account-statistics").addClass("d-none");
+			$("#account-info").removeClass("d-none")
+		}
+	});
 });
 
 // ______________________________________________________________________________________________________________

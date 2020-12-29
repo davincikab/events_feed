@@ -365,10 +365,55 @@ p {
 	font-size: 0.8em;
 }
 
+.bg-danger {
+	background-color: #d31616 !important;
+	color:white;
+}
+
+/* margin */
+.my-0 {
+	margin-top:0 !important;
+	margin-bottom:0 !important
+}
+
+.my-1 {
+	margin-top:0.25em !important;
+	margin-bottom:0.25em !important
+}
+
+/* display */
+.d-flex {
+	display: flex;
+}
+
 .d-none {
 	display: none !important;
 }
 
+.space-between {
+	justify-content: space-between;
+}
+
+.tabs {
+	display: flex;
+	justify-content: space-between;
+}
+
+.tabs .active {
+	color:orange
+}
+
+.tab-item {
+	cursor: pointer;
+}
+
+.account-info {
+	text-align: left;
+}
+
+#account-statistics {
+	width:100%;
+}
 
 /* MEDIA QUERIES */
 @media(min-width:50em) {
@@ -391,6 +436,11 @@ p {
 
 	.popup .content {
 		width:50vw;
+	}
+
+	#account-section .content {
+		width:30vw;
+		height: auto;
 	}
 
 	.head-menu {

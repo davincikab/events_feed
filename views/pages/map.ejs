@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Map</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -74,6 +75,55 @@
             </form>
         </div>
     </div>
+
+    <div class="popup active" id="account-section">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup(accountSection, 'active')">&times;</div>
+            <div class="header">
+                <h3 class="my-0"><%= user.username %></h3>
+                <p class="my-0"><%= user.country %></p>
+            </div>
+
+            <div class="tabs my-1">
+                <h4 class="tab-item my-0" id="stats">Statistics</h4>
+                <h4 class="tab-item active my-0" id="acc-info">Account Information</h4>
+            </div>
+
+            <div class="d-flex space-between">
+                <div class="account-info" id="account-info">
+                    <b>Email</b>
+                    <p> <%= user.email %> </p>
+
+                    <b>Country</b>
+                    <p> <%= user.country %> </p>
+
+                    <b>Account Status</b>
+                    <p> <%= user.email %> </p>
+
+                    
+                </div>
+                <div class="d-none" id="account-statistics">
+                    <p class="d-flex space-between">Events Added <span>5</span></p>
+                    <p class="d-flex space-between">Events contributed to <span>5</span></p>
+                    <p class="d-flex space-between">Followers 
+                        <span> 
+                            <% if (user.account_type == 'pro') {%>
+                                <i class="fa fa-lock"></i>
+                            <%} %>
+                            5
+                        </span>
+                    </p>
+                    <p class="d-flex space-between">Following <span>15</span></p>
+                </div>
+            </div>
+
+            <div class="my-1">
+                <a  href="/logout" class="btn bg-danger">Logout</a>
+            </div>
+           
+        </div>
+    </div>
+
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
     <link
     rel="stylesheet"
