@@ -30,6 +30,15 @@ eventLocationModel.getAllEvents = function(result) {
     });
 }
 
+eventLocationModel.getEventById = function(title, event_id, result) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.event_id=?', event_id, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
 const eventDescriptionModel = function(eventDescription) {
     this.event_id = eventDescription.event_id, 
     this.added_by = eventDescription.added_by, 

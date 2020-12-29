@@ -28,17 +28,28 @@ exports.createEventLocation = function(req, res) {
     });
 }
 
-exports.getEventsDetails = function(req, res) {
+exports.getEventById = function(req, res) {
     // get the route params
     let title = req.params.event_name;
     let id = req.params.event_id;
 
-    eventLocationModel.getEventDetails(title, id, function(err, response) {
+    console.log("Event title");
+    console.log(title);
+
+    eventLocationModel.getEventById(title, id, function(err, response) {
         if(err) {
             res.send(err);
         }
 
-        res.send(response);
+        console.log(response);
+        // res.send(response);
+        let context = {
+            event:response[0],
+            contribution:response.slice(1,),
+            user:req.user
+        }
+        // let usersDescription = ["david", "maina"];
+        res.render('pages/event_detail', context);
     });
 
 }

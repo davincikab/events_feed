@@ -574,6 +574,8 @@ $(eventDescriptionForm).on("submit", function(e) {
 		let user = userName.innerText;
 		if(eventDescription.added_by.indexOf(user) == -1) {
 			eventDescription.added_by += "," + user;
+
+			// UPDATE THE USER SECTION ONLY
 		}
 	}
 

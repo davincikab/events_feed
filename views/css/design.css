@@ -138,6 +138,9 @@ p {
   	font-size: 1.2em;
   }
 
+  .text-center {
+	  text-align: center !important;
+  }
   /* label {
   	font-size: 20px;
   }

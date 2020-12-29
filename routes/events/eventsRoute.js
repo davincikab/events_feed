@@ -8,7 +8,7 @@ var router = express.Router();
 // event location path
 router.get("/events", events.getAllEvents);
 router.post("/create_event_location/", events.createEventLocation);
-router.get("/detail/:event_name/:event_id", events.getEventsDetails);
+router.get("/event/:event_name/:event_id/", events.getEventById);
 
 // description path
 router.post("/create_event_description/", events.createEventDescription);
@@ -22,5 +22,7 @@ router.get("/", (req, res, next) => {
 router.get("/map", isAuthenticated, (req, res) => {
     res.render("pages/map", {user:req.user})
 });
+
+
 
 module.exports = router;
