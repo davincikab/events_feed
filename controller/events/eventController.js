@@ -46,7 +46,8 @@ exports.getEventById = function(req, res) {
         let context = {
             event:response[0],
             contribution:response.slice(1,),
-            user:req.user
+            user:req.user,
+            section:'event_details'
         }
         // let usersDescription = ["david", "maina"];
         res.render('pages/event_detail', context);

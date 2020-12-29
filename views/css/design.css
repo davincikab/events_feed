@@ -347,8 +347,10 @@ p {
 .btn {
 	/* background-color: #000e69; */
 	color:#a87619;
-	padding:0.4em 0.5em;
+	padding:0.2em 0.5em;
 	cursor: pointer;
+	margin:4px 0px;
+	border-radius: 2px;
 }
 
 .media-section img{
@@ -374,6 +376,11 @@ p {
 		justify-content: flex-start;
 	}
 
+	.user-account {
+		position: absolute;
+    	right: 2%;
+	}
+	
 	.top-bar h1 {
 		display: block;
 	}

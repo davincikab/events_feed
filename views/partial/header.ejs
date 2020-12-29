@@ -2,15 +2,21 @@
     <a href="/" class="h1">World Map</a>
     <div class="head-menu">    
         <% if (typeof user != 'undefined') {%>
-            <div id="search" class="search-tab">
-                <input type="search" placeholder="Event Name ..." id="search-event">
-                <div class="suggestions" id="suggestions">
+            <% if (section == 'map') {%>
+                <div id="search" class="search-tab">
+                    <input type="search" placeholder="Event Name ..." id="search-event">
+                    <div class="suggestions" id="suggestions">
+                    </div>
                 </div>
-            </div>
-            <a class="nav-item" id="add-event" href="#">Add Event</a>
-            <a class="nav-item d-none" id="update-event" href="#">Update Event</a>
-            <a class="" href="#" id="saved-events">Saved Events</a>     
-
+                <a class="nav-item" id="add-event" href="#">Add Event</a>
+                <a class="nav-item d-none" id="update-event" href="#">Update Event</a>
+                <a class="" href="#" id="saved-events">Saved Events</a>     
+            <%} else { %>
+            <a class="nav-item" id="user-name" href="/map">
+                View Map
+            </a>
+            <%} %>
+            <div class="user-account">
             <a class="nav-item" id="user-name" href="#">
                 <%= user.username %>
             </a>   
@@ -19,6 +25,7 @@
             <a href="/register">Register</a>
             <a href="/login">Login</a>  
         <%} %>
+        </div>
         
     </div>
 </nav>
