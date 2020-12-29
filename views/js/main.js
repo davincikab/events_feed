@@ -234,11 +234,9 @@ function addEventToMap(event) {
 
 	console.log(event);
 
-	if(event.added_by) {
-		let usersLength = event.added_by.split(',').length;
-		if(usersLength > 1) {
-			el.innerHTML +=  "<p class='user-count'>"+usersLength+"</p>";
-		}
+	if(event.contribution.length > 0) {
+		let count = 1 + event.contribution.length;
+		el.innerHTML +=  "<p class='user-count'>" + count +"</p>";
 	}
 	
 
@@ -251,12 +249,41 @@ function addEventToMap(event) {
 	eventMarkers.push(marker);
 	
 	el.addEventListener('click', function(e) {
+
 		if(activePopup) {
 			activePopup.remove();
 		}
 
 		// display update button and section
-		updateEventObject = event;
+		let username = (userName.innerText).trim();
+		if(event.added_by == username) {
+			updateEventObject = event;
+		} 
+		else if(event.contribution[0]) {
+			let searchEvent = event.contribution.find(ev => ev.added_by == username);
+
+			if(searchEvent) {
+				updateEventObject = searchEvent
+			} else {
+				updateEventObject = {
+					event_id:event.event_id
+				}
+			}
+
+		} 
+		else {
+			updateEventObject = {
+				event_id:event.event_id,
+				added_by:username,	
+				event_name:event.event_name,
+				start_date:"",
+				end_date:"",
+				start_time:"",
+				end_time:"",
+			}
+		}
+
+		// updateEventObject = event;
 		toggleUpdateSections(event);
 
 		marker.togglePopup();
@@ -314,7 +341,7 @@ $(updateEventButton).on("click", function(e) {
 
 	console.log(updateEventObject);
 	let event = updateEventObject;
-	if(event.event_name) {
+	if(event.event_id) {
 		// populate update form with data section
 		updateEventDescriptionForm(event);
 
@@ -347,6 +374,8 @@ function updateEventDescriptionForm(event) {
 
 		if(event[name]) {
 			input.value = event[name]
+		} else {
+			input.value = "";
 		}
 
 		return input;

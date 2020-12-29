@@ -8,7 +8,21 @@ exports.getAllEvents = function(req, res) {
             res.send(err);
         }
 
-        res.send(events)
+        // specify other 
+        let allEvents = [];
+
+        events.forEach(event => {
+            let myEvent = allEvents.find(singleEvent => event.event_id == singleEvent.event_id);
+            if(myEvent) {
+                myEvent.contribution.push(event);
+            } else {
+                event.contribution = [];
+                allEvents.push(event);
+            }
+            
+        });
+
+        res.send(allEvents)
     });
 }
 

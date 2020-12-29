@@ -356,7 +356,7 @@ p {
 .media-section img{
 	height: 100px;
 	width: 100%;
-	object-fit: contain;
+	object-fit: cover;
 }
 
 /* utils clasee */
@@ -380,7 +380,7 @@ p {
 		position: absolute;
     	right: 2%;
 	}
-	
+
 	.top-bar h1 {
 		display: block;
 	}
