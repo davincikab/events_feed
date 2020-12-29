@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <div class="popup active" id="account-section">
+    <div class="popup" id="account-section">
         <div class="content">
             <div class="close-btn" onclick="togglePopup(accountSection, 'active')">&times;</div>
             <div class="header">
@@ -121,6 +121,73 @@
                 <a  href="/logout" class="btn bg-danger">Logout</a>
             </div>
            
+        </div>
+    </div>
+    <div class="popup active" id="events">
+        <div class="content">
+            <div class="popup-header">
+                <h4 class="my-0"> Events Added</h4>
+            </div>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Title</th>
+                            <th>Country</th>
+                            <th>Start Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <%  for (let event of [1,24,5] ) {%>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td> 
+                                <a href="" class="btn">View</a>
+                            </td>
+                        </tr>
+                        <%} %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup active" id="events">
+        <div class="content">
+            <div class="popup-header">
+                <h4 class="my-0"> Events Contributions</h4>
+            </div>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Title</th>
+                            <th>Country</th>
+                            <th>Start Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <%  for (let event of [1,24,5] ) {%>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td> 
+                                <a href="" class="btn">View</a>
+                            </td>
+                        </tr>
+                        <%} %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
