@@ -8,6 +8,7 @@ var router = express.Router();
 // event location path
 router.get("/events", events.getAllEvents);
 router.post("/create_event_location/", events.createEventLocation);
+router.get("/detail/:event_name/:event_id", events.getEventsDetails);
 
 // description path
 router.post("/create_event_description/", events.createEventDescription);
