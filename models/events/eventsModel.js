@@ -87,7 +87,7 @@ var eventMedia = function(media) {
 }
 
 eventMedia.createMedia = function(eventsMedia) {
-    connection.query("INSERT INTO event_location set ?", eventMedia, function(error, response) {
+    connection.query("INSERT INTO event_media set ?", eventMedia, function(error, response) {
         if(error) throw error;
         result(null, response);
     });

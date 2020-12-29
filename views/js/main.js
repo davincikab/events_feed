@@ -214,6 +214,14 @@ function addEventToMap(event) {
 
 	docFrag.appendChild(button);
 
+	let detailLink = document.createElement("a");
+	detailLink.classList.add("btn");
+
+	detailLink.innerHTML = "Visit Webpage";
+	detailLink.href = "event/" + event.event_name + "/" + event.event_id;
+	
+	docFrag.appendChild(detailLink);
+
 	// event popup
 	var popup = new mapboxgl.Popup()
 	.setDOMContent(docFrag);
