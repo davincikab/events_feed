@@ -77,5 +77,21 @@ eventDescriptionModel.deleteEvent = function(event_id) {
 }
 
 
+// Events media files
+var eventMedia = function(media) {
+    this.event_id = media.event_id;
+    this.added_on = media.added_on;
+    this.type = media.type;
+    this.media = media.file;
+    this.added_by = event.user;
+}
+
+eventMedia.createMedia = function(eventsMedia) {
+    connection.query("INSERT INTO event_location set ?", eventMedia, function(error, response) {
+        if(error) throw error;
+        result(null, response);
+    });
+}
+
 module.exports = { eventLocationModel, eventDescriptionModel}
 
