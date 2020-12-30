@@ -103,26 +103,45 @@ exports.createEventLocation = function(req, res) {
 exports.getEventById = function(req, res) {
     // get the route params
     let title = req.params.event_name;
-    let id = req.params.event_id;
+    let event_id = req.params.event_id;
 
     console.log("Event title");
     console.log(title);
 
-    eventLocationModel.getEventById(title, id, function(err, response) {
+    eventLocationModel.getEventById(title, event_id, function(err, response) {
         if(err) {
             res.send(err);
         }
 
         console.log(response);
         // res.send(response);
-        let context = {
-            event:response[0],
-            contribution:response.slice(1,),
-            user:req.user,
-            section:'event_details'
-        }
-        // let usersDescription = ["david", "maina"];
-        res.render('pages/event_detail', context);
+
+        eventMedia.getMediaByEventId(event_id, function(err, descriptionMedia) {
+            if(err) {
+                res.send(err);
+            }
+
+            // merge media to respective description id
+            response.forEach(event => {
+                let media = descriptionMedia.filter(mediaItem => mediaItem.description_id == event.description_id);
+                
+                event.media = media ? media : [];                
+                return event;
+            });
+
+            let context = {
+                event:response.find(event => event.is_contribution == 0),
+                contribution:response.filter(event => event.is_contribution == 1),
+                user:req.user,
+                section:'event_details'
+            }
+
+            // res.send(context);
+
+            // let usersDescription = ["david", "maina"];
+            res.render('pages/event_detail', context);
+        });
+        
     });
 
 }
@@ -254,7 +273,7 @@ exports.updateEventDescription = function(req, res) {
             res.send(err);
         }
 
-        // deleteMediaFiles(description_id);
+        deleteMediaFiles(description_id);
         insertMediaFiles(description_id, imageFiles, event_id, username);
         res.send(response);
     });
@@ -291,10 +310,11 @@ exports.updateEventDescription = function(req, res) {
     // });
 }
 
+// delete media files before update
 function deleteMediaFiles(description_id) {
     eventMedia.deleteMedia(description_id, function(err, response) {
         if(err) {
-            res.send(err);
+            // res.send(err);
             return;
         }
 

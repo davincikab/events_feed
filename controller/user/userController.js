@@ -1,5 +1,5 @@
 const userModel = require("../../models/user/userModel");
-const { eventLocationModel, eventDescriptionModel} = require("../../models/events/eventsModel");
+const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
@@ -138,12 +138,9 @@ exports.userEvents = function(req, res) {
         let results = events;
         console.log(results.map(ev => ev.added_by));
 
-        // user events 
-    
-        // contributed events
-        // following
-        // followers
-
+        // user events and contributed events
+        // following and followers
+        
         let context = {
             user:req.user,
             section:'user profile',
@@ -152,6 +149,7 @@ exports.userEvents = function(req, res) {
             following:[],
             followers:[]
         }
+
         res.render("pages/user_profile", context);
     });
 }

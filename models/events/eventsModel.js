@@ -134,5 +134,12 @@ eventMedia.getAllMedia = function(result) {
     });
 }
 
+eventMedia.getMediaByEventId = function(event_id, result) {
+    connection.query("SELECT * FROM event_media WHERE event_id=?", event_id, function(error, results) {
+        if(error) throw error;
+        result(null, results);
+    });
+}
+
 module.exports = { eventLocationModel, eventDescriptionModel, eventMedia}
 
