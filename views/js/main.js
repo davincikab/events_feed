@@ -274,7 +274,8 @@ function addEventToMap(event) {
 					end_date:"",
 					start_time:"",
 					end_time:"",
-					new_user:true
+					new_user:true,
+					is_contribution:1
 				}
 			}
 
@@ -288,7 +289,8 @@ function addEventToMap(event) {
 				end_date:"",
 				start_time:"",
 				end_time:"",
-				new_user:true
+				new_user:true,
+				is_contribution:1
 			}
 		}
 
@@ -601,7 +603,8 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 	// 
 	let url = '/create_event_description/';
-	eventDescription.added_by = "";
+	eventDescription.added_by = userName.innerText;
+	eventDescription.is_contribution = 0;
 
 	 if(isUpdate) {
 		url = '/update_event_description/';
@@ -613,6 +616,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 		eventDescription.event_id = updateEventObject.event_id;
 		eventDescription.description_id = updateEventObject.description_id;
 		eventDescription.added_by = updateEventObject.added_by;
+		eventDescription.is_contribution = updateEventObject.is_contribution;
 
 		let user = userName.innerText.trim();
 		if(eventDescription.added_by.indexOf(user) == -1) {
@@ -641,8 +645,13 @@ $(eventDescriptionForm).on("submit", function(e) {
 	// fd.append('photo',files);
 
 	// add the video file
-	var video = $('#video')[0].files[0];
-	fd.append('video',video);
+	var video = $('#video')[0].files;
+	Object.values(video).forEach((file, index) => {
+		let name = "video" + index;
+		fd.append(name, file);
+	});
+
+	// fd.append('video',video);
 
 	console.log(fd);
 

@@ -22,7 +22,7 @@ eventLocationModel.createEvent = function(eventLocation, result) {
 }
 
 eventLocationModel.getAllEvents = function(result) {
-    connection.query('SELECT * FROM event_location AS el INNER JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
@@ -117,6 +117,20 @@ eventMedia.updateMedia = function(eventMedia, result) {
     connection.query("UPDATE INTO event_media set ?", eventMedia, function(error, response) {
         if(error) throw error;
         result(null, response);
+    });
+}
+
+eventMedia.deleteMedia = function(description_id, result) {
+    connection.query("DELETE FROM event_media WHERE description_id= ?", description_id, function(error, response) {
+        if(error) throw error;
+        result(null, response);
+    });
+}
+
+eventMedia.getAllMedia = function(result) {
+    connection.query("SELECT * FROM event_media", function(error, results) {
+        if(error) throw error;
+        result(null, results);
     });
 }
 

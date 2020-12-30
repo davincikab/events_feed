@@ -8,21 +8,79 @@ exports.getAllEvents = function(req, res) {
             res.send(err);
         }
 
-        // specify other 
-        let allEvents = [];
-
-        events.forEach(event => {
-            let myEvent = allEvents.find(singleEvent => event.event_id == singleEvent.event_id);
-            if(myEvent) {
-                myEvent.contribution.push(event);
-            } else {
-                event.contribution = [];
-                allEvents.push(event);
+        eventMedia.getAllMedia(function(err, mediaEntries) {
+            if(err) {
+                res.send(err);
             }
-            
+
+            let allEvents = events.reduce((r, a) => {
+                r[a.event_id] =  r[a.event_id] || [];
+                r[a.event_id].push(a);
+
+                return r;
+            }, Object.create(null));
+
+            let descriptionMedia = mediaEntries.reduce((r, a) => {
+                r[a.description_id] =  r[a.description_id] || [];
+                r[a.description_id].push(a);
+
+                return r;
+            }, Object.create(null));
+
+            // combine the two datasets
+            for (const key in allEvents) {
+                let event = allEvents[key]
+                console.log(event);
+                event.forEach(ev => {
+                    let media = descriptionMedia[ev.description_id];
+
+                    if(media) {
+                        ev.media =  media;
+                    } else {
+                        ev.media = [];
+                    }
+                });
+            }
+
+            // convert the object to flat array
+            let eventsArray = [];
+            for (const key in allEvents) {
+                let event = allEvents[key];
+
+                let mainEvent = event.find(ev => ev.is_contribution == 0);
+                contribution = event.filter(ev => ev.is_contribution == 1);
+
+                mainEvent.contribution = contribution;
+
+                eventsArray.push(mainEvent);
+            }
+
+
+
+            res.send(eventsArray);
         });
 
-        res.send(allEvents)
+        // specify other 
+        // let allEvents = [];
+        // let event_ids = events.map(event => event.event_id);
+        // event_ids = [... new Set(event_ids)];
+
+        // event_ids.forEach(eventId => {
+
+        // });
+
+        // events.forEach(event => {
+        //     let myEvent = allEvents.find(singleEvent => event.event_id == singleEvent.event_id);
+        //     if(myEvent) {
+        //         myEvent.contribution.push(event)
+        //         myEvent.media
+        //     } else {
+        //         event.contribution = [];
+        //         // event.media = []
+        //         allEvents.push(event);
+        //     }
+            
+        // });
     });
 }
 
@@ -73,48 +131,68 @@ exports.getEventById = function(req, res) {
 exports.createEventDescription = function(req, res) {
     // console.log(req.body);
     // console.log(req.files.photo.name);
-    console.log("Files");
-    let imagePath = './uploads/images/' + req.files.photo0.name;
-    let imageFile = req.files.photo0;
+    // console.log("Files");
+    // let imagePath = './uploads/images/' + req.files.photo0.name;
+    // let imageFile = req.files.photo0;
 
-    let videoPath = './uploads/videos/' + req.files.video.name;
-    let videoFile = req.files.video;
+    // let videoPath = './uploads/videos/' + req.files.video.name;
+    // let videoFile = req.files.video;
 
     let imageFiles = Object.values(req.files);
-    videoFile.mv(videoPath, function(err) {
-        if(err) {
-            return res.status(500).send(err);
-        }
+    let { event_id } = req.body;
+    let { username } = req.user;
 
-        imageFile.mv(imagePath, function(err) {
-            if(err) {
-                return res.status(500).send(err);
-            } 
-    
-            // create event description instance
-            let eventDescription = new eventDescriptionModel(req.body);
-    
-            // update event description properties
-            eventDescription.photo = imagePath;
-            eventDescription.video = videoPath;
-            eventDescription.added_by = req.user.username;
-            eventDescription.is_contribution = false;
-    
-            console.log(eventDescription);
-    
-            // update the description object
-            eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
-                if(err) {
-                    res.send(err);
-                }
-                
-                console.log(response);
-                // 
-                insertMediaFiles(response.insertId, imageFiles, req.body.event_id, req.user.username);
-                res.send(response);
-            });
-        });
+    console.log("Create a Description");
+    console.log(req.body);
+    let eventDescription = new eventDescriptionModel(req.body);
+    // eventDescription.is_contribution = eventDescription.contribution != undefined ? eventDescription.is_contribution : false;
+
+    // update the description object
+    eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
+        if(err) {
+            res.send(err);
+        }
+        
+        console.log(response);
+        // 
+        insertMediaFiles(response.insertId, imageFiles, event_id, username);
+        res.send(response);
     });
+
+//     videoFile.mv(videoPath, function(err) {
+//         if(err) {
+//             return res.status(500).send(err);
+//         }
+
+//         imageFile.mv(imagePath, function(err) {
+//             if(err) {
+//                 return res.status(500).send(err);
+//             } 
+    
+//             // create event description instance
+//             let eventDescription = new eventDescriptionModel(req.body);
+    
+//             // update event description properties
+//             eventDescription.photo = imagePath;
+//             eventDescription.video = videoPath;
+//             eventDescription.added_by = req.user.username;
+//             eventDescription.is_contribution = false;
+    
+//             console.log(eventDescription);
+    
+//             // update the description object
+//             eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
+//                 if(err) {
+//                     res.send(err);
+//                 }
+                
+//                 console.log(response);
+//                 // 
+//                 insertMediaFiles(response.insertId, imageFiles, req.body.event_id, req.user.username);
+//                 res.send(response);
+//             });
+//         });
+//     });
 
   
 }
@@ -159,41 +237,67 @@ exports.updateEventDescription = function(req, res) {
     // console.log(req.body);
     // console.log(req.files.photo.name);
 
-    let imagePath = './uploads/images/' + req.files.photo.name;
-    let imageFile = req.files.photo;
+    // let imagePath = './uploads/images/' + req.files.photo.name;
+    // let imageFile = req.files.photo;
 
-    let videoPath = './uploads/videos/' + req.files.video.name;
-    let videoFile = req.files.video;
+    // let videoPath = './uploads/videos/' + req.files.video.name;
+    // let videoFile = req.files.video;
 
-    videoFile.mv(videoPath, function(err) {
+    let imageFiles = Object.values(req.files);
+
+    let eventDescription = new eventDescriptionModel(req.body);
+    let { description_id, event_id }= req.body;
+    let { username } = req.user;
+   
+    eventDescriptionModel.updateEventDescription(eventDescription, description_id, function(err, response) {
         if(err) {
-            return res.status(500).send(err);
+            res.send(err);
         }
 
-        // move file to directory on your server
-        imageFile.mv(imagePath, function(err) {
-            if(err) {
-                return res.status(500).send(err);
-            } 
+        // deleteMediaFiles(description_id);
+        insertMediaFiles(description_id, imageFiles, event_id, username);
+        res.send(response);
+    });
 
-            // event description instance
-            let eventDescription = new eventDescriptionModel(req.body);
+    // videoFile.mv(videoPath, function(err) {
+    //     if(err) {
+    //         return res.status(500).send(err);
+    //     }
 
-            // update event description properties
-            eventDescription.photo = imagePath;
-            eventDescription.video = eventDescription.video = videoPath;
-            // eventLocation.added_by = req.user.username;
+    //     // move file to directory on your server
+    //     imageFile.mv(imagePath, function(err) {
+    //         if(err) {
+    //             return res.status(500).send(err);
+    //         } 
 
-            let description_id = req.body.description_id;
+    //         // event description instance
+    //         let eventDescription = new eventDescriptionModel(req.body);
 
-            // update the description object
-            eventDescriptionModel.updateEventDescription(eventDescription, description_id, function(err, response){
-                if(err) {
-                    res.send(err);
-                }
+    //         // update event description properties
+    //         eventDescription.photo = imagePath;
+    //         eventDescription.video = eventDescription.video = videoPath;
+
+    //         let description_id = req.body.description_id;
+
+    //         // update the description object
+    //         eventDescriptionModel.updateEventDescription(eventDescription, description_id, function(err, response){
+    //             if(err) {
+    //                 res.send(err);
+    //             }
         
-                res.send(response);
-            });
-        });
+    //             res.send(response);
+    //         });
+    //     });
+    // });
+}
+
+function deleteMediaFiles(description_id) {
+    eventMedia.deleteMedia(description_id, function(err, response) {
+        if(err) {
+            res.send(err);
+            return;
+        }
+
+        return;
     });
 }
