@@ -69,6 +69,18 @@ exports.getEventById = function(req, res) {
 
 }
 
+// exports.getEventByUser = function(req, res) {
+//     let user = req.user;
+
+//     eventLocationModel.getEventByUser(user.username, function(err, results) {
+//         if(err) {
+//             res.send(err);
+//         }
+
+//         let 
+//     });
+// }
+
 
 // event description
 exports.createEventDescription = function(req, res) {

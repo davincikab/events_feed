@@ -137,19 +137,19 @@
         </div>
 
         <div class="events" id="events">
-            <%  for (let event of [1,24,5] ) {%>
-                <figure>
+            <%  for (let event of events ) {%>
+                <figure data-href="/event/<%= event.event_name %>/<%= event.event_id %>/">
                     <img src="/uploads/images/night_out.jpg" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
-                    <figcaption> Events</figcaption>
+                    <figcaption> <%= event.event_name %> </figcaption>
                 </figure>
             <% } %>
         </div>
 
         <div class="events d-none" id="contributions">
-            <%  for (let event of [1,24,5] ) {%>
-                <figure>
+            <%  for (let contribution of contributions ) {%>
+                <figure data-href="/event/<%= contribution.event_name %>/<%= contribution.event_id %>/">
                     <img src="/uploads/images/clearance_view.PNG" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
-                    <figcaption> Events</figcaption>
+                    <figcaption> <%= contribution.event_name %> </figcaption>
                 </figure>
             <% } %>
         </div>
@@ -173,6 +173,15 @@
                     $("#contributions").addClass("d-none");
                     $("#events").removeClass("d-none")
                 }
+            });
+        });
+
+        let eventFigures = document.querySelectorAll("figure");
+        eventFigures.forEach(figure => {
+            $(figure).on("click", function(e) {
+                let location = $(figure).attr("data-href");
+
+                window.location.assign(location);
             });
         });
     </script>

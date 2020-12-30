@@ -1,4 +1,6 @@
 const userModel = require("../../models/user/userModel");
+const { eventLocationModel, eventDescriptionModel} = require("../../models/events/eventsModel");
+
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
 
@@ -124,4 +126,33 @@ exports.post_login = function(req, res, next) {
     })(req,res,next);
 }
     
+exports.userEvents = function(req, res) {
+    let user = req.user;
+
+    eventLocationModel.getEventByUser(user.username, function(err, events) {
+        if(err) {
+            res.send(err);
+        }
+
+        // user events
+        let results = events;
+        console.log(results.map(ev => ev.added_by));
+
+        // user events 
     
+        // contributed events
+        // following
+        // followers
+
+        let context = {
+            user:req.user,
+            section:'user profile',
+            events:results.filter(event => !event.is_contribution),
+            contributions:results.filter(event => event.is_contribution),
+            following:[],
+            followers:[]
+        }
+        res.render("pages/user_profile", context);
+    });
+}
+

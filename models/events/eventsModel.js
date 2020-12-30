@@ -39,6 +39,15 @@ eventLocationModel.getEventById = function(title, event_id, result) {
     });
 }
 
+eventLocationModel.getEventByUser = function(user, result) {
+    connection.query('SELECT * FROM event_description AS el WHERE el.added_by=?', user, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
 const eventDescriptionModel = function(eventDescription) {
     this.event_id = eventDescription.event_id, 
     this.added_by = eventDescription.added_by, 
@@ -48,6 +57,7 @@ const eventDescriptionModel = function(eventDescription) {
     this.start_time = eventDescription.start_time, 
     this.end_time = eventDescription.end_time, 
     this.event_description = eventDescription.event_description, 
+    this.is_contribution = event.is_contribution,
     this.photo = eventDescription.photo, 
     this.video = eventDescription.video
 };

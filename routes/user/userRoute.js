@@ -13,13 +13,7 @@ userRouter.get("/logout", function(req, res) {
     res.redirect("/login")
 });
 
-userRouter.get("/user_profile", isAuthenticated, function(req, res) {
-    // user events 
-    // contributed events
-    // following
-    // followers
-    res.render("pages/user_profile", {user:req.user, section:"user profile"})
-});
+userRouter.get("/user_profile", isAuthenticated, user.userEvents);
 
 userRouter.post("/login", user.post_login);
 
