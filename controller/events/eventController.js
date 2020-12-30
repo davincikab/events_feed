@@ -310,6 +310,29 @@ exports.updateEventDescription = function(req, res) {
     // });
 }
 
+exports.getEventDescription = function(req, res) {
+    let { description_id } = req.params;
+
+    console.log("Files")
+    console.log(description_id);
+    eventDescriptionModel.getDescriptionById(description_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }
+
+        console.log(results);
+        let context = {
+            user:req.user,
+            section:'update event',
+            event:results[0]
+        };
+        
+        // res.send(context);
+        res.render('pages/update_event', context);
+    });
+
+    
+}
 // delete media files before update
 function deleteMediaFiles(description_id) {
     eventMedia.deleteMedia(description_id, function(err, response) {

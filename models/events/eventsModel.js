@@ -86,6 +86,13 @@ eventDescriptionModel.updateEventDescription = function(eventDescription, descri
     });
 }
 
+eventDescriptionModel.getDescriptionById = function(description_id, result) {
+    connection.query("SELECT * FROM event_description WHERE description_id=?", description_id, function(error, results) {
+        if(error) throw error;
+        result(null, results);
+    });
+}
+
 eventDescriptionModel.deleteEvent = function(event_id) {
     // connection.query("UPDATE event_description SET event_id=?,added_by=?,event_name=?,start_date=?,end_date=?,start_time=?,end_time=?,event_description=?,photo=?,video=? WHERE description_id = ?", [...values, description_id], function (error, results, fields) {
     //     if (error) throw error;

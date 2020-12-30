@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Event Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/design.css">
+    <style>
+         @media(min-width:50em) {
+            .container {
+                min-width: 500px;
+                margin: 1em auto;
+                font-size: 0.9em;
+                overflow-x: hidden;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partial/header') %>
+    <div class="container">
+        <div class="content">
+            <h1 class="description-title">Update an Event</h1>
+            
+            <form action="" method="post" id="event-description" enctype="multipart/form-data">
+                <input type="text" name="event_name" placeholder="Name Event (Use key words)" value="<%= event.event_name %>" required>
+                <br>
+                <input type="date" name="start_date" placeholder="Start Date" value="<%= event.start_date %>" required>
+                <br>
+                <input type="time" name="start_time" placeholder="Start Time" value="<%= event.start_time %>" required>
+                <br>
+                <input type="date" name="end_date" placeholder="End Date" value="<%= event.end_date %>" required>
+                <br>
+                <input type="time" name="end_time" placeholder="End Time"  value="<%= event.end_time %>" required>
+                <br>
+                <textarea placeholder="Describe the event" name="event_description" row=12 value="<%= event.description %>" required>
+                </textarea>
+                <br>
+                <label for="event-media">Add pictures</label>
+                <br>
+                <input type="file" name="photo" id="file" accept="image/*" required multiple>
+                <br>
+                <label for="event-media">Add video</label>
+                <br>
+                <input type="file" name="video" id="video" accept="video/*" required multiple>
+                <br>
+                <!-- <input type="submit" name="add-event" value="Add Event"> -->
+                <button type="submit" name="add-event">Add Event</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+var eventDescription = {};
+var eventDescriptionForm = document.getElementById("event-description");
+$(eventDescriptionForm).on("submit", function(e) {
+	e.preventDefault();
+	
+	// get the form data
+	let data = $(this).serializeArray();
+
+	console.log(data);
+
+	// update event description
+	data.forEach(datum => {
+		let name = datum.name;
+		eventDescription[name] = datum.value; 
+	});
+
+	// 
+	let url = '/update_event_description/';
+
+    eventDescription.event_id = parseInt("<%= event.event_id %>");
+	eventDescription.description_id = parseInt("<%= event.description_id %>");
+	eventDescription.added_by = "<%= user.username %>";
+	eventDescription.is_contribution = "<%= event.is_contribution %>";
+
+	console.log(eventDescription);
+
+	// create a FormData object
+	var fd = new FormData();
+
+	Object.keys(eventDescription).forEach(key => {
+		fd.append(key, eventDescription[key]);
+	});
+
+	// add the image file
+	var files = $('#file')[0].files;
+	Object.values(files).forEach((file, index) => {
+		let name = "photo" + index;
+		fd.append(name, file);
+	});
+
+	// fd.append('photo',files);
+
+	// add the video file
+	var video = $('#video')[0].files;
+	Object.values(video).forEach((file, index) => {
+		let name = "video" + index;
+		fd.append(name, file);
+	});
+
+	// fd.append('video',video);
+
+	console.log(fd);
+
+	// submit the data
+	$.ajax({
+		url:url,
+		type:'POST',
+		data:fd,
+		dataType: 'json',
+		contentType: false,
+		processData:false,
+		success:function(response) {
+            console.log(response);
+            
+            // 
+			if(response.message.includes="success") {
+                window.location.assign("/map")
+			} else {
+				alert(response.message);
+			}
+
+			// reset the form values
+			eventDescriptionForm.reset();
+            updateEventObject = {};
+			
+		},
+		error:function(error) {
+			// alert("error");
+			console.log(error);
+		}
+	});
+
+});
+</script>
+</body>
+</html>
