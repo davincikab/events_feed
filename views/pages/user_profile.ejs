@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Map</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/design.css">
+    <style>
+        .top-bar {
+            position: fixed;
+            top:0;
+            z-index: 1;
+        }
+
+        .container {
+            margin:5em auto;
+            max-width: 728px;
+            padding: 0.5em 0.1em;
+            box-shadow: none;
+            /* display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 1em;
+            overflow-x: hidden; */
+        }
+        .profile-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid: 1em;
+        }
+
+        .profile-header {
+            border-bottom: 1px solid #ddd;
+            padding: 1em 1.5em;
+        }
+
+        .profile-header .image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-section img {
+            height: 100px;
+            width: 100px;
+            object-fit: cover;
+        }
+
+        .img-circle {
+            border-radius: 50%;
+        }
+
+        .section-username {
+            align-items: flex-end;
+        }
+
+        .account-stats p {
+            margin: 0 1em;
+        }
+
+        .event-tab {
+            display: flex;
+            justify-content: center;
+            margin-top: -1px;
+        }
+        .event-tab a {
+            text-transform: uppercase;
+            color:#333;
+            min-width: 100px;
+        }
+
+        .event-tab a.active {
+            border-top: 1px solid #333;
+        }
+
+        .events {
+            display:grid;
+            grid-gap: 2px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr) ) ;
+            background-color: #fff;
+            margin: 1em 0;
+        }
+
+        figure {
+            margin: 0;
+        }
+        figure img {
+            object-fit: cover;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <%- include('../partial/header') %>
+    <div class="container">
+        <div class="profile-header">
+            <div class="image-section">
+                <!-- <i class="fa fa-user fa-2x"></i> -->
+                <img src="/uploads/images/clearance_view.PNG" class="img-circle" alt="<%= user.username %>">
+            </div>
+
+            <div class="account-info">
+                <div class="d-flex section-username">
+                    <h3 class="my-0 mr-1"><%= user.username %></h3>
+                    <button class="bg-brand ml-1">Follow</button>
+                    <button class="bg-brand ml-1"><i class="fa fa-lock mr-1"></i>Message</button>
+                </div>
+
+                <div class="d-flex account-stats">
+                    <div class="d-flex"><span class="mr-1">5</span> Events</div>
+                    <p class="d-flex"><span class="mr-1">5</span> Contributions</p>
+                    <p class="d-flex">
+                        <span class="mr-1"> 
+                            <% if (user.account_type == 'pro') {%>
+                                <i class="fa fa-lock"></i>
+                            <%} %>  5
+                        </span>
+                        Followers 
+                    </p>
+                    <p class="d-flex"><span class="mr-1">15</span> Following</p>
+                </div>
+
+                <div class="my-1">
+                    <b>Email</b>
+                    <p> <%= user.email %> </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-tab">
+            <a href="" class="link active" id="event"><i class="fa fa-calendar mr-1"></i>Events</a>
+            <a href="" class="link" id="contribution"><i class="fa fa-users mr-1"></i>Contribution</a>
+        </div>
+
+        <div class="events" id="events">
+            <%  for (let event of [1,24,5] ) {%>
+                <figure>
+                    <img src="/uploads/images/night_out.jpg" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <figcaption> Events</figcaption>
+                </figure>
+            <% } %>
+        </div>
+
+        <div class="events d-none" id="contributions">
+            <%  for (let event of [1,24,5] ) {%>
+                <figure>
+                    <img src="/uploads/images/clearance_view.PNG" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <figcaption> Events</figcaption>
+                </figure>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        let tabItems = document.querySelectorAll(".event-tab a");
+        tabItems.forEach(tabItem => {
+            
+            $(tabItem).on("click", function(e) {
+                e.preventDefault();
+
+                tabItems.forEach(tb => tb.classList.remove("active"));
+                
+                if(tabItem.id == "contribution") {
+                    tabItem.classList.add("active");
+                    $("#contributions").removeClass("d-none");
+                    $("#events").addClass("d-none")
+                } else {
+                    tabItem.classList.add("active");
+                    $("#contributions").addClass("d-none");
+                    $("#events").removeClass("d-none")
+                }
+            });
+        });
+    </script>
+</body>
+</html>

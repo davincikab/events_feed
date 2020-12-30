@@ -366,6 +366,10 @@ p {
 }
 
 .bg-danger {
+	background-color: #000e69;
+	color:white;
+}
+.bg-danger {
 	background-color: #d31616 !important;
 	color:white;
 }
@@ -380,6 +384,15 @@ p {
 	margin-top:0.25em !important;
 	margin-bottom:0.25em !important
 }
+.mr-1 {
+	margin-right: 0.25em !important;
+}
+
+.ml-1 {
+	margin-left: 0.25em !important;
+}
+
+
 
 /* display */
 .d-flex {

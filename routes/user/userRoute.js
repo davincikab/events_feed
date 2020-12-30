@@ -1,7 +1,7 @@
 const express = require("express");
 
 const user = require("../../controller/user/userController");
-
+const { isAuthenticated } = require("../../config/auth");
 
 const userRouter = express.Router();
 
@@ -11,6 +11,14 @@ userRouter.get("/logout", function(req, res) {
     req.logout();
     // req.flash('success_msg','Now logged out');
     res.redirect("/login")
+});
+
+userRouter.get("/user_profile", isAuthenticated, function(req, res) {
+    // user events 
+    // contributed events
+    // following
+    // followers
+    res.render("pages/user_profile", {user:req.user, section:"user profile"})
 });
 
 userRouter.post("/login", user.post_login);

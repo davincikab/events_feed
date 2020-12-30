@@ -36,11 +36,11 @@
                 <br>
                 <label for="event-media">Add pictures</label>
                 <br>
-                <input type="file" name="photo" id="file" accept="image/*" required>
+                <input type="file" name="photo" id="file" accept="image/*" required multiple>
                 <br>
                 <label for="event-media">Add video</label>
                 <br>
-                <input type="file" name="video" id="video" accept="video/*" required>
+                <input type="file" name="video" id="video" accept="video/*" required multiple> multiple
                 <br>
                 <!-- <input type="submit" name="add-event" value="Add Event"> -->
                 <button type="submit" name="add-event">Add Event</button>
@@ -123,7 +123,7 @@
            
         </div>
     </div>
-    <div class="popup active" id="events">
+    <div class="popup" id="events">
         <div class="content">
             <div class="popup-header">
                 <h4 class="my-0"> Events Added</h4>
@@ -157,7 +157,7 @@
         </div>
     </div>
 
-    <div class="popup active" id="events">
+    <div class="popup" id="events">
         <div class="content">
             <div class="popup-header">
                 <h4 class="my-0"> Events Contributions</h4>

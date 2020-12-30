@@ -691,10 +691,10 @@ $(eventDescriptionForm).on("submit", function(e) {
 
 // display user account information
 $(userName).on("click", function(e) {
-	e.preventDefault();
+	// e.preventDefault();
 
 	// toggle user account modal
-	togglePopup(accountSection, "active");
+	// togglePopup(accountSection, "active");
 });
 
 let tabItems = document.querySelectorAll(".tab-item");
