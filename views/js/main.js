@@ -632,8 +632,13 @@ $(eventDescriptionForm).on("submit", function(e) {
 	});
 
 	// add the image file
-	var files = $('#file')[0].files[0];
-	fd.append('photo',files);
+	var files = $('#file')[0].files;
+	Object.values(files).forEach((file, index) => {
+		let name = "photo" + index;
+		fd.append(name, file);
+	});
+
+	// fd.append('photo',files);
 
 	// add the video file
 	var video = $('#video')[0].files[0];

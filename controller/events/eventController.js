@@ -1,5 +1,5 @@
 // get event model
-const { eventLocationModel, eventDescriptionModel} = require("../../models/events/eventsModel");
+const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 const { request } = require("express");
 
 exports.getAllEvents = function(req, res) {
@@ -69,30 +69,18 @@ exports.getEventById = function(req, res) {
 
 }
 
-// exports.getEventByUser = function(req, res) {
-//     let user = req.user;
-
-//     eventLocationModel.getEventByUser(user.username, function(err, results) {
-//         if(err) {
-//             res.send(err);
-//         }
-
-//         let 
-//     });
-// }
-
-
 // event description
 exports.createEventDescription = function(req, res) {
     // console.log(req.body);
     // console.log(req.files.photo.name);
-
-    let imagePath = './uploads/images/' + req.files.photo.name;
-    let imageFile = req.files.photo;
+    console.log("Files");
+    let imagePath = './uploads/images/' + req.files.photo0.name;
+    let imageFile = req.files.photo0;
 
     let videoPath = './uploads/videos/' + req.files.video.name;
     let videoFile = req.files.video;
 
+    let imageFiles = Object.values(req.files);
     videoFile.mv(videoPath, function(err) {
         if(err) {
             return res.status(500).send(err);
@@ -110,6 +98,7 @@ exports.createEventDescription = function(req, res) {
             eventDescription.photo = imagePath;
             eventDescription.video = videoPath;
             eventDescription.added_by = req.user.username;
+            eventDescription.is_contribution = false;
     
             console.log(eventDescription);
     
@@ -118,13 +107,52 @@ exports.createEventDescription = function(req, res) {
                 if(err) {
                     res.send(err);
                 }
-        
+                
+                console.log(response);
+                // 
+                insertMediaFiles(response.insertId, imageFiles, req.body.event_id, req.user.username);
                 res.send(response);
             });
         });
     });
 
   
+}
+
+function insertMediaFiles(description_id, imageFiles, event_id, username) {
+    console.log("Saving Media Files");
+
+    imageFiles.forEach(image => {
+        let path = './uploads/images/' + image.name;
+
+        image.mv(path, function(err) {
+            if(err) {
+                return res.status(500).send(err);
+            }
+
+            let type = image.mimetype.includes('image') ? 'image': 'video';
+            let media = {
+                event_id:event_id,
+                description_id:description_id,
+                type:type,
+                added_by:username,
+                file:path
+            }
+
+            let event = new eventMedia(media);
+
+            // create the media
+            eventMedia.createMedia(event, function(err, response) {
+                if(err) {
+                    console.log("Error while updating file");
+                    return res.status(500).send(err);
+                }
+
+                console.log("Updated File")
+            });
+
+        });
+    });
 }
 
 exports.updateEventDescription = function(req, res) {

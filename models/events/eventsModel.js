@@ -22,7 +22,7 @@ eventLocationModel.createEvent = function(eventLocation, result) {
 }
 
 eventLocationModel.getAllEvents = function(result) {
-    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
+    connection.query('SELECT * FROM event_location AS el INNER JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
@@ -57,7 +57,7 @@ const eventDescriptionModel = function(eventDescription) {
     this.start_time = eventDescription.start_time, 
     this.end_time = eventDescription.end_time, 
     this.event_description = eventDescription.event_description, 
-    this.is_contribution = event.is_contribution,
+    this.is_contribution = eventDescription.is_contribution,
     this.photo = eventDescription.photo, 
     this.video = eventDescription.video
 };
@@ -99,18 +99,26 @@ eventDescriptionModel.deleteEvent = function(event_id) {
 // Events media files
 var eventMedia = function(media) {
     this.event_id = media.event_id;
+    this.description_id = media.description_id;
     this.added_on = media.added_on;
     this.type = media.type;
     this.media = media.file;
-    this.added_by = event.user;
+    this.added_by = media.added_by;
 }
 
-eventMedia.createMedia = function(eventsMedia) {
+eventMedia.createMedia = function(eventMedia, result) {
     connection.query("INSERT INTO event_media set ?", eventMedia, function(error, response) {
         if(error) throw error;
         result(null, response);
     });
 }
 
-module.exports = { eventLocationModel, eventDescriptionModel}
+eventMedia.updateMedia = function(eventMedia, result) {
+    connection.query("UPDATE INTO event_media set ?", eventMedia, function(error, response) {
+        if(error) throw error;
+        result(null, response);
+    });
+}
+
+module.exports = { eventLocationModel, eventDescriptionModel, eventMedia}
 
