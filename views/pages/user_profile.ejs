@@ -86,7 +86,9 @@
 
         figure {
             margin: 0;
+            cursor: pointer;
         }
+        
         figure img {
             object-fit: cover;
         }
@@ -139,7 +141,7 @@
         <div class="events" id="events">
             <%  for (let event of events ) {%>
                 <figure data-href="/event/<%= event.event_name %>/<%= event.event_id %>/">
-                    <img src="/uploads/images/night_out.jpg" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <img src="<%= event.media.media %>" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
                     <figcaption> <%= event.event_name %> </figcaption>
                 </figure>
             <% } %>
@@ -148,7 +150,7 @@
         <div class="events d-none" id="contributions">
             <%  for (let contribution of contributions ) {%>
                 <figure data-href="/event/<%= contribution.event_name %>/<%= contribution.event_id %>/">
-                    <img src="/uploads/images/clearance_view.PNG" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <img src="<%= contribution.media.media %>" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
                     <figcaption> <%= contribution.event_name %> </figcaption>
                 </figure>
             <% } %>

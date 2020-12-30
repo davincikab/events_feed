@@ -140,17 +140,33 @@ exports.userEvents = function(req, res) {
 
         // user events and contributed events
         // following and followers
-        
-        let context = {
-            user:req.user,
-            section:'user profile',
-            events:results.filter(event => !event.is_contribution),
-            contributions:results.filter(event => event.is_contribution),
-            following:[],
-            followers:[]
-        }
+        eventMedia.getAllMedia(function(err, descriptionMedia) {
+            if(err) {
+                res.send(err);
+            }
 
-        res.render("pages/user_profile", context);
+            // merge media to respective description id
+            results.forEach(event => {
+                let media = descriptionMedia.filter(media => media.description_id == event.description_id);
+                
+                event.media = media ? media.find(md => md.type == 'image') : {};
+                return event;
+            });
+
+            // 
+
+            let context = {
+                user:req.user,
+                section:'user profile',
+                events:results.filter(event => !event.is_contribution),
+                contributions:results.filter(event => event.is_contribution),
+                following:[],
+                followers:[]
+            }
+            
+            // res.send(context);
+            res.render("pages/user_profile", context);
+        });
     });
 }
 
