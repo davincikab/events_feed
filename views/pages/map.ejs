@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Map</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/static/css/design.css">
@@ -14,11 +13,18 @@
     <%- include('../partial/header') %>
     <div id="map"></div>
 
-        <!-- description_id	event_id	added_by	event_name	start_date	end_date	start_time	end_time	event_description	photo	video	 -->
+    
+    <div class="aside-section">
+         <div class="close-btn" onclick="togglePopup(asideSection, 'open')">&times;</div>
+         <section id="aside-section">
+
+         </section>
+    </div>
+
     <div class="popup" id="addEvent">
         <div class="overlay"></div>
         <div class="content">
-            <!-- <div class="close-btn" onclick="togglePopup(addEventDiv, 'active')">&times;</div> -->
+            <div class="close-btn" onclick="togglePopup(addEventDiv, 'active')">&times;</div>
             <h1 class="description-title">Add an event</h1>
             <br>
             <form action="" method="post" id="event-description" enctype="multipart/form-data">
@@ -191,6 +197,7 @@
         </div>
     </div>
 
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
     <link
     rel="stylesheet"

@@ -9,6 +9,50 @@ p {
 	font-family: inherit;
 }
 
+.aside-section {
+	height: 90vh;
+	position: absolute; 
+	width: 360px;
+	left:-370px;
+	background-color: white;
+	z-index: 2;
+	box-shadow: 2px 2px 0.1em #ddd;
+	transition: 0.4s all;
+	overflow-y: scroll;
+	text-align: left;
+	padding: 0.2em;
+}
+
+.aside-section.open {
+	left:0
+}
+
+.aside-section .close-btn {
+	right: 1%;
+    position: absolute;
+    font-size: 1.5em;
+	right: 0;
+	cursor: pointer;
+}
+
+.aside-section p {
+	font-size: 0.9em;
+}
+
+.aside-section .header {
+	box-shadow: 1px 1px 0.2em #ddd;
+	padding: 0.5em 0;
+}
+
+.header h5 {
+	margin: 0;
+	font-size: 1.3em;
+}
+
+.aside-section .info-section {
+	font-size: 0.9em;
+}
+
 #map {
 	height: 90vh;
 	position: absolute; 

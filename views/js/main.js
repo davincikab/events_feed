@@ -10,6 +10,7 @@ var eventDescriptionForm = document.getElementById("event-description");
 var userName = document.getElementById("user-name");
 var descriptionFormTitle = document.querySelector(".description-title");
 var accountSection = document.getElementById("account-section");
+var asideSection = document.querySelector(".aside-section");
 var activePopup;
 var isUpdate = false;
 var isEditMode = false;
@@ -187,19 +188,19 @@ function addEventToMap(event) {
 	// inner content
 	div.innerHTML += 
 		"<div class='popup-header'>"+
-		"<h5>"+event.event_name+"</h5>"+
-		"<p>"+address+"</p>"+
+		"<h5>"+ event.event_name +"</h5>"+
+		"<p>"+ address +"</p>"+
 		"</div>"+
 		"<div class='popup-body'>"+
-		"<p class='item'><b>Start Date</b>"+event.start_date+"</p>"+
-		"<p class='item'><b>End Date</b>"+event.end_date+"</p>"+
-		"<p class='item'><b>Time</b>"+event.start_time+ " - "+event.end_time+"</p>"+
-		"<p class='item'><b>Added by </b>"+event.added_by+"</p>"+
-		"<p class='description'><b>Description</b><br>"+event.event_description+"</p>"+
+		"<p class='item'><b>Start Date</b>" + event.start_date + "</p>"+
+		"<p class='item'><b>End Date</b>" + event.end_date + "</p>"+
+		"<p class='item'><b>Time</b>" + event.start_time +  " - " + event.end_time + "</p>"+
+		"<p class='item'><b>Added by </b>" + event.added_by + "</p>"+
+		"<p class='description'><b>Description</b><br>"+event.event_description + "</p>"+
 		"<div class='media-section'>"+
-		"<img src='"+event.photo+"'>"+
+		"<img src='"+ event.photo +"'>"+
 		"<video width='100%' height='120' controls>"+
-		"<source src='"+event.video+"' type='video/mp4'>"+
+		"<source src='" + event.video +"' type='video/mp4'>"+
 		"Your browser does not support the video tag."+
 		"</video>"+
 		"<div>"+
@@ -214,7 +215,11 @@ function addEventToMap(event) {
 
 	button.innerHTML = "Read more ...";
 	$(button).on("click", function(e) {
-		expandPopup();
+		// expandPopup();
+
+		// update the aside section
+		$('.aside-section').toggleClass("open");
+		updateAsideSection(event, address);
 	});
 
 	docFrag.appendChild(button);
@@ -330,7 +335,76 @@ function expandPopup(e) {
 	}
 	// update the class expand
 	popup.toggleClass("expand-popup");
-	
+
+	// hide side-section
+}
+
+// update aside section
+function updateAsideSection(event, address) {
+	function getPhotos(event) {
+		return event.media.map(media => {
+			if(media.type == 'image') {
+				return "<img src='"+ media.media +"'>";
+			}
+		});
+	}
+
+	function getVideos(event) {
+		return event.media.map(media => {
+			if(media.type == 'video') {
+				return "<video width='100%' height='120' controls>"+
+				"<source src='" + media.media +"' type='video/mp4'>"+
+				"Your browser does not support the video tag."+
+				"</video>";
+			}
+		});
+	}
+
+	let html = 
+	"<div class='header'>"+
+	"<h5>"+ event.event_name +"</h5>"+
+	"<p>"+ address +"</p>"+
+	"</div>"+
+	"<div class='info-section'>"+
+	"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
+	"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
+	"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
+	"<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
+	"<p class='description'><b>Description</b><p>"+event.event_description + "</p></p>"+
+	"</div>" +
+	"<div class='media-section'>"+
+	"<div class='images'>"+
+		getPhotos(event).join("") +
+	"</div>"+
+		getVideos(event).join("") +
+	"<div>"+
+	"</div>";
+
+	// contribution
+	let contributionString = "";
+	event.contribution.forEach(contribution => {
+		let htmlString = "<div class='section'>" +
+			"<p>" + contribution.added_by + " says </p>" +
+			"<div class='info-section'>"+
+				"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
+				"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
+				"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
+				"<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
+				"<p class='description'><b>Description</b><p>"+event.event_description + "</p></p>"+
+			"</div>" +
+			"<div class='media-section'>"+
+				"<div class='images'>"+
+					getPhotos(contribution).join("") +
+				"</div>"+
+					getVideos(contribution).join("") +
+				"<div>"+
+			"<div>"+
+			"</div>";
+
+			contributionString += htmlString;
+	});
+
+	$("#aside-section").html(html + contributionString );
 }
 
 function updateEventMarkers() {
