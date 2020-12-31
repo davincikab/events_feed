@@ -68,6 +68,9 @@
             font-size: 0.9em;
         }
 
+        .text-content p {
+            justify-content: space-between;
+        }
         @media(min-width:50em) {
             .container {
                 font-size: 0.9em;
@@ -94,14 +97,14 @@
     </div>
     
     <div class="container">
-        <div class="text content">
+        <div class="text-content">
             <h4 class="mb-0">Event Details</h4>
             <p class="d-flex">
-                Event Location <b> <%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %></b>
+                <b>Address</b> <p><%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %></p>
             </p>
 
-            <p class="d-flex">Start Date  <b> <%= event.start_date %></b> at  <%= event.start_time %></p>
-            <p class="d-flex">End Date  <b> <%= event.start_date %></b> at  <%= event.end_time %></p>
+            <p class="d-flex"><b>Start Date</b>  <p> <%= event.start_date %> at  <%= event.start_time %></p></p>
+            <p class="d-flex"><b>End Date</b>  <p> <%= event.start_date %> at  <%= event.end_time %></p></p>
 
             <h4 class="mb-0">Event Description</h4>
             <p class="my-0">

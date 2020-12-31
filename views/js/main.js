@@ -12,6 +12,7 @@ var descriptionFormTitle = document.querySelector(".description-title");
 var accountSection = document.getElementById("account-section");
 var activePopup;
 var isUpdate = false;
+var isEditMode = false;
 
 var eventLocation = {
 	street_number:"",
@@ -72,7 +73,10 @@ map.on('load', function(e) {
 		let address = location.lat +", "+ location.lng;
 		console.log(address);
 
-		triggerGeocode(address);
+		if(isEditMode) {
+			triggerGeocode(address);
+		}
+		
 	});
 });
 
@@ -343,6 +347,7 @@ var addEventButton = document.getElementById("add-event");
 
 $(addEventButton).on("click", function(e) {
 	map.getCanvas().style.cursor = "url(/static/img/add_button.png), auto";
+	isEditMode = true;
 });
 
 $(updateEventButton).on("click", function(e) {
@@ -694,6 +699,8 @@ $(eventDescriptionForm).on("submit", function(e) {
 			// toggle the form
 			// togglePopup(addEventDiv, "active");
 			
+			map.getCanvas().style.cursor = "";
+			isEditMode = false;
 		},
 		error:function(error) {
 			// alert("error");
@@ -754,7 +761,18 @@ function myEvents(){
 
 //________________________________________________________ Helper function ________________________________________________
 function togglePopup(element, toggleClass="active") {
+	
 	element.classList.toggle(toggleClass);
+
+	// check 
+	if(element == confirmLocation && !element.classList.contains("active")) {
+		toggleEditMode();
+	}
+}
+
+function toggleEditMode() {
+	map.getCanvas().style.cursor = "";
+	isEditMode = false;
 }
 
 function triggerGeocode(address) {

@@ -36,7 +36,7 @@ p {
     background-color: #000e69;
     display: flex;
     justify-content: flex-start;
-	align-items: center;
+	align-items: flex-start;
 	padding:0.4em 0em;
 }
 
@@ -45,6 +45,7 @@ p {
 	font-weight: 700;
 	color: #a87619; 
 }
+
 .top-bar h1 {
 	font-size: 1.7em; 
 	color: #a87619; 
@@ -52,10 +53,34 @@ p {
 	display: none;
 }
 
+.navbar-toggler {
+	position: absolute;
+	top: 0.5%;
+    right: 0;
+    font-size: 1.3em;
+}
+
+.navbar-toggler:hover {
+	background-color: transparent !important;
+}
+
+.top-bar, .head-menu, .user-account{
+	display: flex;
+	flex-direction:column;
+}
+
 .head-menu {
-	display: inline-block;
 	z-index: 3;
-	width: 90%;
+	width: 100%;
+	display: none;
+}
+
+.head-menu.open {
+	display: block;
+}
+
+.nav-item {
+	width:100%;
 }
 
 .menu {position: fixed; right: 20px; top: 5px; }
@@ -279,13 +304,13 @@ p {
 }
 
 .custom-marker img {
-	height: 30px;
+	height: 35px;
 }
 
 .custom-marker .user-count {
     position: absolute;
-    top: 12%;
-    left: 21%;
+	top: 15%;
+    left: 25%;
     font-size: 1em;
     color: white;
     height: 15px;
@@ -436,9 +461,25 @@ table {
 @media(min-width:50em) {
 	.top-bar {
 		justify-content: flex-start;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.navbar-toggler {
+		display: none;
+	}
+
+	.head-menu {
+		display: inline-block;
+		flex-direction: row;
+	}
+
+	.nav-item {
+		width: auto;
 	}
 
 	.user-account {
+		display: block;
 		position: absolute;
     	right: 2%;
 	}

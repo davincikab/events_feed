@@ -1,5 +1,7 @@
 <nav class="top-bar">
     <a href="/" class="h1">World Map</a>
+
+    <button class="navbar-toggler"><i class="fa fa-bars"></i></button>
     <div class="head-menu">    
         <% if (typeof user != 'undefined') {%>
             <% if (section == 'map') {%>
@@ -27,3 +29,12 @@
         
     </div>
 </nav>
+
+<script>
+    let toggler = document.querySelector('.navbar-toggler');
+    var menu = document.querySelector('.head-menu');
+
+    $(toggler).on("click", function(e) {
+        menu.classList.toggle("open");
+    });
+</script>
