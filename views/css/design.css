@@ -77,10 +77,12 @@ p {
 
 .head-menu.open {
 	display: block;
+	border-top: 1px solid white
 }
 
 .nav-item {
 	width:100%;
+	font-size: 1.2em;
 }
 
 .menu {position: fixed; right: 20px; top: 5px; }
@@ -476,6 +478,7 @@ table {
 
 	.nav-item {
 		width: auto;
+		font-size: 1em;
 	}
 
 	.user-account {

@@ -27,9 +27,8 @@
             overflow-x: hidden; */
         }
         .profile-header {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            grid: 1em;
+            display: flex;
+            flex-direction: column;
         }
 
         .profile-header {
@@ -41,6 +40,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .account-info {
+            margin-top: 1em;
         }
 
         .image-section img {
@@ -57,8 +60,14 @@
             align-items: flex-end;
         }
 
+        .account-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr) );
+            margin:0.5em 0;
+        }
+
         .account-stats p {
-            margin: 0 1em;
+            margin: 0;
         }
 
         .event-tab {
@@ -79,7 +88,7 @@
         .events {
             display:grid;
             grid-gap: 2px;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr) ) ;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr) ) ;
             background-color: #fff;
             margin: 1em 0;
         }
@@ -90,9 +99,39 @@
         }
         
         figure img {
+            height: 150px;
+            width:100%;
             object-fit: cover;
+            border-radius: 4px;
         }
 
+        @media (min-width: 50em) {
+            .profile-header {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                grid: 1em;
+            }   
+
+            .account-stats {
+                display: flex;
+            }
+            .account-stats p {
+                margin: 0;
+            }
+
+            .events {
+                display:grid;
+                grid-gap: 2px;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr) ) ;
+                background-color: #fff;
+                margin: 1em 0;
+            }
+            figure img {
+                width:240px; 
+                height: 200px;
+                object-fit: cover;
+            }
+        }
         
     </style>
 </head>
@@ -141,7 +180,7 @@
         <div class="events" id="events">
             <%  for (let event of events ) {%>
                 <figure data-href="/event/<%= event.event_name %>/<%= event.event_id %>/">
-                    <img src="<%= event.media.media %>" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <img src="<%= event.media.media %>" alt="Trulli" style="">
                     <figcaption> <%= event.event_name %> </figcaption>
                 </figure>
             <% } %>
@@ -150,7 +189,7 @@
         <div class="events d-none" id="contributions">
             <%  for (let contribution of contributions ) {%>
                 <figure data-href="/event/<%= contribution.event_name %>/<%= contribution.event_id %>/">
-                    <img src="<%= contribution.media.media %>" alt="Trulli" style="width:240px; height: 200px; border-radius: 4px;">
+                    <img src="<%= contribution.media.media %>" alt="Trulli" style="">
                     <figcaption> <%= contribution.event_name %> </figcaption>
                 </figure>
             <% } %>
