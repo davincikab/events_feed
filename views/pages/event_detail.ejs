@@ -71,6 +71,13 @@
         .text-content p {
             justify-content: space-between;
         }
+
+        .title {
+            font-size: 1.1em;
+            font-weight: bolder;
+            text-transform: capitalize;
+        }
+
         @media(min-width:50em) {
             .container {
                 font-size: 0.9em;
@@ -93,7 +100,7 @@
     <%- include('../partial/header') %>
     <div class="text-center mt-5">
         <h2 class="text-center"><%= event.event_name %></h2>
-        <small>Posted By <%= event.added_by %>  on <%= event.start_date %></small>
+        <small>Posted By <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>  on <%= event.start_date %></small>
     </div>
     
     <div class="container">
@@ -147,7 +154,9 @@
     <%  for (let event of contribution ) {%>
         <div class="container">
             <div class="text-content">
-                <p><%= event.added_by %> says  
+                <p class="title">
+                    <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>
+                     says  
                 </p>
 
                 <p class="d-flex">Start Date  <b> <%= event.start_date %></b> at  <%= event.start_time %></p>
@@ -159,7 +168,7 @@
                 </p>
 
                 <div class="mt-1">
-                    <% if ( user.username == event.added_by) {%>
+                    <% if (user.username == event.added_by) {%>
                         <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2">Update</a>
                     <%} %>
                 </div>

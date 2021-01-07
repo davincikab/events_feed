@@ -362,14 +362,19 @@ function updateAsideSection(event, address) {
 
 	let html = 
 	"<div class='header'>"+
-	"<h5>"+ event.event_name +"</h5>"+
+	"<h5> <a href='/event/"+ event.event_name +"/"+ event.event_id +"/'>"+ event.event_name +"</a></h5>"+
 	"<p>"+ address +"</p>"+
 	"</div>"+
 	"<div class='info-section'>"+
 	"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
 	"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
 	"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
-	"<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
+	// "<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
+
+	"<p class='item'><b>Added by </b>" +
+		"<p><a class='link' id='user-name' href='/user_profile/" + event.added_by +"/'>"  + event.added_by + "</a></p>" +
+	"</p>" +
+
 	"<p class='description'><b>Description</b><p>"+event.event_description + "</p></p>"+
 	"</div>" +
 	"<div class='media-section'>"+
@@ -380,17 +385,26 @@ function updateAsideSection(event, address) {
 	"<div>"+
 	"</div>";
 
+	html += "<h4 class='text-center'>Contribution</h5>"
 	// contribution
 	let contributionString = "";
 	event.contribution.forEach(contribution => {
 		let htmlString = "<div class='section'>" +
-			"<p>" + contribution.added_by + " says </p>" +
+			"<p class='title'>" +
+				"<a class='link' id='user-name' href='/user_profile/" + contribution.added_by +"/'>"  + contribution.added_by + "</a>"  +
+				"says"+
+			"</p>" +
+
 			"<div class='info-section'>"+
-				"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
-				"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
-				"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
-				"<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
-				"<p class='description'><b>Description</b><p>"+event.event_description + "</p></p>"+
+				"<p class='item'><b>Start Date</b><p>" +contribution.start_date + "</p></p>"+
+				"<p class='item'><b>End Date</b><p>" +contribution.end_date + "</p></p>"+
+				"<p class='item'><b>Time</b><p>" +contribution.start_time +  " - " +contribution.end_time + "</p></p>"+
+
+				"<p class='item'><b>Added by </b>" +
+					"<p><a class='link' id='user-name' href='/user_profile/'" + contribution.added_by +"'/>"  + contribution.added_by + "</a></p>" +
+				"</p>" +
+
+				"<p class='description'><b>Description</b><p>"+ contribution.event_description + "</p></p>"+
 			"</div>" +
 			"<div class='media-section'>"+
 				"<div class='images'>"+

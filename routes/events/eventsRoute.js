@@ -12,7 +12,7 @@ router.get("/event/:event_name/:event_id/", events.getEventById);
 router.get("/event/update/:event_name/:description_id/", events.getEventDescription);
 
 // description path
-router.post("/create_event_description/", events.createEventDescription);
+router.post("/create_event_description/", isAuthenticated, events.createEventDescription);
 router.post("/update_event_description/", isAuthenticated, events.updateEventDescription);
 
 // default path

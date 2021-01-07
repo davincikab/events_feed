@@ -30,7 +30,7 @@ exports.getAllEvents = function(req, res) {
             // combine the two datasets
             for (const key in allEvents) {
                 let event = allEvents[key]
-                console.log(event);
+                // console.log(event);
                 event.forEach(ev => {
                     let media = descriptionMedia[ev.description_id];
 
@@ -60,27 +60,6 @@ exports.getAllEvents = function(req, res) {
             res.send(eventsArray);
         });
 
-        // specify other 
-        // let allEvents = [];
-        // let event_ids = events.map(event => event.event_id);
-        // event_ids = [... new Set(event_ids)];
-
-        // event_ids.forEach(eventId => {
-
-        // });
-
-        // events.forEach(event => {
-        //     let myEvent = allEvents.find(singleEvent => event.event_id == singleEvent.event_id);
-        //     if(myEvent) {
-        //         myEvent.contribution.push(event)
-        //         myEvent.media
-        //     } else {
-        //         event.contribution = [];
-        //         // event.media = []
-        //         allEvents.push(event);
-        //     }
-            
-        // });
     });
 }
 
@@ -148,16 +127,8 @@ exports.getEventById = function(req, res) {
 
 // event description
 exports.createEventDescription = function(req, res) {
-    // console.log(req.body);
-    // console.log(req.files.photo.name);
-    // console.log("Files");
-    // let imagePath = './uploads/images/' + req.files.photo0.name;
-    // let imageFile = req.files.photo0;
-
-    // let videoPath = './uploads/videos/' + req.files.video.name;
-    // let videoFile = req.files.video;
-
     let imageFiles = Object.values(req.files);
+
     let { event_id } = req.body;
     let { username } = req.user;
 
@@ -176,78 +147,48 @@ exports.createEventDescription = function(req, res) {
         // 
         insertMediaFiles(response.insertId, imageFiles, event_id, username);
         res.send(response);
-    });
-
-//     videoFile.mv(videoPath, function(err) {
-//         if(err) {
-//             return res.status(500).send(err);
-//         }
-
-//         imageFile.mv(imagePath, function(err) {
-//             if(err) {
-//                 return res.status(500).send(err);
-//             } 
-    
-//             // create event description instance
-//             let eventDescription = new eventDescriptionModel(req.body);
-    
-//             // update event description properties
-//             eventDescription.photo = imagePath;
-//             eventDescription.video = videoPath;
-//             eventDescription.added_by = req.user.username;
-//             eventDescription.is_contribution = false;
-    
-//             console.log(eventDescription);
-    
-//             // update the description object
-//             eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
-//                 if(err) {
-//                     res.send(err);
-//                 }
-                
-//                 console.log(response);
-//                 // 
-//                 insertMediaFiles(response.insertId, imageFiles, req.body.event_id, req.user.username);
-//                 res.send(response);
-//             });
-//         });
-//     });
-
-  
+    });  
 }
 
 function insertMediaFiles(description_id, imageFiles, event_id, username) {
     console.log("Saving Media Files");
 
-    imageFiles.forEach(image => {
-        let path = './uploads/images/' + image.name;
+    return eventMedia.deleteMedia(description_id, function(err, response) {
+        if(err) {
+            return;
+        }
 
-        image.mv(path, function(err) {
-            if(err) {
-                return res.status(500).send(err);
-            }
+        imageFiles.forEach(image => {
+            let path = './uploads/images/' + image.name;
 
-            let type = image.mimetype.includes('image') ? 'image': 'video';
-            let media = {
-                event_id:event_id,
-                description_id:description_id,
-                type:type,
-                added_by:username,
-                file:path
-            }
-
-            let event = new eventMedia(media);
-
-            // create the media
-            eventMedia.createMedia(event, function(err, response) {
+            image.mv(path, function(err) {
                 if(err) {
-                    console.log("Error while updating file");
-                    return res.status(500).send(err);
+                    console.log(err);
+                    return ;
                 }
 
-                console.log("Updated File")
-            });
+                let type = image.mimetype.includes('image') ? 'image': 'video';
+                let media = {
+                    event_id:event_id,
+                    description_id:description_id,
+                    type:type,
+                    added_by:username,
+                    file:path
+                }
 
+                let event = new eventMedia(media);
+
+                // create the media
+                eventMedia.createMedia(event, function(err, response) {
+                    if(err) {
+                        console.log("Error while updating file");
+                        return res.status(500).send(err);
+                    }
+
+                    console.log("Updated File")
+                });
+
+            });
         });
     });
 }
@@ -263,6 +204,7 @@ exports.updateEventDescription = function(req, res) {
     // let videoFile = req.files.video;
 
     let imageFiles = Object.values(req.files);
+    console.log(imageFiles);
 
     let eventDescription = new eventDescriptionModel(req.body);
     let { description_id, event_id }= req.body;
@@ -273,41 +215,9 @@ exports.updateEventDescription = function(req, res) {
             res.send(err);
         }
 
-        deleteMediaFiles(description_id);
         insertMediaFiles(description_id, imageFiles, event_id, username);
         res.send(response);
     });
-
-    // videoFile.mv(videoPath, function(err) {
-    //     if(err) {
-    //         return res.status(500).send(err);
-    //     }
-
-    //     // move file to directory on your server
-    //     imageFile.mv(imagePath, function(err) {
-    //         if(err) {
-    //             return res.status(500).send(err);
-    //         } 
-
-    //         // event description instance
-    //         let eventDescription = new eventDescriptionModel(req.body);
-
-    //         // update event description properties
-    //         eventDescription.photo = imagePath;
-    //         eventDescription.video = eventDescription.video = videoPath;
-
-    //         let description_id = req.body.description_id;
-
-    //         // update the description object
-    //         eventDescriptionModel.updateEventDescription(eventDescription, description_id, function(err, response){
-    //             if(err) {
-    //                 res.send(err);
-    //             }
-        
-    //             res.send(response);
-    //         });
-    //     });
-    // });
 }
 
 exports.getEventDescription = function(req, res) {
@@ -331,16 +241,4 @@ exports.getEventDescription = function(req, res) {
         res.render('pages/update_event', context);
     });
 
-    
-}
-// delete media files before update
-function deleteMediaFiles(description_id) {
-    eventMedia.deleteMedia(description_id, function(err, response) {
-        if(err) {
-            // res.send(err);
-            return;
-        }
-
-        return;
-    });
 }

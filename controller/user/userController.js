@@ -127,9 +127,9 @@ exports.post_login = function(req, res, next) {
 }
     
 exports.userEvents = function(req, res) {
-    let user = req.user;
+    let username = req.params.username;
 
-    eventLocationModel.getEventByUser(user.username, function(err, events) {
+    eventLocationModel.getEventByUser(username, function(err, events) {
         if(err) {
             res.send(err);
         }
@@ -155,17 +155,25 @@ exports.userEvents = function(req, res) {
 
             // 
 
-            let context = {
-                user:req.user,
-                section:'user profile',
-                events:results.filter(event => !event.is_contribution),
-                contributions:results.filter(event => event.is_contribution),
-                following:[],
-                followers:[]
-            }
-            
-            // res.send(context);
-            res.render("pages/user_profile", context);
+            userModel.findUserByUsername(username, function(err, userprofile) {
+                if(err) {
+                    res.send(err);
+                }
+
+                let context = {
+                    user:req.user,
+                    userprofile:userprofile[0],
+                    section:'user profile',
+                    events:results.filter(event => !event.is_contribution),
+                    contributions:results.filter(event => event.is_contribution),
+                    following:[],
+                    followers:[]
+                }
+                
+                // res.send(context);
+                res.render("pages/user_profile", context);
+            });
+
         });
     });
 }

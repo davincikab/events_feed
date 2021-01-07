@@ -13,7 +13,7 @@ userRouter.get("/logout", function(req, res) {
     res.redirect("/login")
 });
 
-userRouter.get("/user_profile", isAuthenticated, user.userEvents);
+userRouter.get("/user_profile/:username/", isAuthenticated, user.userEvents);
 
 userRouter.post("/login", user.post_login);
 

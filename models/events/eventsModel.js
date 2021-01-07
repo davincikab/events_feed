@@ -78,7 +78,7 @@ eventDescriptionModel.updateEventDescription = function(eventDescription, descri
     console.log(values);
 
      // file upload
-     connection.query("UPDATE event_description SET event_id=?,added_by=?,event_name=?,start_date=?,end_date=?,start_time=?,end_time=?,event_description=?,photo=?,video=? WHERE description_id = ?", [...values, description_id], function (error, results, fields) {
+     connection.query("UPDATE event_description SET ? WHERE description_id = ?", [eventDescription, description_id], function (error, results, fields) {
         if (error) throw error;
         console.log('The solution is: ', results);
 

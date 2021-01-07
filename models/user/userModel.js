@@ -31,6 +31,15 @@ userModel.findOne = function(username, email, result) {
     });
 }
 
+userModel.findUserByUsername = function(username, result) {
+    connection.query('SELECT username, email, country, account_type FROM users WHERE username = ?', [username], function(err, response) {
+        if(err) throw err;
+
+        console.log(response);
+        result(null, response);
+    });
+}
+
 userModel.findById = function(user_id, result) {
     connection.query('SELECT * FROM users WHERE user_id = ?', user_id, function(err, response) {
         if(err) throw err;

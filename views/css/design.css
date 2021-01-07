@@ -184,6 +184,10 @@ p {
     cursor: pointer;
   }
 
+  .link {
+	color:#000e69 !important;
+  }
+
 
   input, textarea {	  
 	  display: block;
@@ -418,10 +422,13 @@ p {
 .btn {
 	/* background-color: #000e69; */
 	color:#a87619;
-	padding:0.2em 0.5em;
 	cursor: pointer;
-	margin:4px 0px;
-	border-radius: 2px;
+	margin:4px 0px;	
+	padding: 0.375rem 0.75rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	border-radius: 0.25rem;
+  
 }
 
 .media-section img{

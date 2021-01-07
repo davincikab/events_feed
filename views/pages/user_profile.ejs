@@ -116,7 +116,7 @@
                 display: flex;
             }
             .account-stats p {
-                margin: 0;
+                margin: 0 0.5em;;
             }
 
             .events {
@@ -146,9 +146,11 @@
 
             <div class="account-info">
                 <div class="d-flex section-username">
-                    <h3 class="my-0 mr-1"><%= user.username %></h3>
-                    <button class="bg-brand ml-1">Follow</button>
-                    <button class="bg-brand ml-1"><i class="fa fa-lock mr-1"></i>Message</button>
+                    <h3 class="my-0 mr-1"><%= userprofile.username %></h3>
+                    <% if (user.username != userprofile.username) {%>
+                        <button class="bg-brand ml-1">Follow</button>
+                        <button class="bg-brand ml-1"><i class="fa fa-lock mr-1"></i>Message</button>
+                    <%} %>
                 </div>
 
                 <div class="d-flex account-stats">
@@ -180,7 +182,7 @@
         <div class="events" id="events">
             <%  for (let event of events ) {%>
                 <figure data-href="/event/<%= event.event_name %>/<%= event.event_id %>/">
-                    <img src="<%= event.media.media %>" alt="Trulli" style="">
+                    <img src="../.<%= event.media.media %>" alt="Trulli" style="">
                     <figcaption> <%= event.event_name %> </figcaption>
                 </figure>
             <% } %>
@@ -189,7 +191,7 @@
         <div class="events d-none" id="contributions">
             <%  for (let contribution of contributions ) {%>
                 <figure data-href="/event/<%= contribution.event_name %>/<%= contribution.event_id %>/">
-                    <img src="<%= contribution.media.media %>" alt="Trulli" style="">
+                    <img src="../.<%= contribution.media.media %>" alt="Trulli" style="">
                     <figcaption> <%= contribution.event_name %> </figcaption>
                 </figure>
             <% } %>
