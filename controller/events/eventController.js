@@ -255,8 +255,6 @@ exports.addEventDescription = function(req, res) {
                 end_time:'',
                 event_description:'',
                 is_contribution:1,
-                photo:'',
-                video:''
             }
         }
 

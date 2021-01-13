@@ -57,9 +57,7 @@ const eventDescriptionModel = function(eventDescription) {
     this.start_time = eventDescription.start_time, 
     this.end_time = eventDescription.end_time, 
     this.event_description = eventDescription.event_description, 
-    this.is_contribution = eventDescription.is_contribution,
-    this.photo = eventDescription.photo, 
-    this.video = eventDescription.video
+    this.is_contribution = eventDescription.is_contribution
 };
 
 eventDescriptionModel.createEventDescription = function(eventDescription, result) {
