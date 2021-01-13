@@ -78,9 +78,15 @@
             text-transform: capitalize;
         }
 
+        .update-section {
+            justify-content: center;
+            padding:0.3em 0.6em;
+        }
+
         @media(min-width:50em) {
             .container {
-                font-size: 0.9em;
+                font-size: 1em;
+                line-height: 1.6;
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-gap: 1em;
@@ -120,7 +126,7 @@
 
             <div class="mt-1">
                 <% if ( user.username == event.added_by) {%>
-                    <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2">Update</a>
+                    <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
                 <%} %>
             </div>
         </div>
@@ -169,7 +175,7 @@
 
                 <div class="mt-1">
                     <% if (user.username == event.added_by) {%>
-                        <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2">Update</a>
+                        <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
                     <%} %>
                 </div>
                 
@@ -203,5 +209,20 @@
             </div>
         </div>
     <%} %>
+
+    <div class="update-section d-flex d-none">
+        <div class="mt-1">
+            <a href="/event/add-description/<%= event.event_name %>/<%= event.event_id %>" class="btn bg-brand mt-2">Add description</a>
+        </div>
+    </div>
+    <script>
+        // hide or display the update event button
+        let updateButton = document.querySelector(".update-btn");
+        if(!updateButton) {
+            let updateSection = document.querySelector(".update-section");
+            updateSection.classList.toggle("d-none");
+        }
+
+    </script>
 </body>
 </html>

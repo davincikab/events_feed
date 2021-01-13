@@ -195,14 +195,14 @@ function addEventToMap(event) {
 		"<p class='item'><b>Start Date</b>" + event.start_date + "</p>"+
 		"<p class='item'><b>End Date</b>" + event.end_date + "</p>"+
 		"<p class='item'><b>Time</b>" + event.start_time +  " - " + event.end_time + "</p>"+
-		"<p class='item'><b>Added by </b>" + event.added_by + "</p>"+
-		"<p class='description'><b>Description</b><br>"+event.event_description + "</p>"+
-		"<div class='media-section'>"+
-		"<img src='"+ event.photo +"'>"+
-		"<video width='100%' height='120' controls>"+
-		"<source src='" + event.video +"' type='video/mp4'>"+
-		"Your browser does not support the video tag."+
-		"</video>"+
+		"<p class='item'><b>Added by </b><a class='link' id='user-name' href='/user_profile/" + event.added_by +"/'>"  + event.added_by + "</a></p>"+
+		// "<p class='description'><b>Description</b><br>"+event.event_description + "</p>"+
+		// "<div class='media-section'>"+
+		// "<img src='"+ event.photo +"'>"+
+		// "<video width='100%' height='120' controls>"+
+		// "<source src='" + event.video +"' type='video/mp4'>"+
+		// "Your browser does not support the video tag."+
+		// "</video>"+
 		"<div>"+
 		"</div>";
 
@@ -210,7 +210,7 @@ function addEventToMap(event) {
 
 	// read more / read less button
 	let button = document.createElement("span");
-	button.classList.add("btn");
+	button.classList.add("btn","btn-link");
 	button.id = "read-more";
 
 	button.innerHTML = "Read more ...";
@@ -225,7 +225,7 @@ function addEventToMap(event) {
 	docFrag.appendChild(button);
 
 	let detailLink = document.createElement("a");
-	detailLink.classList.add("btn");
+	detailLink.classList.add("btn-link");
 
 	detailLink.innerHTML = "Visit Webpage";
 	detailLink.href = "event/" + event.event_name + "/" + event.event_id;
@@ -360,6 +360,9 @@ function updateAsideSection(event, address) {
 		});
 	}
 
+	// event update link
+	let descriptionLink = userName.innerText == event.added_by ? "<a class='link btn bg-brand' id='user-name' href='/event/update/" + event.event_name + "/" + event.description_id +"/'>Update</a>" : ""
+	
 	let html = 
 	"<div class='header'>"+
 	"<h5> <a href='/event/"+ event.event_name +"/"+ event.event_id +"/'>"+ event.event_name +"</a></h5>"+
@@ -384,11 +387,14 @@ function updateAsideSection(event, address) {
 		getVideos(event).join("") +
 	"<div>"+
 	"</div>";
+	html += descriptionLink;
 
 	html += "<h4 class='text-center'>Contribution</h5>"
 	// contribution
 	let contributionString = "";
 	event.contribution.forEach(contribution => {
+		let descrLink = userName.innerText == contribution.added_by ? "<a class='link btn bg-brand' id='user-name' href='/event/update/" + contribution.event_name + "/" + contribution.description_id +"/'>Update</a>" : ""
+		
 		let htmlString = "<div class='section'>" +
 			"<p class='title'>" +
 				"<a class='link' id='user-name' href='/user_profile/" + contribution.added_by +"/'>"  + contribution.added_by + "</a>"  +
@@ -413,7 +419,8 @@ function updateAsideSection(event, address) {
 					getVideos(contribution).join("") +
 				"<div>"+
 			"<div>"+
-			"</div>";
+			"</div> " + descrLink;
+
 
 			contributionString += htmlString;
 	});
@@ -855,6 +862,7 @@ function togglePopup(element, toggleClass="active") {
 	// check 
 	if(element == confirmLocation && !element.classList.contains("active")) {
 		toggleEditMode();
+		$('#aside-section').html("");
 	}
 }
 

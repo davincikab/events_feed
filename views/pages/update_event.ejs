@@ -70,9 +70,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 		eventDescription[name] = datum.value; 
 	});
 
-	// 
-	let url = '/update_event_description/';
-
+	// event data
     eventDescription.event_id = parseInt("<%= event.event_id %>");
 	eventDescription.description_id = parseInt("<%= event.description_id %>");
 	eventDescription.added_by = "<%= user.username %>";
@@ -106,6 +104,9 @@ $(eventDescriptionForm).on("submit", function(e) {
 	// fd.append('video',video);
 
 	console.log(fd);
+
+	// submit url
+	let url = eventDescription.description_id ? '/update_event_description/' : '/create_event_description/';
 
 	// submit the data
 	$.ajax({

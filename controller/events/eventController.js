@@ -135,7 +135,6 @@ exports.createEventDescription = function(req, res) {
     console.log("Create a Description");
     console.log(req.body);
     let eventDescription = new eventDescriptionModel(req.body);
-    // eventDescription.is_contribution = eventDescription.contribution != undefined ? eventDescription.is_contribution : false;
 
     // update the description object
     eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
@@ -194,15 +193,6 @@ function insertMediaFiles(description_id, imageFiles, event_id, username) {
 }
 
 exports.updateEventDescription = function(req, res) {
-    // console.log(req.body);
-    // console.log(req.files.photo.name);
-
-    // let imagePath = './uploads/images/' + req.files.photo.name;
-    // let imageFile = req.files.photo;
-
-    // let videoPath = './uploads/videos/' + req.files.video.name;
-    // let videoFile = req.files.video;
-
     let imageFiles = Object.values(req.files);
     console.log(imageFiles);
 
@@ -241,4 +231,35 @@ exports.getEventDescription = function(req, res) {
         res.render('pages/update_event', context);
     });
 
+}
+
+exports.addEventDescription = function(req, res) {
+    let { event_name, event_id } = req.params;
+
+    eventLocationModel.getEventById(event_name, event_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }
+
+        console.log(results);
+
+        let context = {
+            user:req.user,
+            section:'Creat Event',
+            event:{
+                event_name:results[0].event_name,
+                event_id:results[0].event_id,
+                start_time:'',
+                start_date:'',
+                end_date:'',
+                end_time:'',
+                event_description:'',
+                is_contribution:1,
+                photo:'',
+                video:''
+            }
+        }
+
+        res.render('pages/update_event', context);
+    });
 }

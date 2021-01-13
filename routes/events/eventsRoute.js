@@ -10,6 +10,7 @@ router.get("/events", events.getAllEvents);
 router.post("/create_event_location/", events.createEventLocation);
 router.get("/event/:event_name/:event_id/", events.getEventById);
 router.get("/event/update/:event_name/:description_id/", events.getEventDescription);
+router.get("/event/add-description/:event_name/:event_id/", events.addEventDescription);
 
 // description path
 router.post("/create_event_description/", isAuthenticated, events.createEventDescription);
