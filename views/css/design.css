@@ -126,6 +126,14 @@ p {
 	border-top: 1px solid white
 }
 
+.badge {
+	background-color: #dd0000;
+	color:white;
+	font-size: 0.7em;
+	padding:0.2em 0.4em;
+	border-radius: 50%;
+}
+
 .nav-item {
 	width:100%;
 	font-size: 1.2em;
@@ -561,12 +569,17 @@ table {
 
 	.head-menu {
 		width: 65%;
-		align-items: center;
-		display: flex;
+		/* align-items: center; */
+		/* display: flex; */
 		/* justify-content: space-evenly; */
 		margin-left: 10%;
 	}
 
+	.user-menu {
+		align-items: center;
+		display: flex;
+		justify-content: space-evenly;
+	}
 	.head-menu .search-tab {
 		width:50%;
 	}

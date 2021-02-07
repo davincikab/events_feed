@@ -125,6 +125,17 @@ exports.post_login = function(req, res, next) {
         failureFlash : true,
     })(req,res,next);
 }
+
+exports.getAllUsers = function(req, res) {
+    // create the event location
+    userModel.getAllUsers(eventLocation, function(err, response) {
+        if(err) {
+            res.send(err);
+        }
+
+        res.send(response);
+    });
+}
     
 exports.userEvents = function(req, res) {
     let username = req.params.username;

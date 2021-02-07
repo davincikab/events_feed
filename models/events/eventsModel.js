@@ -22,7 +22,25 @@ eventLocationModel.createEvent = function(eventLocation, result) {
 }
 
 eventLocationModel.getAllEvents = function(result) {
-    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id', function (error, results, fields) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id ', function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
+eventLocationModel.getPostedEvents = function(result) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.is_posted=? AND ed.is_published=?',[true, true], function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
+eventLocationModel.getUnPostedEvents = function(result) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.is_posted=? AND ed.is_contribution=?',[false, false], function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
@@ -41,6 +59,15 @@ eventLocationModel.getEventById = function(title, event_id, result) {
 
 eventLocationModel.getEventByUser = function(user, result) {
     connection.query('SELECT * FROM event_description AS el WHERE el.added_by=?', user, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
+eventLocationModel.postEvent = function(event_id, result) {
+    connection.query('UPDATE event_location SET is_posted=true WHERE event_id =?', event_id, function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
@@ -91,15 +118,30 @@ eventDescriptionModel.getDescriptionById = function(description_id, result) {
     });
 }
 
-eventDescriptionModel.deleteEvent = function(event_id) {
-    // connection.query("UPDATE event_description SET event_id=?,added_by=?,event_name=?,start_date=?,end_date=?,start_time=?,end_time=?,event_description=?,photo=?,video=? WHERE description_id = ?", [...values, description_id], function (error, results, fields) {
-    //     if (error) throw error;
-    //     console.log('The solution is: ', results);
-
-    //     result(null, results);
-    // });
+eventDescriptionModel.getUnpublishedEventContribution = function(description_id, result) {
+    connection.query("SELECT * FROM event_description WHERE is_published=? AND 	is_contribution=",[false, true] , function(error, results) {
+        if(error) throw error;
+        result(null, results);
+    });
 }
 
+eventDescriptionModel.deleteEvent = function(event_id, result) {
+    connection.query("DELETE FROM `event_description` WHERE event_id", event_id, function (error, results, fields) {
+        if (error) throw error;
+        console.log('The solution is: ', results);
+
+        result(null, results);
+    });
+}
+
+eventDescriptionModel.publishEvent  = function(description_id, result) {
+    connection.query('UPDATE event_description SET is_posted=true WHERE description_id=?', description_id, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
 
 // Events media files
 var eventMedia = function(media) {

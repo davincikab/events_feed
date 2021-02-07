@@ -3,10 +3,25 @@ const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../
 const { request } = require("express");
 
 exports.getAllEvents = function(req, res) {
-    eventLocationModel.getAllEvents(function(err, events) {
-        if(err) {
-            res.send(err);
-        }
+    if(req.user.is_admin) {
+        eventLocationModel.getAllEvents(function(err, events) {
+            if(err) {
+                res.send(err);
+            }
+
+            addMediaFiles(events);
+        });
+    } else {
+        eventLocationModel.getPostedEvents(function(err, events) {
+            if(err) {
+                res.send(err);
+            }
+
+            addMediaFiles(events);
+        });
+    }
+
+    function addMediaFiles(events) {
 
         eventMedia.getAllMedia(function(err, mediaEntries) {
             if(err) {
@@ -55,11 +70,20 @@ exports.getAllEvents = function(req, res) {
                 eventsArray.push(mainEvent);
             }
 
-
-
             res.send(eventsArray);
         });
 
+    }
+}
+
+exports.getUnPostedEvents = function(req, res) {
+    // create the event location
+    eventLocationModel.getUnPostedEvents(eventLocation, function(err, response) {
+        if(err) {
+            res.send(err);
+        }
+
+        res.send(response);
     });
 }
 
@@ -123,6 +147,17 @@ exports.getEventById = function(req, res) {
         
     });
 
+}
+
+exports.getUnPublishedDescription = function(req, res) {
+    // create the event location
+    eventLocationModel.getUnPublishedDescription(eventLocation, function(err, response) {
+        if(err) {
+            res.send(err);
+        }
+
+        res.send(response);
+    });
 }
 
 // event description

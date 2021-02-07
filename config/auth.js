@@ -1,7 +1,7 @@
 module.exports = {
     isAuthenticated:function(req, res, next) {
         if(req.isAuthenticated()) {
-            console.log
+            console.log("Authenticated");
             return next();
         }
 
