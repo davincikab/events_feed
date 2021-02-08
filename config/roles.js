@@ -1,10 +1,10 @@
 var userRoles = {
     guest:1,
     user:2,
-    admins:4
+    admin:4
 };
 
-var accessLevels = {
+exports.accessLevels = {
     guest: userRoles.guest | userRoles.user | userRoles.admin,    // ...111
     user: userRoles.user | userRoles.admin,                       // ...110
     admin: userRoles.admin                                        // ...100

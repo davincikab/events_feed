@@ -52,7 +52,7 @@ userModel.getAllUsers = function(result) {
     connection.query('SELECT * FROM users', function(err, response) {
         if(err) throw err;
 
-        result(null, response[0]);
+        result(null, response);
     });
 }
 

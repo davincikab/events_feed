@@ -63,11 +63,14 @@ exports.getAllEvents = function(req, res) {
                 let event = allEvents[key];
 
                 let mainEvent = event.find(ev => ev.is_contribution == 0);
-                contribution = event.filter(ev => ev.is_contribution == 1);
+                if(mainEvent) {
+                    let contribution = event.filter(ev => ev.is_contribution == 1);
 
-                mainEvent.contribution = contribution;
+                    mainEvent.contribution = contribution;
 
-                eventsArray.push(mainEvent);
+                    eventsArray.push(mainEvent);
+                }
+                
             }
 
             res.send(eventsArray);
@@ -78,12 +81,17 @@ exports.getAllEvents = function(req, res) {
 
 exports.getUnPostedEvents = function(req, res) {
     // create the event location
-    eventLocationModel.getUnPostedEvents(eventLocation, function(err, response) {
+    eventLocationModel.getUnPostedEvents(function(err, response) {
         if(err) {
             res.send(err);
         }
 
-        res.send(response);
+        // res.send(response);
+        res.render("pages/pending_events", {
+            events:response,
+            user:req.user,
+            section:"Pending Events"
+        });
     });
 }
 
@@ -151,12 +159,16 @@ exports.getEventById = function(req, res) {
 
 exports.getUnPublishedDescription = function(req, res) {
     // create the event location
-    eventLocationModel.getUnPublishedDescription(eventLocation, function(err, response) {
+    eventDescriptionModel.getUnpublishedEventContribution(function(err, response) {
         if(err) {
             res.send(err);
         }
 
-        res.send(response);
+        res.render("pages/pending_contribution", {
+            events:response,
+            user:req.user,
+            section:"Pending Contribution"
+        });
     });
 }
 
@@ -294,5 +306,75 @@ exports.addEventDescription = function(req, res) {
         }
 
         res.render('pages/update_event', context);
+    });
+}
+
+exports.deleteEventContribution = function(req, res, next) {
+    let { description_id } = req.params;
+    eventDescriptionModel.deleteEventDescription(description_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }
+
+        eventMedia.deleteMedia(description_id, function(err, results) {
+            if(err) {
+                res.send(err);
+            } 
+            
+            res.send({'message':'success'})
+        });
+
+        // res.send({'message':'success'})
+    });
+}
+
+exports.deleteEventLocation = function(req, res, next) {
+    let { event_id } = req.params;
+    eventLocationModel.deleteEventLocation(event_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }  
+
+        eventDescriptionModel.deleteEventDescriptionByEventId(event_id, function(err, results) {
+            if(err) {
+                res.send(err);
+            }  
+            
+            eventMedia.deleteMediaByEventId(event_id, function(err, results) {
+                if(err) {
+                    res.send(err);
+                } 
+
+                res.send({'message':'success'})
+            });
+           
+        });
+    });
+    
+}
+
+exports.postEvent = function(req, res, next) {
+    let { event_id } = req.params;
+    console.log("Hitting url endpoint");
+
+    eventLocationModel.postEvent(event_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }  
+
+        console.log(results);
+
+        res.send({'message':'success'});
+    });
+}
+
+exports.publishContribution = function(req, res, next) {
+    let { description_id } = req.params;
+    eventDescriptionModel.publishEventContribution(description_id, function(err, results) {
+        if(err) {
+            res.send(err);
+        }  
+
+        res.send({'message':'success'});
     });
 }

@@ -4,23 +4,30 @@
     <button class="navbar-toggler"><i class="fa fa-bars"></i></button>
     <div class="head-menu">    
         <% if (typeof user != 'undefined') {%>
-            <% if (section == 'map') {%>
+           
                 <div class="user-menu">
-                    <div id="search" class="search-tab">
-                        <input type="search" placeholder="Event Name ..." id="search-event">
-                        <div class="suggestions" id="suggestions">
+                    <% if (section == "map") {%>
+                        <div id="search" class="search-tab">
+                            <input type="search" placeholder="Event Name ..." id="search-event">
+                            <div class="suggestions" id="suggestions">
+                            </div>
                         </div>
-                    </div>
-                    <a class="nav-item" id="add-event" href="#">Add Event</a>
-                    <a class="nav-item d-none" id="update-event" href="#">Update Event</a>
-                    <a class="nav-item" href="#" id="saved-events">Saved Events</a> 
+                        <a class="nav-item" id="add-event" href="#">Add Event</a>
+                        <a class="nav-item d-none" id="update-event" href="#">Update Event</a>
+                        <a class="nav-item" href="#" id="saved-events">Saved Events</a> 
+                    <%} else { %>
+                        <a class="nav-item" id="user-name" href="/map">
+                            View Map
+                        </a>
+                    <%} %>
                 </div>
+
                 <% if (user.is_admin) {%>
                     <div class="admin-option">
-                        <a class="nav-item" href="#" id="saved-events">Pending Events
+                        <a class="nav-item" href="/pending_events" id="saved-events">Pending Events
                             <span class="badge">2</span>
                         </a>   
-                        <a class="nav-item" href="#" id="saved-events">Pending Contribution
+                        <a class="nav-item" href="/pending_contribution" id="saved-events">Pending Contribution
                             <span class="badge">2</span>
                         </a>  
                         <a class="nav-item" href="#" id="saved-events">Reported Contribution
@@ -29,7 +36,7 @@
                         <a class="nav-item" href="#" id="saved-events">Messages
                             <span class="badge">2</span>
                         </a>  
-                        <a class="nav-item" href="#" id="saved-events">Accounts
+                        <a class="nav-item" href="/accounts" id="saved-events">Accounts
                             <span class="badge">2</span>
                         </a> 
                         <a class="nav-item" href="#" id="saved-events">Reported Accounts
@@ -40,11 +47,6 @@
                         </a>
                     </div> 
                 <%} %>     
-            <%} else { %>
-            <a class="nav-item" id="user-name" href="/map">
-                View Map
-            </a>
-            <%} %>
             <div class="user-account">
             <a class="nav-item" id="user-name" href="/user_profile/<%= user.username %>/"><%= user.username %></a>   
             <a href="/logout" class="nav-item">Logout</a>  

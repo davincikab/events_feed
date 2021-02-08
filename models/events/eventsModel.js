@@ -75,6 +75,15 @@ eventLocationModel.postEvent = function(event_id, result) {
     });
 }
 
+eventLocationModel.deleteEventLocation = function(event_id, result) {
+    connection.query('DELETE FROM event_location WHERE event_id =?', event_id, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
 const eventDescriptionModel = function(eventDescription) {
     this.event_id = eventDescription.event_id, 
     this.added_by = eventDescription.added_by, 
@@ -118,15 +127,15 @@ eventDescriptionModel.getDescriptionById = function(description_id, result) {
     });
 }
 
-eventDescriptionModel.getUnpublishedEventContribution = function(description_id, result) {
-    connection.query("SELECT * FROM event_description WHERE is_published=? AND 	is_contribution=",[false, true] , function(error, results) {
+eventDescriptionModel.getUnpublishedEventContribution = function(result) {
+    connection.query("SELECT * FROM event_description WHERE is_published=? AND 	is_contribution=?",[false, true] , function(error, results) {
         if(error) throw error;
         result(null, results);
     });
 }
 
-eventDescriptionModel.deleteEvent = function(event_id, result) {
-    connection.query("DELETE FROM `event_description` WHERE event_id", event_id, function (error, results, fields) {
+eventDescriptionModel.deleteEventDescription = function(description_id, result) {
+    connection.query("DELETE FROM `event_description` WHERE description_id=?", description_id, function (error, results, fields) {
         if (error) throw error;
         console.log('The solution is: ', results);
 
@@ -134,8 +143,17 @@ eventDescriptionModel.deleteEvent = function(event_id, result) {
     });
 }
 
-eventDescriptionModel.publishEvent  = function(description_id, result) {
-    connection.query('UPDATE event_description SET is_posted=true WHERE description_id=?', description_id, function (error, results, fields) {
+eventDescriptionModel.deleteEventDescriptionByEventId = function(event_id, result) {
+    connection.query("DELETE FROM `event_description` WHERE event_id=?", event_id, function (error, results, fields) {
+        if (error) throw error;
+        console.log('The solution is: ', results);
+
+        result(null, results);
+    });
+}
+
+eventDescriptionModel.publishEventContribution  = function(description_id, result) {
+    connection.query('UPDATE event_description SET is_published=true WHERE description_id=?', description_id, function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
@@ -169,6 +187,13 @@ eventMedia.updateMedia = function(eventMedia, result) {
 
 eventMedia.deleteMedia = function(description_id, result) {
     connection.query("DELETE FROM event_media WHERE description_id= ?", description_id, function(error, response) {
+        if(error) throw error;
+        result(null, response);
+    });
+}
+
+eventMedia.deleteMediaByEventId = function(event_id, result) {
+    connection.query("DELETE FROM event_media WHERE event_id=?", event_id, function(error, response) {
         if(error) throw error;
         result(null, response);
     });

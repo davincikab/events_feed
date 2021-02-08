@@ -128,6 +128,15 @@
                 <% if ( user.username == event.added_by) {%>
                     <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
                 <%} %>
+
+                <% if (user.is_admin && !event.is_posted) {%>
+                    <button data-href="/post_event/<%= event.event_id %>/" data-event="event" class="btn bg-brand mt-2 btn-action">Post</button>
+                <%} %>
+
+                <% if (user.is_admin || user.username == event.added_by) {%>
+                    <button data-href="/delete_event/<%= event.event_id %>/" data-event="event" class="btn bg-danger mt-2 btn-action">Delete</button>
+                <%} %>
+
             </div>
         </div>
         <div class="media">
@@ -177,9 +186,16 @@
                     <% if (user.username == event.added_by) {%>
                         <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
                     <%} %>
+
+                    <% if (!event.is_published) {%>
+                        <button data-href="/publish_contribution/<%= event.description_id  %>/" data-event="contribution"  class="btn bg-brand mt-2 btn-action">Publish</button>
+                    <%} %>
+
+                    <% if (user.is_admin || user.username == event.added_by) {%>
+                        <button data-href="/delete_contribution/<%= event.description_id  %>/"  data-event="contribution" class="btn bg-danger mt-2 btn-action">Delete</button>
+                    <%} %>
                 </div>
                 
-
             </div>
 
             <div class="media">
@@ -221,6 +237,42 @@
         if(!updateButton) {
             let updateSection = document.querySelector(".update-section");
             updateSection.classList.toggle("d-none");
+        }
+
+        // action buttons
+        let actionButtons = document.querySelectorAll(".btn-action")
+        actionButtons.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                // get the attributes
+                console.log( btn.getAttribute("data-href"));
+                let url = btn.getAttribute("data-href");
+                let eventType = btn.getAttribute("data-event");
+
+                // send the request
+                executeAction(url, eventType);
+            });
+        });
+
+        function executeAction(url, eventType) {
+            console.log("Executing");
+            console.log(url);
+            $.ajax({
+                url:url,
+                type:'POST',
+                success:function(response) {
+                    console.log(response);
+
+                    // 
+                    if(eventType == "contribution") {
+                        window.location.reload();
+                    } else {
+                        window.location.assign("/map");
+                    }
+                },
+                error:function(error) {
+                    console.log(error);
+                }
+            });
         }
 
     </script>

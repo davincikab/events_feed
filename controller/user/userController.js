@@ -128,12 +128,17 @@ exports.post_login = function(req, res, next) {
 
 exports.getAllUsers = function(req, res) {
     // create the event location
-    userModel.getAllUsers(eventLocation, function(err, response) {
+    userModel.getAllUsers(function(err, response) {
         if(err) {
             res.send(err);
         }
 
-        res.send(response);
+        // console.log(response);
+        res.render('pages/accounts', {
+            users:response,
+            user:req.user,
+            section:'Accounts'
+        });
     });
 }
     

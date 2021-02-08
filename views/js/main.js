@@ -766,7 +766,7 @@ $(eventDescriptionForm).on("submit", function(e) {
 		success:function(response) {
 			console.log(response);
 			if(response.message.includes="success") {
-				updateEventMarkers();
+				// updateEventMarkers();
 				togglePopup(addEventDiv, "active");
 				map.getCanvas().style.cursor = "";
 			} else {

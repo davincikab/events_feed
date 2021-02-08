@@ -1,6 +1,7 @@
 const express = require("express");
 const events = require("../../controller/events/eventController");
 const { isAuthenticated } = require("../../config/auth");
+const { allowOnly, accessLevels  } = require("../../config/roles");
 
 // express route
 var router = express.Router();
@@ -30,5 +31,15 @@ router.get("/map", isAuthenticated, (req, res) => {
 });
 
 
+router.get("/pending_events", isAuthenticated, allowOnly(accessLevels.admin, events.getUnPostedEvents));
+router.get("/pending_contribution", isAuthenticated, allowOnly(accessLevels.admin, events.getUnPublishedDescription));
+
+// delete or update events
+router.post("/post_event/:event_id/", isAuthenticated, allowOnly(accessLevels.admin, events.postEvent))
+router.post("/delete_event/:event_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventLocation))
+
+// contribution
+router.post("/publish_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.publishContribution))
+router.post("/delete_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventContribution))
 
 module.exports = router;
