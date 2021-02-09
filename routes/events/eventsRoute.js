@@ -7,6 +7,7 @@ const { allowOnly, accessLevels  } = require("../../config/roles");
 var router = express.Router();
 
 // event location path
+router.get("/dashboard",isAuthenticated, allowOnly(accessLevels.admin, events.dashboard));
 router.get("/events", events.getAllEvents);
 router.post("/create_event_location/", events.createEventLocation);
 router.get("/event/:event_name/:event_id/", events.getEventById);
@@ -41,5 +42,6 @@ router.post("/delete_event/:event_id/", isAuthenticated, allowOnly(accessLevels.
 // contribution
 router.post("/publish_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.publishContribution))
 router.post("/delete_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventContribution))
+
 
 module.exports = router;

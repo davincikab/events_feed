@@ -1,5 +1,6 @@
 // get event model
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
+const userModel = require("../../models/user/userModel");
 const { request } = require("express");
 
 exports.getAllEvents = function(req, res) {
@@ -377,4 +378,36 @@ exports.publishContribution = function(req, res, next) {
 
         res.send({'message':'success'});
     });
+}
+
+// dashboard
+exports.dashboard = function(req, res, next) {
+    // get pending contribution
+    eventLocationModel.getUnPostedEvents(function(err, events) {
+        if(err) {
+            res.send(err);
+        }
+
+        eventDescriptionModel.getUnpublishedEventContribution(function(err, contribution) {
+            if(err) {
+                res.send(err);
+            }
+
+            userModel.getAllUsers(function(err, accounts) {
+                if(err) {
+                    res.send(err);
+                }
+
+                context = {
+                    user:req.user,
+                    unposted_events:events.length,
+                    contribution:contribution.length,
+                    accounts:accounts.length,
+                    section:'Dashboard'
+                };
+            
+                res.render('pages/dashboard', context);  
+            });
+        });
+    });     
 }

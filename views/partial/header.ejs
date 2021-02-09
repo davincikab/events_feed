@@ -20,40 +20,20 @@
                             View Map
                         </a>
                     <%} %>
-                </div>
 
-                <% if (user.is_admin) {%>
-                    <div class="admin-option">
-                        <a class="nav-item" href="/pending_events" id="saved-events">Pending Events
-                            <span class="badge">2</span>
-                        </a>   
-                        <a class="nav-item" href="/pending_contribution" id="saved-events">Pending Contribution
-                            <span class="badge">2</span>
-                        </a>  
-                        <a class="nav-item" href="#" id="saved-events">Reported Contribution
-                            <span class="badge">2</span>
-                        </a>  
-                        <a class="nav-item" href="#" id="saved-events">Messages
-                            <span class="badge">2</span>
-                        </a>  
-                        <a class="nav-item" href="/accounts" id="saved-events">Accounts
-                            <span class="badge">2</span>
-                        </a> 
-                        <a class="nav-item" href="#" id="saved-events">Reported Accounts
-                            <span class="badge">2</span>
-                        </a>  
-                        <a class="nav-item" href="#" id="saved-events">Reported Events
-                            <span class="badge">2</span>
+                    <% if (user.is_admin) {%>
+                        <a class="nav-item" href="/dashboard">
+                            Dashboard
                         </a>
-                    </div> 
-                <%} %>     
-            <div class="user-account">
+                    <%} %>
+            <div>
             <a class="nav-item" id="user-name" href="/user_profile/<%= user.username %>/"><%= user.username %></a>   
             <a href="/logout" class="nav-item">Logout</a>  
         <%} else { %>
             <a href="/register" class="nav-item">Register</a>
             <a href="/login" class="nav-item">Login</a>  
         <%} %>
+            </div>
         </div>
         
     </div>
