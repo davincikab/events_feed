@@ -130,7 +130,7 @@
                 <%} %>
 
                 <% if (user.is_admin && !event.is_posted) {%>
-                    <button data-href="/post_event/<%= event.event_id %>/" data-event="event" class="btn bg-brand mt-2 btn-action">Post</button>
+                    <button data-href="/post_event/<%= event.event_id %>/<%= event.description_id  %>/" data-event="event" class="btn bg-brand mt-2 btn-action">Post</button>
                 <%} %>
 
                 <% if (user.is_admin || user.username == event.added_by) {%>
@@ -138,7 +138,7 @@
                 <%} %>
 
             </div>
-        </div>
+        </div>  
         <div class="media">
             <!-- images carousel -->
             <h4 class="my-1">Event Photos</h4>

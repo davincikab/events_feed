@@ -3,6 +3,7 @@ const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../
 
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
+const { request } = require("express");
 
 exports.login = function(req, res) {
     res.render("pages/login");
@@ -145,10 +146,25 @@ exports.getAllUsers = function(req, res) {
 exports.userEvents = function(req, res) {
     let username = req.params.username;
 
-    eventLocationModel.getEventByUser(username, function(err, events) {
-        if(err) {
-            res.send(err);
-        }
+    if(req.user.is_admin) {
+        eventLocationModel.getEventByUser(username, function(err, events) {
+            if(err) {
+                res.send(err);
+            }
+
+            addMediaFiles(events)
+        });   
+    } else {
+        eventLocationModel.getPublishedEventByUser(username, function(err, events) {
+            if(err) {
+                res.send(err);
+            }
+
+            addMediaFiles(events)
+        });    
+    }
+    
+    function addMediaFiles(events) {
 
         // user events
         let results = events;
@@ -191,6 +207,6 @@ exports.userEvents = function(req, res) {
             });
 
         });
-    });
+    }
 }
 

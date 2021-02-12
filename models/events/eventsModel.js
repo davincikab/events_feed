@@ -57,8 +57,26 @@ eventLocationModel.getEventById = function(title, event_id, result) {
     });
 }
 
+eventLocationModel.getPostedEventById = function(title, event_id, result) {
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.event_id=? AND el.is_posted=? AND ed.is_published=?',[ event_id, true, true], function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
 eventLocationModel.getEventByUser = function(user, result) {
     connection.query('SELECT * FROM event_description AS el WHERE el.added_by=?', user, function (error, results, fields) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
+eventLocationModel.getPublishedEventByUser = function(user, result) {
+    connection.query('SELECT * FROM event_description AS el WHERE el.added_by=? AND is_published=?',[ user, true], function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 

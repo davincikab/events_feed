@@ -120,14 +120,30 @@ exports.getEventById = function(req, res) {
     console.log("Event title");
     console.log(title);
 
-    eventLocationModel.getEventById(title, event_id, function(err, response) {
-        if(err) {
-            res.send(err);
-        }
+    if(req.user.is_admin) {
+        eventLocationModel.getEventById(title, event_id, function(err, response) {
+            if(err) {
+                res.send(err);
+            }
 
-        console.log(response);
-        // res.send(response);
+            console.log(response);
+            addMediaFiles(response, event_id);
+            // res.send(response);
+        });
+    } else {
+        eventLocationModel.getPostedEventById(title, event_id, function(err, response) {
+            if(err) {
+                res.send(err);
+            }
 
+            console.log(response);
+            addMediaFiles(response, event_id);
+            // res.send(response);
+        });
+
+    }
+
+    function addMediaFiles(response, event_id) {
         eventMedia.getMediaByEventId(event_id, function(err, descriptionMedia) {
             if(err) {
                 res.send(err);
@@ -154,7 +170,7 @@ exports.getEventById = function(req, res) {
             res.render('pages/event_detail', context);
         });
         
-    });
+    }
 
 }
 
@@ -355,7 +371,7 @@ exports.deleteEventLocation = function(req, res, next) {
 }
 
 exports.postEvent = function(req, res, next) {
-    let { event_id } = req.params;
+    let { event_id, description_id } = req.params;
     console.log("Hitting url endpoint");
 
     eventLocationModel.postEvent(event_id, function(err, results) {
@@ -363,9 +379,16 @@ exports.postEvent = function(req, res, next) {
             res.send(err);
         }  
 
-        console.log(results);
+        // update the main event description 
+        eventDescriptionModel.publishEventContribution(description_id, function(err, results) {
+            if(err) {
+                res.send(err);
+            }
 
-        res.send({'message':'success'});
+            console.log(results);
+            res.send({'message':'success'});
+        });
+        
     });
 }
 

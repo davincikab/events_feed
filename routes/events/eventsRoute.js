@@ -36,7 +36,7 @@ router.get("/pending_events", isAuthenticated, allowOnly(accessLevels.admin, eve
 router.get("/pending_contribution", isAuthenticated, allowOnly(accessLevels.admin, events.getUnPublishedDescription));
 
 // delete or update events
-router.post("/post_event/:event_id/", isAuthenticated, allowOnly(accessLevels.admin, events.postEvent))
+router.post("/post_event/:event_id/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.postEvent))
 router.post("/delete_event/:event_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventLocation))
 
 // contribution

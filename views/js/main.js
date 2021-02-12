@@ -766,7 +766,11 @@ $(eventDescriptionForm).on("submit", function(e) {
 		success:function(response) {
 			console.log(response);
 			if(response.message.includes="success") {
-				// updateEventMarkers();
+
+				if(userName.getAttribute("data-admin") == "1") {
+					updateEventMarkers();
+				}
+				
 				togglePopup(addEventDiv, "active");
 				map.getCanvas().style.cursor = "";
 			} else {
