@@ -42,18 +42,20 @@
         <table class="table">
             <thead>
                 <th>Title</th>
-                <th>Country</th>
-                <th>Start Date</th>
+                <th>Reported By</th>
+                <th>Reason</th>
+                <th>Date</th>
                 <th>Action</th>
             </thead>
             <tbody>
-                <% for (let event of events) {%>
+                <% for (let report of events) {%>
                     <tr>
-                        <td><%= event.event_name %></td>
-                        <td><%= event.country %></td>
-                        <td><%= event.start_date %></td>
+                        <td><%= report.event_name %></td>
+                        <td><%= report.reported_by %></td>
+                        <td><%= report.reason %></td>
+                        <td><%= new Date(report.date).toDateString()%></td>
                         <td>
-                            <a href="/event/<%= event.event_name %>/<%= event.event_id %>/" class="link btn btn-warning">View</a>
+                            <button data-id="<%= report.report_id %>" class="link btn btn-warning btn-remove">Remove</button>
                         </td>
                     </tr>
                 <%} %>
@@ -73,7 +75,7 @@
 
 
         function deleteFromReports(report_id) {
-            let url = "/reported-events/remove/"+ report_id + "/";
+            let url = "/report-events/delete/"+ report_id + "/";
 
             $.ajax({
                 url:url,

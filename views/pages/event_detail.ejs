@@ -83,6 +83,20 @@
             padding:0.3em 0.6em;
         }
 
+        .popup {
+            width: 100%;
+            height: 92vh;
+            background: rgba(53, 53, 53, 0.726);
+            z-index: 3;
+            position: absolute;
+            top: 50px;
+            display: none;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
         @media(min-width:50em) {
             .container {
                 font-size: 1em;
@@ -136,7 +150,8 @@
                 <% if (user.is_admin || user.username == event.added_by) {%>
                     <button data-href="/delete_event/<%= event.event_id %>/" data-event="event" class="btn bg-danger mt-2 btn-action">Delete</button>
                 <%} %>
-
+                
+                <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Event</button>
             </div>
         </div>  
         <div class="media">
@@ -194,6 +209,9 @@
                     <% if (user.is_admin || user.username == event.added_by) {%>
                         <button data-href="/delete_contribution/<%= event.description_id  %>/"  data-event="contribution" class="btn bg-danger mt-2 btn-action">Delete</button>
                     <%} %>
+
+                    <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Contribution</button>
+                    
                 </div>
                 
             </div>
@@ -229,6 +247,24 @@
     <div class="update-section d-flex d-none">
         <div class="mt-1">
             <a href="/event/add-description/<%= event.event_name %>/<%= event.event_id %>" class="btn bg-brand mt-2">Add description</a>
+        </div>
+    </div>
+
+    <div class="popup" id="report-section">
+        <div class="content">
+            <div class="close-btn" onclick="togglePopup(reportSection, 'active')">&times;</div>
+            <form action="" id="report-form" method="POST">
+                <div class="d-none">
+                    <input type="text" name="event_name" id="event-name">
+                    <input type="text" name="description_id" id="description-id">
+                    <input type="text" name="is_contribution" id="is-contribution">
+                </div>
+                <label for="reason">Reason for Reporting</label>
+                <textarea name="reason" id="" cols="30" rows="10" placeholder="Reason for reporting account" value="" required></textarea>
+
+                <button type="submit" class="btn bg-brand">Report Account</button>
+            </form>
+
         </div>
     </div>
     <script>
@@ -275,6 +311,61 @@
             });
         }
 
+        // get all report button
+        let reportButtons = document.querySelectorAll(".btn-report");
+        reportButtons.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                let report_id = btn.getAttribute("data-id");
+
+                // toggle form and update form fields
+                $('#description-id').val(btn.getAttribute('data-id'));
+                $('#is-contribution').val(btn.getAttribute('data-cont'));
+                $('#event-name').val(btn.getAttribute('data-event'));
+
+                togglePopup(reportSection, "active");
+
+            });
+        });
+
+        let reportSection = document.getElementById("report-section");
+
+        $("#report-button").on("click", function(e) {
+            togglePopup(reportSection, "active");
+        });
+
+        function togglePopup(element, className="active") {
+            element.classList.toggle(className);
+        }
+
+
+        // report account
+        $("#report-form").on("submit", function(e) {
+            // prevent default behaviour
+            e.preventDefault();
+
+            let data = $("#report-form").serialize();
+
+            $.ajax({
+                url:'/report-event/',
+                type:'POST',
+                data:data,
+                success:function(response) {
+                    if(response.message.includes("success")) {
+
+                        alert("Thanks for lodging you report");
+                        togglePopup(reportSection, "active");
+
+                        // reset form
+                        $("#report-form")[0].reset();
+
+                        window.location.reload();
+                    }
+                },
+                error:function(err) {
+                    console.error(err);
+                }
+            });
+        });
     </script>
 </body>
 </html>

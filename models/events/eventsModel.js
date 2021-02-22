@@ -196,7 +196,7 @@ eventDescriptionModel.getReportedContributions = function(result) {
 }
 
 eventDescriptionModel.reportEvent = function(report, result) {
-    connection.query('INSERT INTO event_media set ?', report, function (error, results, fields) {
+    connection.query('INSERT INTO reported_events set ?', report, function (error, results, fields) {
         if (error) throw error;
 
         result(null, results);
@@ -204,8 +204,8 @@ eventDescriptionModel.reportEvent = function(report, result) {
 }
 
 
-eventDescriptionModel.deleteEventReportById = function(description_id, result) {
-    connection.query('UPDATE event_description SET is_reported=? WHERE description_id=?', [false, description_id], function (error, results, fields) {
+eventDescriptionModel.deleteEventReportById = function(report_id, result) {
+    connection.query('DELETE FROM reported_events WHERE report_id=?', report_id, function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
