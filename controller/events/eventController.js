@@ -443,3 +443,71 @@ exports.dashboard = function(req, res, next) {
         });
     });     
 }
+
+// 
+exports.getReportedEvents = function(req, res, next) {
+    eventDescriptionModel.getReportedEvents(function(err, result) {
+        if(err) {
+            res.send(err);
+        }
+
+        let context = {
+            user:req.user,
+            events:result,
+            section:'Reported Events'
+        };
+
+        res.render("pages/reported_events", context);
+    });
+}
+
+exports.getReportedContributions = function(req, res, next) {
+    eventDescriptionModel.getReportedContributions(function(err, result) {
+        if(err) {
+            res.send(err);
+        }
+
+        let context = {
+            user:req.user,
+            events:result,
+            section:'Reported Contribution'
+        };
+
+        res.render("pages/reported_contibution", context);
+    })
+}
+
+// report events 
+exports.reportEvent = function(req, res, next) {
+    let { event_name, reason, is_contribution, description_id } = req.body;
+
+    let report = {
+        reported_by:req.user.username,
+        event_name:event_name,
+        reason:reason,
+        is_contribution:is_contribution,
+        description_id:description_id
+    };
+
+    eventDescriptionModel.reportEvent(report, function(err, result) {
+        if(err) {
+            res.send(err);
+        } 
+
+        res.status(200).send({message:'success'});
+    });
+
+}
+
+// delete event report
+exports.deleteEventReport = function(req, res, next) {
+    let { report_id } = req.params;
+
+    eventDescriptionModel.deleteEventReportById(report_id, function(err, result) {
+        if(err) {
+            res.send(err);
+        } 
+
+        res.status(200).send({message:'success'});
+    });   
+}

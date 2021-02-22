@@ -38,7 +38,7 @@
     <%- include('../partial/header') %>
     <div class="main">
         <!-- create a table -->
-        <h2>Pending Contribution</h2>
+        <h2>Reported Events</h2>
         <table class="table">
             <thead>
                 <th>Title</th>
@@ -60,5 +60,34 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        let removButtons = document.querySelectorAll(".btn-remove");
+        removButtons.forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                let report_id = btn.getAttribute("data-id");
+
+                deleteFromReports(report_id);
+            });
+        });
+
+
+        function deleteFromReports(report_id) {
+            let url = "/reported-events/remove/"+ report_id + "/";
+
+            $.ajax({
+                url:url,
+                type:'POST',
+                success:function(response) {
+                    if(response.message.includes("success")) {
+                        window.location.reload();
+                    }
+                },
+                error:function(err) {
+                    console.error(err);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

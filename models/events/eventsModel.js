@@ -179,48 +179,32 @@ eventDescriptionModel.publishEventContribution  = function(description_id, resul
     });
 }
 
-eventDescriptionModel.getReportEvents = function(result) {
-    connection.query('SELECT * FROM  event_description WHERE is_reported=? AND is_contribution=?', [true, false], function (error, results, fields) {
+eventDescriptionModel.getReportedEvents = function(result) {
+    connection.query('SELECT * FROM reported_events WHERE is_contribution=?', false, function (error, results, fields) {
         if (error) throw error;
 
         result(null, results);
     });
 }
 
-eventDescriptionModel.reportEventDescription = function(description_id, result) {
-    connection.query('UPDATE event_description SET is_reported=? WHERE description_id=?', [true, description_id], function (error, results, fields) {
+eventDescriptionModel.getReportedContributions = function(result) {
+    connection.query('SELECT * FROM reported_events WHERE is_contribution=?', true, function (error, results, fields) {
         if (error) throw error;
 
         result(null, results);
     });
 }
 
-eventDescriptionModel.removeFromReportedEvents = function(description_id, result) {
-    connection.query('UPDATE event_description SET is_reported=? WHERE description_id=?', [false, description_id], function (error, results, fields) {
-        if (error) throw error;
-        // console.log('The solution is: ', results[0]);
-
-        result(null, results);
-    });
-}
-
-eventDescriptionModel.getReportContributions = function(result) {
-    connection.query('SELECT * FROM  event_description WHERE is_reported=? AND is_contribution=?', [true, true], function (error, results, fields) {
+eventDescriptionModel.reportEvent = function(report, result) {
+    connection.query('INSERT INTO event_media set ?', report, function (error, results, fields) {
         if (error) throw error;
 
         result(null, results);
     });
 }
 
-eventDescriptionModel.reportEventContributions = function(description_id, result) {
-    connection.query('UPDATE event_description SET is_reported=? WHERE description_id=?', [true, description_id], function (error, results, fields) {
-        if (error) throw error;
 
-        result(null, results);
-    });
-}
-
-eventDescriptionModel.removeFromReportedContributions = function(description_id, result) {
+eventDescriptionModel.deleteEventReportById = function(description_id, result) {
     connection.query('UPDATE event_description SET is_reported=? WHERE description_id=?', [false, description_id], function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
