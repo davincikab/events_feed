@@ -176,7 +176,7 @@
                             <% if (userprofile.is_locked == 0) {%>
                                 <button class="bg-danger ml-1" id="lock-account">Lock Account</button>
                             <%} else {%> 
-                                <button class="bg-brand ml-1" id="unllock-account">Unlock Account</button>
+                                <button class="bg-brand ml-1" id="unlock-account">Unlock Account</button>
                             <%}%>
                         <%}%>
                         
@@ -245,12 +245,12 @@
         $("#lock-account").on("click", function(e) {
             // lock the account
             $.ajax({
-                url:'',
-                type:POST,
+                url:'/lock_account/<%= userprofile.username %>/',
+                type:'POST',
                 success:function(response) {
                     console.log(response);
 
-                    if(response.message == "success") {
+                    if(response.message.includes("success")) {
                         // reload the page
                         window.location.reload();
                     }
@@ -264,12 +264,12 @@
         $("#unlock-account").on("click", function(e) {
             // unlock the account
             $.ajax({
-                url:'',
-                type:POST,
+                url:'/unlock_account/<%= userprofile.username %>/',
+                type:'POST',
                 success:function(response) {
                     console.log(response);
 
-                    if(response.statu == "success") {
+                    if(response.message.includes("success")) {
                         // reload the page
                         window.location.reload();
                     }

@@ -20,5 +20,7 @@ userRouter.post("/login", user.post_login);
 
 userRouter.post("/register", user.post_register);
 userRouter.get("/accounts", isAuthenticated, allowOnly(accessLevels.admin, user.getAllUsers));
+userRouter.post("/lock_account/:username/", isAuthenticated, allowOnly(accessLevels.admin, user.lockAccount))
+userRouter.post("/unlock_account/:username/", isAuthenticated, allowOnly(accessLevels.admin, user.unlockAccount))
 
 module.exports = userRouter;

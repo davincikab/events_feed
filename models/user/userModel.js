@@ -80,16 +80,16 @@ userModel.reportUser = function(user_id, result) {
     });
 }
 
-userModel.lockUserAccount = function(user_id, result) {
-    connection.query('UPDATE users SET is_locked=? WHERE user_id =? ',[true, user_id] , function(err, response) {
+userModel.lockUserAccount = function(username, result) {
+    connection.query('UPDATE users SET is_locked=? WHERE username=? ',[true, username] , function(err, response) {
         if(err) throw err;
 
         result(null, response);
     });
 }
 
-userModel.unlockUserAccount = function(user_id, result) {
-    connection.query('UPDATE users SET is_locked=? WHERE user_id =? ',[false, user_id] , function(err, response) {
+userModel.unlockUserAccount = function(username, result) {
+    connection.query('UPDATE users SET is_locked=? WHERE username=? ',[false, username] , function(err, response) {
         if(err) throw err;
 
         result(null, response);

@@ -226,24 +226,19 @@ exports.getReportedAccounts = function(req, res, next) {
 }
 
 exports.lockAccount = function(req, res, next) {
-    let { user_id } = req.params;
-    userModel.lockUserAccount(user_id, function(err, result) {
+    let { username } = req.params;
+    userModel.lockUserAccount(username, function(err, result) {
         if (err) {
             res.send(err);
         }
-
-        let context = {
-            user:req.user,
-            lockedAccounts:result
-        };
         
         res.status(200).send({message:'successfully locked'});
     });
 }
 
 exports.unlockAccount = function(req, res, next) {
-    let { user_id } = req.params;
-    userModel.unlockUserAccount(user_id, function(err, result) {
+    let { username } = req.params;
+    userModel.unlockUserAccount(username, function(err, result) {
         if (err) {
             res.send(err);
         }

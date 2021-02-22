@@ -15,6 +15,10 @@ module.exports = function(passport) {
 
                 let user = users[0];
 
+                if(user.is_locked) {
+                    return done(null, false, {message : 'This account has been locked'});
+                }
+
                 // match password
                 bcrypt.compare(password, user.password, (err, isMatch) => {
                     if(err) throw err;
