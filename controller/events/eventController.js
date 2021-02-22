@@ -427,16 +427,31 @@ exports.dashboard = function(req, res, next) {
                         res.send(err);
                     }
 
-                    context = {
-                        user:req.user,
-                        unposted_events:events.length,
-                        contribution:contribution.length,
-                        accounts:accounts.length,
-                        reportedAccounts:reportedAccounts.length,
-                        section:'Dashboard'
-                    };
-                
-                    res.render('pages/dashboard', context);  
+                    eventDescriptionModel.getReportedContributions(function(err, reportedEvents) {
+                        if(err) {
+                            res.send(err);
+                        }
+
+                        eventDescriptionModel.getReportedContributions(function(err, reportedContribution) {
+                            if(err) {
+                                res.send(err);
+                            }
+
+                            context = {
+                                user:req.user,
+                                unposted_events:events.length,
+                                contribution:contribution.length,
+                                accounts:accounts.length,
+                                reportedAccounts:reportedAccounts.length,
+                                reportEvents:reportedEvents.length,
+                                reportedContribution:reportedContribution.length,
+                                section:'Dashboard'
+                            };
+                        
+                            res.render('pages/dashboard', context);  
+                        });
+                    });
+
                 });
                 
             });
