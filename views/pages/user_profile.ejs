@@ -210,7 +210,7 @@
         <div class="events" id="events">
             <%  for (let event of events ) {%>
                 <figure data-href="/event/<%= event.event_name %>/<%= event.event_id %>/">
-                    <img src="../.<%= event.media.media %>" alt="Trulli" style="">
+                    <img src="../.<%= event.media.media %>" alt="Trulli" >
                     <figcaption> <%= event.event_name %> </figcaption>
                 </figure>
             <% } %>
@@ -219,7 +219,7 @@
         <div class="events d-none" id="contributions">
             <%  for (let contribution of contributions ) {%>
                 <figure data-href="/event/<%= contribution.event_name %>/<%= contribution.event_id %>/">
-                    <img src="../.<%= contribution.media.media %>" alt="Trulli" style="">
+                    <img src="../.<%= contribution.media.media %>" alt="Trulli">
                     <figcaption> <%= contribution.event_name %> </figcaption>
                 </figure>
             <% } %>
