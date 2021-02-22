@@ -27,5 +27,6 @@ userRouter.post("/unlock_account/:username/", isAuthenticated, allowOnly(accessL
 // report user account
 userRouter.get("/reported-accounts/", isAuthenticated, allowOnly(accessLevels.admin, user.getReportedAccounts));
 userRouter.post("/report-account/:username/:reported_by/", isAuthenticated, allowOnly(accessLevels.admin, user.reportAccount));
+userRouter.post("/reported-account/remove/:report_id/",isAuthenticated, allowOnly(accessLevels.admin, user.deleteReport));
 
 module.exports = userRouter;

@@ -242,7 +242,7 @@ exports.getReportedAccounts = function(req, res, next) {
         let context = {
             user:req.user,
             section:'Reported Accounts',
-            reportedAccounts:result
+            users:result
         };
 
         res.render('pages/reported_accounts', context)
@@ -265,5 +265,17 @@ exports.reportAccount = function(req, res, next) {
         }
         
         res.status(200).send({message:'successfully reported account'});
+    });
+}
+
+exports.deleteReport = function(req, res, next) {
+    let { report_id } = req.params;
+
+    userModel.deleteReportById(report_id, function(err, result) {
+        if (err) {
+            res.send(err);
+        }
+        
+        res.status(200).send({message:'successfully deleted the report'});
     });
 }

@@ -64,8 +64,8 @@ userModel.getReportedAccounts = function(result) {
     });
 }
 
-userModel.removeUserFromReports = function(user_id, result) {
-    connection.query('UPDATE users SET is_reported=? WHERE user_id =? ',[false, user_id] , function(err, response) {
+userModel.deleteReportById = function(report_id, result) {
+    connection.query('DELETE FROM reported_accounts WHERE report_id =? ',report_id , function(err, response) {
         if(err) throw err;
 
         result(null, response[0]);
