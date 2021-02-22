@@ -170,6 +170,20 @@
                 <div class="my-1">
                     <b>Email</b>
                     <p> <%= userprofile.email %> </p>
+
+                    <div class="my-1">
+                        <% if (user.is_admin) {%>
+                            <% if (userprofile.is_locked == 0) {%>
+                                <button class="bg-danger ml-1" id="lock-account">Lock Account</button>
+                            <%} else {%> 
+                                <button class="bg-brand ml-1" id="unllock-account">Unlock Account</button>
+                            <%}%>
+                        <%}%>
+                        
+                        <% if (!userprofile.is_admin) {%>
+                            <button class="bg-brand ml-1">Report Account</button>
+                        <%}%>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,6 +240,44 @@
 
                 window.location.assign(location);
             });
+        });
+
+        $("#lock-account").on("click", function(e) {
+            // lock the account
+            $.ajax({
+                url:'',
+                type:POST,
+                success:function(response) {
+                    console.log(response);
+
+                    if(response.message == "success") {
+                        // reload the page
+                        window.location.reload();
+                    }
+                },
+                error:function(err) {
+                    console.error(err.message);
+                }
+            })
+        });
+
+        $("#unlock-account").on("click", function(e) {
+            // unlock the account
+            $.ajax({
+                url:'',
+                type:POST,
+                success:function(response) {
+                    console.log(response);
+
+                    if(response.statu == "success") {
+                        // reload the page
+                        window.location.reload();
+                    }
+                },
+                error:function(err) {
+                    console.error(err.message);
+                }
+            })
         });
     </script>
 </body>

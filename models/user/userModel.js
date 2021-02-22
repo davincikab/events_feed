@@ -32,7 +32,7 @@ userModel.findOne = function(username, email, result) {
 }
 
 userModel.findUserByUsername = function(username, result) {
-    connection.query('SELECT username, email, country, account_type FROM users WHERE username = ?', [username], function(err, response) {
+    connection.query('SELECT username, email, country, account_type, is_locked, is_admin FROM users WHERE username = ?', [username], function(err, response) {
         if(err) throw err;
 
         console.log(response);
@@ -56,4 +56,55 @@ userModel.getAllUsers = function(result) {
     });
 }
 
+userModel.getReportedAccounts = function(result) {
+    connection.query('SELECT * FROM users WHERE is_reported=?',true , function(err, response) {
+        if(err) throw err;
+
+        result(null, response[0]);
+    });
+}
+
+userModel.removeUserFromReports = function(user_id, result) {
+    connection.query('UPDATE users SET is_reported=? WHERE user_id =? ',[false, user_id] , function(err, response) {
+        if(err) throw err;
+
+        result(null, response[0]);
+    });
+}
+
+userModel.reportUser = function(user_id, result) {
+    connection.query('UPDATE users SET is_reported=? WHERE user_id =? ',[true, user_id] , function(err, response) {
+        if(err) throw err;
+
+        result(null, response[0]);
+    });
+}
+
+userModel.lockUserAccount = function(user_id, result) {
+    connection.query('UPDATE users SET is_locked=? WHERE user_id =? ',[true, user_id] , function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+userModel.unlockUserAccount = function(user_id, result) {
+    connection.query('UPDATE users SET is_locked=? WHERE user_id =? ',[false, user_id] , function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+userModel.getLockedAccounts = function(result) {
+    connection.query('SELECT * FROM users WHERE is_locked=?', true, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+
+
+// report an account
 module.exports = userModel;
