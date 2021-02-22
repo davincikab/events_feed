@@ -2,6 +2,7 @@
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 const userModel = require("../../models/user/userModel");
 const { request } = require("express");
+const { reportAccount } = require("../user/userController");
 
 exports.getAllEvents = function(req, res) {
     if(req.user.is_admin) {
@@ -421,15 +422,23 @@ exports.dashboard = function(req, res, next) {
                     res.send(err);
                 }
 
-                context = {
-                    user:req.user,
-                    unposted_events:events.length,
-                    contribution:contribution.length,
-                    accounts:accounts.length,
-                    section:'Dashboard'
-                };
-            
-                res.render('pages/dashboard', context);  
+                userModel.getReportedAccounts(function(err, reportedAccounts) {
+                    if(err) {
+                        res.send(err);
+                    }
+
+                    context = {
+                        user:req.user,
+                        unposted_events:events.length,
+                        contribution:contribution.length,
+                        accounts:accounts.length,
+                        reportedAccounts:reportedAccounts.length,
+                        section:'Dashboard'
+                    };
+                
+                    res.render('pages/dashboard', context);  
+                });
+                
             });
         });
     });     

@@ -57,10 +57,10 @@ userModel.getAllUsers = function(result) {
 }
 
 userModel.getReportedAccounts = function(result) {
-    connection.query('SELECT * FROM users WHERE is_reported=?',true , function(err, response) {
+    connection.query('SELECT * FROM reported_accounts', function(err, response) {
         if(err) throw err;
 
-        result(null, response[0]);
+        result(null, response);
     });
 }
 
