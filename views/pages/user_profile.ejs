@@ -10,6 +10,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/design.css">
     <style>
+        h2 {
+            font-size: 1.8rem !important;
+        }
         .top-bar {
             position: fixed;
             top:0;
@@ -161,7 +164,10 @@
             <div class="account-info">
                 <div class="d-flex section-username">
                     <h3 class="my-0 mr-1"><%= userprofile.username %></h3>
-                    <% if (user.username != userprofile.username) {%>
+                    <% if (userprofile.is_locked) {%>
+                        <h2 class="text-danger">THIS ACCOUNT HAS BEEN LOCKED</h2>
+                    <%} %>
+                    <% if (user.username != userprofile.username && !userprofile.is_locked) {%>
                         <button class="bg-brand ml-1">Follow</button>
                         <button class="bg-brand ml-1"><i class="fa fa-lock mr-1"></i>Message</button>
                     <%} %>

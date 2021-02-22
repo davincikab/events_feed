@@ -427,7 +427,7 @@ exports.dashboard = function(req, res, next) {
                         res.send(err);
                     }
 
-                    eventDescriptionModel.getReportedContributions(function(err, reportedEvents) {
+                    eventDescriptionModel.getReportedEvents(function(err, reportedEvents) {
                         if(err) {
                             res.send(err);
                         }
