@@ -210,21 +210,6 @@ exports.userEvents = function(req, res) {
     }
 }
 
-exports.getReportedAccounts = function(req, res, next) {
-    userModel.getReportedAccounts(function(err, result) {
-        if (err) {
-            res.send(err);
-        }
-
-        let context = {
-            user:req.user,
-            lockedAccounts:result
-        };
-
-        res.render('pages/reported_accounts', context)
-    });
-}
-
 exports.lockAccount = function(req, res, next) {
     let { username } = req.params;
     userModel.lockUserAccount(username, function(err, result) {
@@ -248,13 +233,37 @@ exports.unlockAccount = function(req, res, next) {
 }
 
 
-exports.reportUser = function(req, res, next) {
-    let { user_id } = req.params;
-    userModel.unlockUserAccount(user_id, function(err, result) {
+exports.getReportedAccounts = function(req, res, next) {
+    userModel.getReportedAccounts(function(err, result) {
+        if (err) {
+            res.send(err);
+        }
+
+        let context = {
+            user:req.user,
+            section:'Reported Accounts',
+            reportedAccounts:result
+        };
+
+        res.render('pages/reported_accounts', context)
+    });
+}
+
+exports.reportAccount = function(req, res, next) {
+    let { username, reported_by } = req.params;
+    let { reason } = req.body;
+
+    let report = {
+        reported_by:reported_by,
+        account_name:username,
+        reason:reason
+    };
+
+    userModel.reportAccount(report, function(err, result) {
         if (err) {
             res.send(err);
         }
         
-        res.status(200).send({message:'successfully locked'});
+        res.status(200).send({message:'successfully reported account'});
     });
 }

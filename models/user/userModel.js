@@ -72,11 +72,19 @@ userModel.removeUserFromReports = function(user_id, result) {
     });
 }
 
-userModel.reportUser = function(user_id, result) {
-    connection.query('UPDATE users SET is_reported=? WHERE user_id =? ',[true, user_id] , function(err, response) {
+userModel.reportAccount = function(report, result) {
+    connection.query('INSERT INTO reported_accounts SET? ', report, function(err, response) {
         if(err) throw err;
 
         result(null, response[0]);
+    });
+}
+
+userModel.getReportedAccounts = function(result) {
+    connection.query('SELECT * FROM reported_accounts', function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
     });
 }
 
