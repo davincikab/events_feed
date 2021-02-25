@@ -151,7 +151,9 @@
                     <button data-href="/delete_event/<%= event.event_id %>/" data-event="event" class="btn bg-danger mt-2 btn-action">Delete</button>
                 <%} %>
                 
-                <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Event</button>
+                <% if (user.username != event.added_by) {%>
+                    <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Event</button>
+                <%} %>
             </div>
         </div>  
         <div class="media">
