@@ -213,6 +213,15 @@ eventDescriptionModel.deleteEventReportById = function(report_id, result) {
     });
 }
 
+eventDescriptionModel.getReportedEventById = function(report_id, result) {
+    connection.query('SELECT * from reported_events WHERE report_id=?', report_id, function(error, results) {
+        if (error) throw error;
+        // console.log('The solution is: ', results[0]);
+
+        result(null, results);
+    });
+}
+
 // Events media files
 var eventMedia = function(media) {
     this.event_id = media.event_id;

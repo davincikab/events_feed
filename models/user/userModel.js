@@ -64,6 +64,14 @@ userModel.getReportedAccounts = function(result) {
     });
 }
 
+userModel.getReportedAccountById = function(report_id, result) {
+    connection.query('SELECT * FROM reported_accounts WHERE report_id =? ',report_id , function(err, response) {
+        if(err) throw err;
+
+        result(null, response[0]);
+    });
+}
+
 userModel.deleteReportById = function(report_id, result) {
     connection.query('DELETE FROM reported_accounts WHERE report_id =? ',report_id , function(err, response) {
         if(err) throw err;

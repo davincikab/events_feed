@@ -526,3 +526,21 @@ exports.deleteEventReport = function(req, res, next) {
         res.status(200).send({message:'success'});
     });   
 }
+
+exports.getReportedEvent = function(req, res, next) {
+    let { report_id } = req.params;
+
+    eventDescriptionModel.getReportedEventById(report_id, function(err, result) {
+        if(err) {
+            res.send(err)
+        }
+
+        let context = {
+            user:req.user,
+            report:result[0] ? result[0] : {},
+            section:'Report Detail'
+        };
+
+        res.render("pages/report_details", context)
+    });
+}

@@ -49,5 +49,6 @@ router.get('/reported-contributions/', isAuthenticated, allowOnly(accessLevels.a
 
 router.post('/report-event/', isAuthenticated, allowOnly(accessLevels.admin, events.reportEvent));
 router.post('/report-events/delete/:report_id/', isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventReport));
+router.get('/reported-events/:report_id/', isAuthenticated, allowOnly(accessLevels.admin, events.getReportedEvent));
 
 module.exports = router;

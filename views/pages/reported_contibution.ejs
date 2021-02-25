@@ -46,6 +46,7 @@
                 <th>Reason</th>
                 <th>Date</th>
                 <th>Action</th>
+                <th></th>
             </thead>
             <tbody>
                 <% for (let report of events) {%>
@@ -56,6 +57,10 @@
                         <td><%= new Date(report.date).toDateString()%></td>
                         <td>
                             <button data-id="<%= report.report_id %>" class="link btn btn-warning btn-remove">Remove</button>
+                        </td>
+
+                        <td>
+                            <a href="/reported-events/<%= report.report_id %>/" class="link btn btn-warning">View</a>
                         </td>
                     </tr>
                 <%} %>

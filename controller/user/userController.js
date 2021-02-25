@@ -279,3 +279,21 @@ exports.deleteReport = function(req, res, next) {
         res.status(200).send({message:'successfully deleted the report'});
     });
 }
+
+exports.getReportedAccount = function(req, res, next) {
+    let { report_id } = req.params;
+
+    userModel.getReportedAccountById(report_id, function(err, result) {
+        if (err) {
+            res.send(err);
+        }
+
+        let context = {
+            user:req.user,
+            report:result,
+            section:'Report Account Detail'
+        }
+
+        res.render("pages/reported-accounts-details", context)
+    });
+}

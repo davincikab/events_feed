@@ -40,19 +40,28 @@
         <h2>Reported Accounts</h2>
         <table class="table">
             <thead>
-                <th>Title</th>
+                <th>User</th>
                 <th>Reported By</th>
                 <th>Date</th>
+                <th>Reason</th>
                 <th>Action</th>
+                <th></th>
             </thead>
             <tbody>
-                <% for (let report of events) {%>
+                <% for (let report of users) {%>
                     <tr>
-                        <td><%= report.event_name %></td>
-                        <td><%= report.reported_by %></td>
+                        <td>
+                            <a class="link" href="/user_profile/<%= report.account_name %>/"><%= report.account_name %></a>
+                        <td>
+                            <a class="link" href="/user_profile/<%= report.reported_by %>/"><%= report.reported_by %></a> 
+                        </td>
                         <td><%= new Date(report.date).toDateString()%></td>
+                        <td><%= report.reason.slice(0, 10) %> ...</td>
                         <td>
                             <button data-id="<%= report.report_id %>" class="link btn btn-warning btn-remove">Remove</button>
+                        </td>
+                        <td>
+                            <a href="/reported-accounts/<%= report.report_id %>/" class="link btn btn-warning">View</a>
                         </td>
                     </tr>
                 <%} %>
