@@ -192,7 +192,7 @@
                     <p> <%= userprofile.email %> </p>
 
                     <div class="my-1">
-                        <% if (user.is_admin) {%>
+                        <% if (user.is_admin && userprofile.username != user.username) {%>
                             <% if (userprofile.is_locked == 0) {%>
                                 <button class="bg-danger ml-1" id="lock-account">Lock Account</button>
                             <%} else {%> 
@@ -200,7 +200,7 @@
                             <%}%>
                         <%}%>
                         
-                        <% if (!userprofile.is_admin) {%>
+                        <% if (!userprofile.is_admin && userprofile.username != user.username) {%>
                             <button class="bg-brand ml-1" id="report-button">Report Account</button>
                         <%} %>
                     </div>

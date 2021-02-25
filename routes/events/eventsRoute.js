@@ -44,11 +44,11 @@ router.post("/publish_contribution/:description_id/", isAuthenticated, allowOnly
 router.post("/delete_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventContribution))
 
 // reporting
-router.get('/reported-events/', isAuthenticated, allowOnly(accessLevels.admin, events.getReportedEvents));
-router.get('/reported-contributions/', isAuthenticated, allowOnly(accessLevels.admin, events.getReportedContributions));
+router.get('/reported-events/', isAuthenticated, allowOnly(accessLevels.user, events.getReportedEvents));
+router.get('/reported-contributions/', isAuthenticated, allowOnly(accessLevels.user, events.getReportedContributions));
 
-router.post('/report-event/', isAuthenticated, allowOnly(accessLevels.admin, events.reportEvent));
+router.post('/report-event/', isAuthenticated, allowOnly(accessLevels.user, events.reportEvent));
 router.post('/report-events/delete/:report_id/', isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventReport));
-router.get('/reported-events/:report_id/', isAuthenticated, allowOnly(accessLevels.admin, events.getReportedEvent));
+router.get('/reported-events/:report_id/', isAuthenticated, allowOnly(accessLevels.user, events.getReportedEvent));
 
 module.exports = router;
