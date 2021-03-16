@@ -7,11 +7,121 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/static/css/design.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/design.css">
+    
+    <style>
+        .filters {
+            text-align: center;
+            margin-bottom: 2rem;
+            z-index: 3;
+            position: absolute;
+            top:3%;
+            left: 2%;
+            background-color: grey;
+            padding:0.25rem;
+        }
+
+        .filters * {
+            display: inline-block;
+        }
+
+        .filters label {
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.25rem;
+            /* border-radius: 2rem; */
+            min-width: 50px;
+            line-height: normal;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 1rem;
+            background-color: var(--white);
+        }
+
+        .filters label.active {
+            background-color: var(--green);
+            color: var(--white);
+        }
+
+        .filters label:hover {
+            background: var(--green);
+            color: var(--white);
+        }
+
+    </style>
 </head>
 <body>
     <%- include('../partial/header') %>
-    <div id="map"></div>
+    <div id="map">
+        <div class="filters">
+
+            <div class="">
+                <label for="earliest">Earliest</label>
+            </div>
+
+            <div class="">
+                <label for="6m-past">6m</label>
+            </div>
+
+            <div class="">
+                <label for="1m-past">1m</label>
+            </div>
+
+            <div class="">
+                <label for="2wk-past">2w</label>
+            </div>
+
+            <div class="">
+                <label for="1wk-past">1w</label>
+            </div>
+
+            <div class="">
+                <label for="24hr-past">24hr</label>
+            </div>
+
+            <span class="text-white">
+                <i class="fa fa-arrow-left mx-2"></i>
+                Past
+            </span>
+
+            <div class="">
+                <label for="current" class="active">Current</label>
+            </div>
+
+            <div class="">
+                <label for="all">All</label>
+            </div>
+
+            <span class="text-white">
+                Upcoming
+                <i class="fa fa-arrow-right mx-2"></i>
+            </span>
+
+            <div class="">
+                <label for="next-24hr">24hr</label>
+            </div>
+
+            <div class="">
+                <label for="next-1wk">1w</label>
+            </div>
+
+            <div class="">
+                <label for="next-2wk">2w</label>
+            </div>
+
+            <div class="">
+                <label for="next-1m">1m</label>
+            </div>
+
+            <div class="">
+                <label for="next-6m">6m</label>
+            </div>
+
+            <div class="">
+                <label for="latest">Latest</label>
+            </div>
+
+        </div>
+    </div>
 
     
     <div class="aside-section">

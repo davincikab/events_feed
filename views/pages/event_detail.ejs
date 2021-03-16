@@ -46,11 +46,13 @@
             max-width: 960px;
             display: flex;
             flex-direction: column;
+            padding: 0;
         }
 
         .media {
-            padding:1em 0;
+            padding:0em 0;
         }
+
         .media img {
             height: 150px;
             width: 100%;
@@ -70,6 +72,13 @@
 
         .text-content p {
             justify-content: space-between;
+        }
+
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .title {
@@ -125,7 +134,7 @@
     
     <div class="container">
         <div class="text-content">
-            <h4 class="mb-0">Event Details</h4>
+            <!-- <h4 class="mb-0">Event Details</h4> -->
             <p class="d-flex">
                 <b>Address</b> <p><%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %></p>
             </p>
@@ -158,20 +167,20 @@
         </div>  
         <div class="media">
             <!-- images carousel -->
-            <h4 class="my-1">Event Photos</h4>
+            <!-- <h4 class="my-1">Event Photos</h4> -->
             <div class="event-photo">
                 <% for ( let image of event.media) {%>
                     <% if (image.type == "image") {%>
-                        <img src="../../.<%= image.media %>" alt="<%= event.event_name %>">
+                        <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
                     <%} %>
                 <%} %>
             </div>
 
-            <h4 class="my-1">Event Videos</h4>
+            <!-- <h4 class="my-1">Event Videos</h4> -->
            <div class="event-video">
                 <% for ( let video of event.media) {%>
                     <% if (video.type == "video") {%>
-                        <video width='auto' height='100' controls>
+                        <video width='auto' height='250' controls>
                             <source src="../../.<%= video.media %>" type='video/mp4'>
                             Your browser does not support the video tag.
                         </video>
@@ -191,8 +200,8 @@
                      says  
                 </p>
 
-                <p class="d-flex">Start Date  <b> <%= event.start_date %></b> at  <%= event.start_time %></p>
-                <p class="d-flex">End Date  <b> <%= event.start_date %></b> at  <%= event.end_time %></p>
+                <p class="d-flex">From  <b class="ml-2"> <%= event.start_date %></b> at  <%= event.start_time %></p>
+                <p class="d-flex">To  <b class="ml-2"> <%= event.start_date %></b> at  <%= event.end_time %></p>
 
                 <h4 class="mb-0">Event Description</h4>
                 <p class="my-0">
@@ -211,29 +220,30 @@
                     <% if (user.is_admin || user.username == event.added_by) {%>
                         <button data-href="/delete_contribution/<%= event.description_id  %>/"  data-event="contribution" class="btn bg-danger mt-2 btn-action">Delete</button>
                     <%} %>
-
-                    <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Contribution</button>
                     
+                    <% if (user.is_admin || user.username != event.added_by) {%>
+                        <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Contribution</button>
+                    <%} %>
                 </div>
                 
             </div>
 
             <div class="media">
                 <!-- images carousel -->
-                <h4 class="my-1">Event Photos</h4>
+                <!-- <h4 class="my-1">Event Photos</h4> -->
                 <div class="event-photo">
                     <% for ( let image of event.media) {%>
                         <% if (image.type == "image") {%>
-                            <img src="../../.<%= image.media %>" alt="<%= event.event_name %>">
+                            <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
                         <%} %>
                     <%} %>
                 </div>
 
-                <h4 class="my-0">Event Videos</h4>
+                <!-- <h4 class="my-0">Event Videos</h4> -->
                 <div class="event-video">
                     <% for ( let video of event.media) {%>
                         <% if (video.type == "video") {%>
-                            <video width='auto' height='100' controls>
+                            <video width='auto' height='250' controls>
                                 <source src="../../.<%= video.media %>" type='video/mp4'>
                                 Your browser does not support the video tag.
                             </video>

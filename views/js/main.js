@@ -58,7 +58,9 @@ var map = new mapboxgl.Map({
 
 // click event lister
 map.on('load', function(e) {
-	loadEvents();
+	loadEvents(
+		[new Date().toISOString(), new Date().toISOString()]
+	);
 
 	map.on('click', function(e) {
 		if(userName.innerText == "") {
@@ -147,10 +149,14 @@ geocoderControl.on('result', function({result}) {
 });
 
 // ______________________ Get Events from the database ______________________________________________________
-function loadEvents() {
+function loadEvents(timeFrame) {
 	$.ajax({
 		url:'/events/',
 		type:'GET',
+		data:{
+			from:timeFrame[0],
+			to:timeFrame[1]
+		},
 		success:function(response) {
 			console.log(response);
 
@@ -891,4 +897,72 @@ function triggerGeocode(address) {
 //  TODO: Style the popup and call loadEvents on add or update;
 
 
+// get events by time
+let DAY_IN_MS = 8460000;
+var timeFilterObject = {
+	"earliest":[
+		new Date(0).toISOString(), new Date().toISOString()
+	],
+	"6m-past":[
+		new Date((new Date() - DAY_IN_MS * 180)).toISOString(), new Date().toISOString()
+	],
+	"1m-past":[
+		new Date((new Date() - DAY_IN_MS * 30)).toISOString(), new Date().toISOString()
+	],
+	"2wk-past":[
+		new Date((new Date() - DAY_IN_MS * 14)).toISOString(), new Date().toISOString()
+	],
+	"1wk-past":[
+		new Date((new Date() - DAY_IN_MS * 7)).toISOString(), new Date().toISOString()
+	],
+	"24hr-past":[
+		new Date((new Date() - DAY_IN_MS)).toISOString(), new Date().toISOString()
+	],
+	"current":[new Date().toISOString(), new Date().toISOString()],
+	"all":[new Date(0).toISOString(), new Date(8640000000000000).toISOString()],
+	"next-24hr":[
+		new Date().toISOString(), new Date((new Date() + DAY_IN_MS)).toISOString()
+	],
+	"next-1wk":[
+		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 7)).toISOString()
+	],
+	"next-2wk":[
+		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 14)).toISOString()
+	],
+	"next-1m":[
+		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 30)).toISOString()
+	],
+	"next-6m":[
+		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 180)).toISOString()
+	],
+	"latest":[
+		new Date((new Date() + DAY_IN_MS * 180)).toISOString(), new Date(8640000000000000).toISOString()
+	]
+};
+
+
+var eventFilters = document.querySelectorAll(".filters label");
+eventFilters.forEach(timeFilter => {
+	$(timeFilter).on("click", function(e) {
+		// toggle event filters
+		eventFilters.forEach(tmF => $(tmF).removeClass("active"));
+
+		// add active class
+		$(timeFilter).toggleClass("active");
+
+		// get the htmlFor
+		let timeKey =$(this).attr('for');
+		console.log(timeKey);
+
+		// get the time
+		let time = timeFilterObject[timeKey];
+
+		// load the data within the given period
+		console.log(time);
+
+		loadEvents(time);
+	});
+
+
+});
 
