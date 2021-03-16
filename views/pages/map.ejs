@@ -10,15 +10,29 @@
     <link rel="stylesheet" type="text/css" href="/static/css/design.css">
     
     <style>
+        .filter-section {
+            background-color: grey;
+            padding:0.25rem;
+            position: absolute;
+            top: 0%;
+            left: -90%;
+            bottom: 0%;
+            right: 1%;
+            z-index: 3;
+            width: 90%;
+            transition-duration: 0.5s;
+        }
+
+        .filter-section.open {
+            left: 0;
+        }
+
         .filters {
             text-align: center;
             margin-bottom: 2rem;
-            z-index: 3;
-            position: absolute;
-            top:3%;
-            left: 2%;
-            background-color: grey;
-            padding:0.25rem;
+            display: flex;
+            display: flex;
+            flex-direction: column;
         }
 
         .filters * {
@@ -47,79 +61,140 @@
             color: var(--white);
         }
 
+        .filter-section .btn-close {
+            position:absolute;
+            right:1%;
+            top:0%;
+        }
+
+        .filters span {
+            font-size: 1rem;
+        }
+
+        #open-filter {
+            z-index: 3;
+            position: absolute;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: var(--white);
+            left: 1%;
+            bottom: 1%;
+        }
+
+        @media (min-width:50em) {
+            .filter-section {
+                top:0%;
+                height: 100%;
+                left: -30vw;
+                width:30vw;
+            }
+
+            .filter-section.open {
+                left:0%;
+            }
+
+            .filters {
+                display: inline-block;
+            }
+
+            #open-filter {
+                top: 1%;
+                bottom: 90%;
+            }
+        }
+
     </style>
 </head>
 <body>
     <%- include('../partial/header') %>
     <div id="map">
-        <div class="filters">
+        <button class="btn" id="open-filter">
+            <i class="fa fa-filter"></i>
+            FILTER
+        </button>
 
-            <div class="">
-                <label for="earliest">Earliest</label>
+        <div class="filter-section" id="filter-section">
+            <button class="btn btn-close" id="close-filter">
+                <i class="fa fa-close"></i>
+            </button>
+
+            <div class="my-3 text-white">
+                <h3>Time Filter</h3>
             </div>
 
-            <div class="">
-                <label for="6m-past">6m</label>
+            <div class="filters">
+                <div class="past-filter">
+                    <div class="">
+                        <label for="earliest">Earliest</label>
+                    </div>
+
+                    <div class="">
+                        <label for="6m-past">6m</label>
+                    </div>
+
+                    <div class="">
+                        <label for="1m-past">1m</label>
+                    </div>
+
+                    <div class="">
+                        <label for="2wk-past">2w</label>
+                    </div>
+
+                    <div class="">
+                        <label for="1wk-past">1w</label>
+                    </div>
+
+                    <div class="">
+                        <label for="24hr-past">24hr</label>
+                    </div>
+                </div>
+
+                <div class="mx-1">
+                    <span class="text-white">
+                        <i class="fa fa-arrow-left mx-2"></i>
+                        Past
+                    </span>
+
+                    <div class="">
+                        <label for="current" class="active">Current</label>
+                    </div>
+
+                    <div class="">
+                        <label for="all">All</label>
+                    </div>
+
+                    <span class="text-white">
+                        Upcoming
+                        <i class="fa fa-arrow-right mx-2"></i>
+                    </span>
+                </div>
+
+                <div>
+                    <div class="">
+                        <label for="next-24hr">24hr</label>
+                    </div>
+
+                    <div class="">
+                        <label for="next-1wk">1w</label>
+                    </div>
+
+                    <div class="">
+                        <label for="next-2wk">2w</label>
+                    </div>
+
+                    <div class="">
+                        <label for="next-1m">1m</label>
+                    </div>
+
+                    <div class="">
+                        <label for="next-6m">6m</label>
+                    </div>
+
+                    <div class="">
+                        <label for="latest">Latest</label>
+                    </div>
+                </div>
             </div>
-
-            <div class="">
-                <label for="1m-past">1m</label>
-            </div>
-
-            <div class="">
-                <label for="2wk-past">2w</label>
-            </div>
-
-            <div class="">
-                <label for="1wk-past">1w</label>
-            </div>
-
-            <div class="">
-                <label for="24hr-past">24hr</label>
-            </div>
-
-            <span class="text-white">
-                <i class="fa fa-arrow-left mx-2"></i>
-                Past
-            </span>
-
-            <div class="">
-                <label for="current" class="active">Current</label>
-            </div>
-
-            <div class="">
-                <label for="all">All</label>
-            </div>
-
-            <span class="text-white">
-                Upcoming
-                <i class="fa fa-arrow-right mx-2"></i>
-            </span>
-
-            <div class="">
-                <label for="next-24hr">24hr</label>
-            </div>
-
-            <div class="">
-                <label for="next-1wk">1w</label>
-            </div>
-
-            <div class="">
-                <label for="next-2wk">2w</label>
-            </div>
-
-            <div class="">
-                <label for="next-1m">1m</label>
-            </div>
-
-            <div class="">
-                <label for="next-6m">6m</label>
-            </div>
-
-            <div class="">
-                <label for="latest">Latest</label>
-            </div>
-
         </div>
     </div>
 

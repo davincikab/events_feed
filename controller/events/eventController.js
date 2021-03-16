@@ -5,8 +5,11 @@ const { request } = require("express");
 const { reportAccount } = require("../user/userController");
 
 exports.getAllEvents = function(req, res) {
+    console.log(req.query);
+    // console.log(req.body);
+    let query = req.query;
     if(req.user.is_admin) {
-        eventLocationModel.getAllEvents(function(err, events) {
+        eventLocationModel.getAllEvents(query, function(err, events) {
             if(err) {
                 res.send(err);
             }
@@ -14,7 +17,7 @@ exports.getAllEvents = function(req, res) {
             addMediaFiles(events);
         });
     } else {
-        eventLocationModel.getPostedEvents(function(err, events) {
+        eventLocationModel.getPostedEvents(query, function(err, events) {
             if(err) {
                 res.send(err);
             }

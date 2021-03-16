@@ -439,7 +439,7 @@ function updateEventMarkers() {
 		marker.remove();
 	});
 
-	loadEvents();
+	// loadEvents();
 }
 
 // _______________________________ Update section _____________________________________________________________
@@ -896,47 +896,55 @@ function triggerGeocode(address) {
 
 //  TODO: Style the popup and call loadEvents on add or update;
 
+// toggle filter section
+$("#close-filter").on("click", function(e) {
+	$("#filter-section").removeClass("open");
+});
+
+$("#open-filter").on("click", function(e) {
+	$("#filter-section").addClass("open");
+});
 
 // get events by time
-let DAY_IN_MS = 8460000;
+let DAY_IN_MS = 24 * 60 * 60 * 1000;
 var timeFilterObject = {
 	"earliest":[
 		new Date(0).toISOString(), new Date().toISOString()
 	],
 	"6m-past":[
-		new Date((new Date() - DAY_IN_MS * 180)).toISOString(), new Date().toISOString()
+		new Date(new Date() - (DAY_IN_MS * 180)).toISOString(), new Date().toISOString()
 	],
 	"1m-past":[
-		new Date((new Date() - DAY_IN_MS * 30)).toISOString(), new Date().toISOString()
+		new Date(new Date() - (DAY_IN_MS * 30)).toISOString(), new Date().toISOString()
 	],
 	"2wk-past":[
-		new Date((new Date() - DAY_IN_MS * 14)).toISOString(), new Date().toISOString()
+		new Date(new Date() - (DAY_IN_MS * 14)).toISOString(), new Date().toISOString()
 	],
 	"1wk-past":[
-		new Date((new Date() - DAY_IN_MS * 7)).toISOString(), new Date().toISOString()
+		new Date(new Date() - (DAY_IN_MS * 7)).toISOString(), new Date().toISOString()
 	],
 	"24hr-past":[
-		new Date((new Date() - DAY_IN_MS)).toISOString(), new Date().toISOString()
+		new Date(new Date() - (DAY_IN_MS)).toISOString(), new Date().toISOString()
 	],
 	"current":[new Date().toISOString(), new Date().toISOString()],
-	"all":[new Date(0).toISOString(), new Date(8640000000000000).toISOString()],
+	"all":[new Date(0).toISOString(), new Date(66400000000000).toISOString()],
 	"next-24hr":[
-		new Date().toISOString(), new Date((new Date() + DAY_IN_MS)).toISOString()
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS)).toISOString()
 	],
 	"next-1wk":[
-		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 7)).toISOString()
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 7)).toISOString()
 	],
 	"next-2wk":[
-		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 14)).toISOString()
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 14)).toISOString()
 	],
 	"next-1m":[
-		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 30)).toISOString()
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 30)).toISOString()
 	],
 	"next-6m":[
-		new Date().toISOString(), new Date((new Date() + DAY_IN_MS * 180)).toISOString()
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 180)).toISOString()
 	],
 	"latest":[
-		new Date((new Date() + DAY_IN_MS * 180)).toISOString(), new Date(8640000000000000).toISOString()
+		new Date(new Date().getTime() + (DAY_IN_MS * 180)).toISOString(), new Date(8640000000000000).toISOString()
 	]
 };
 
@@ -959,6 +967,7 @@ eventFilters.forEach(timeFilter => {
 
 		// load the data within the given period
 		console.log(time);
+		updateEventMarkers();
 
 		loadEvents(time);
 	});
