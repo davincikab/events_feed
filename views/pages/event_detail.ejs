@@ -77,8 +77,11 @@
         .text-content {
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+        }
+
+        .text-content div {
+            flex-direction: column;
         }
 
         .title {
@@ -129,23 +132,35 @@
     <%- include('../partial/header') %>
     <div class="text-center mt-5">
         <h2 class="text-center"><%= event.event_name %></h2>
-        <small>Posted By <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>  on <%= event.start_date %></small>
+        <p class="mb-1">
+            Posted By <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>  on <%= new Date(event.start_date).toDateString() %>
+        </p>
     </div>
     
     <div class="container">
         <div class="text-content">
             <!-- <h4 class="mb-0">Event Details</h4> -->
-            <p class="d-flex">
-                <b>Address</b> <p><%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %></p>
-            </p>
+            <div class="d-flex">
+                <b>Address</b> 
+                <p>
+                    <%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %>
+                </p>
+            </div>
 
-            <p class="d-flex"><b>Start Date</b>  <p> <%= event.start_date %> at  <%= event.start_time %></p></p>
-            <p class="d-flex"><b>End Date</b>  <p> <%= event.start_date %> at  <%= event.end_time %></p></p>
+            <div class="d-flex">
+                <b>Start Date</b>  
+                <p> <%= new Date(event.start_date).toDateString() %> at  <%= event.start_time.slice(0, -9) %></p>
+            </div>
 
-            <h4 class="mb-0">Event Description</h4>
-            <p class="my-0">
+            <div class="d-flex">
+                <b>End Date</b>  
+                <p> <%= new Date(event.end_date).toDateString() %> at  <%= event.end_time.slice(0, -9) %></p>
+            </div>
+
+            <div class="my-0">
+                <h4 class="mb-0">Event Description</h4>
                 <%= event.event_description %>
-            </p>
+            </div>
 
             <div class="mt-1">
                 <% if ( user.username == event.added_by) {%>

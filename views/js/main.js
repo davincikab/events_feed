@@ -182,7 +182,7 @@ function createEventMarkers(events) {
 }
 
 function addEventToMap(event) {
-	let lngLat = {lng:event.longitude,lat:event.latitude};
+	let lngLat = { lng:event.longitude, lat:event.latitude };
 
 	// Create popup content
 	var docFrag = document.createDocumentFragment();
@@ -198,9 +198,9 @@ function addEventToMap(event) {
 		"<p>"+ address +"</p>"+
 		"</div>"+
 		"<div class='popup-body'>"+
-		"<p class='item'><b>Start Date</b>" + event.start_date + "</p>"+
-		"<p class='item'><b>End Date</b>" + event.end_date + "</p>"+
-		"<p class='item'><b>Time</b>" + event.start_time +  " - " + event.end_time + "</p>"+
+		"<p class='item'><b>Start Date</b>" + new Date(event.start_date).toDateString() + "</p>"+
+		"<p class='item'><b>End Date</b>" + new Date(event.end_date).toDateString() + "</p>"+
+		"<p class='item'><b>Time</b>" + event.start_time.slice(0, -9) +  " - " + event.end_time.slice(0, -9) + "</p>"+
 		"<p class='item'><b>Added by </b><a class='link' id='user-name' href='/user_profile/" + event.added_by +"/'>"  + event.added_by + "</a></p>"+
 		// "<p class='description'><b>Description</b><br>"+event.event_description + "</p>"+
 		// "<div class='media-section'>"+
@@ -220,6 +220,7 @@ function addEventToMap(event) {
 	button.id = "read-more";
 
 	button.innerHTML = "Read more ...";
+
 	$(button).on("click", function(e) {
 		// expandPopup();
 
@@ -272,14 +273,17 @@ function addEventToMap(event) {
 
 		// display update button and section
 		let username = (userName.innerText).trim();
+
 		if(event.added_by == username) {
 			updateEventObject = event;
 		} 
+
 		else if(event.contribution[0]) {
+
 			let searchEvent = event.contribution.find(ev => ev.added_by == username);
 
 			if(searchEvent) {
-				updateEventObject = searchEvent
+				updateEventObject = searchEvent;
 			} else {
 				updateEventObject = {
 					event_id:event.event_id,
@@ -375,9 +379,9 @@ function updateAsideSection(event, address) {
 	"<p>"+ address +"</p>"+
 	"</div>"+
 	"<div class='info-section'>"+
-	"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
-	"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
-	"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
+	"<p class='item'><b>Start Date</b><p>" + new Date(event.start_date).toDateString() + "</p></p>"+
+	"<p class='item'><b>End Date</b><p>" + new Date(event.end_date).toDateString() + "</p></p>"+
+	"<p class='item'><b>Time</b><p>" + event.start_time.slice(0, -9) +  " - " + event.end_time.slice(0, -9) + "</p></p>"+
 	// "<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
 
 	"<p class='item'><b>Added by </b>" +
@@ -395,7 +399,8 @@ function updateAsideSection(event, address) {
 	"</div>";
 	html += descriptionLink;
 
-	html += "<h4 class='text-center'>Contribution</h5>"
+	html += "<h4 class='text-center'>Contribution</h5>";
+
 	// contribution
 	let contributionString = "";
 	event.contribution.forEach(contribution => {
@@ -410,7 +415,7 @@ function updateAsideSection(event, address) {
 			"<div class='info-section'>"+
 				"<p class='item'><b>Start Date</b><p>" +contribution.start_date + "</p></p>"+
 				"<p class='item'><b>End Date</b><p>" +contribution.end_date + "</p></p>"+
-				"<p class='item'><b>Time</b><p>" +contribution.start_time +  " - " +contribution.end_time + "</p></p>"+
+				"<p class='item'><b>Time</b><p>" +contribution.start_time.slice(0, -9) +  " - " + contribution.end_time.slice(0, -9) + "</p></p>"+
 
 				"<p class='item'><b>Added by </b>" +
 					"<p><a class='link' id='user-name' href='/user_profile/'" + contribution.added_by +"'/>"  + contribution.added_by + "</a></p>" +
