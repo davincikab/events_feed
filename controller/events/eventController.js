@@ -196,12 +196,14 @@ exports.getUnPublishedDescription = function(req, res) {
 // event description
 exports.createEventDescription = function(req, res) {
     let imageFiles = Object.values(req.files);
+    console.log(imageFiles);
 
     let { event_id } = req.body;
-    let { username } = req.user;
+    let { username, user_id } = req.user;
+    let points = 0;
 
-    console.log("Create a Description");
-    console.log(req.body);
+    // console.log("Create a Description");
+    // console.log(req.body);
     let eventDescription = new eventDescriptionModel(req.body);
 
     // update the description object
@@ -211,9 +213,41 @@ exports.createEventDescription = function(req, res) {
         }
         
         console.log(response);
-        // 
+        
+        // update the points value by event type
+        points = eventDescription.is_contribution == '0' ? points + 3 : points + 1;
+        console.log("Points: " + points);
+        // update points by file types
+        let image = imageFiles.find(image => image.mimetype.includes('image'))
+        if(image) {
+            console.log("Found Image");
+            points = points + 1;
+            console.log("Points: " + points);
+        }
+
+        let video = imageFiles.find(image => image.mimetype.includes('video'))
+        if(video) {
+            console.log("Found Video");
+            points = points + 2;
+            console.log("Points: " + points);
+        }
+
+        // update the files;
+        console.log("User Update Points");
+        console.log("Points: " + points);
+
         insertMediaFiles(response.insertId, imageFiles, event_id, username);
-        res.send(response);
+
+        userModel.updatePoints(user_id, points, function(err, result) {
+            if(err) throw err;
+
+            console.log("User Update Points");
+            console.log(points);
+
+            res.send(response);
+        });
+
+       
     });  
 }
 

@@ -41,12 +41,15 @@
         .head-menu {
             justify-content: space-evenly;
         }
-        .container {
-            margin:5px auto;
-            max-width: 960px;
+
+        .event-container {
+            width: 93vw;
+            margin:5px 1em;
             display: flex;
             flex-direction: column;
-            padding: 0;
+            padding: 0.5rem 0.75rem;
+            box-shadow: 2px 2px 1em #ddd;
+            overflow: hidden;
         }
 
         .media {
@@ -109,8 +112,14 @@
             display: block;
         }
 
+        .btn {
+            color:var(--white) !important;
+        }
+
         @media(min-width:50em) {
-            .container {
+            .event-container {
+                max-width: 960px;
+                margin: 5px auto;
                 font-size: 1em;
                 line-height: 1.6;
                 display: grid;
@@ -130,119 +139,58 @@
 </head>
 <body>
     <%- include('../partial/header') %>
-    <div class="text-center mt-5">
-        <h2 class="text-center"><%= event.event_name %></h2>
-        <p class="mb-1">
-            Posted By <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>  on <%= new Date(event.start_date).toDateString() %>
-        </p>
-    </div>
-    
+
     <div class="container">
-        <div class="text-content">
-            <!-- <h4 class="mb-0">Event Details</h4> -->
-            <div class="d-flex">
-                <b>Address</b> 
-                <p>
-                    <%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %>
-                </p>
-            </div>
-
-            <div class="d-flex">
-                <b>Start Date</b>  
-                <p> <%= new Date(event.start_date).toDateString() %> at  <%= event.start_time.slice(0, -9) %></p>
-            </div>
-
-            <div class="d-flex">
-                <b>End Date</b>  
-                <p> <%= new Date(event.end_date).toDateString() %> at  <%= event.end_time.slice(0, -9) %></p>
-            </div>
-
-            <div class="my-0">
-                <h4 class="mb-0">Event Description</h4>
-                <%= event.event_description %>
-            </div>
-
-            <div class="mt-1">
-                <% if ( user.username == event.added_by) {%>
-                    <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
-                <%} %>
-
-                <% if (user.is_admin && !event.is_posted) {%>
-                    <button data-href="/post_event/<%= event.event_id %>/<%= event.description_id  %>/" data-event="event" class="btn bg-brand mt-2 btn-action">Post</button>
-                <%} %>
-
-                <% if (user.is_admin || user.username == event.added_by) {%>
-                    <button data-href="/delete_event/<%= event.event_id %>/" data-event="event" class="btn bg-danger mt-2 btn-action">Delete</button>
-                <%} %>
-                
-                <% if (user.username != event.added_by) {%>
-                    <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Event</button>
-                <%} %>
-            </div>
-        </div>  
-        <div class="media">
-            <!-- images carousel -->
-            <!-- <h4 class="my-1">Event Photos</h4> -->
-            <div class="event-photo">
-                <% for ( let image of event.media) {%>
-                    <% if (image.type == "image") {%>
-                        <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
-                    <%} %>
-                <%} %>
-            </div>
-
-            <!-- <h4 class="my-1">Event Videos</h4> -->
-           <div class="event-video">
-                <% for ( let video of event.media) {%>
-                    <% if (video.type == "video") {%>
-                        <video width='auto' height='250' controls>
-                            <source src="../../.<%= video.media %>" type='video/mp4'>
-                            Your browser does not support the video tag.
-                        </video>
-                    <%} %>
-                <%} %>
-           </div>
-            <!-- video element -->
+        <div class="text-center mt-2">
+            <h2 class="text-center"><%= event.event_name %></h2>
+            <p class="mb-1">
+                Posted By <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>  on <%= new Date(event.start_date).toDateString() %>
+            </p>
         </div>
-    </div>
-
-    <!-- other users contribution -->
-    <%  for (let event of contribution ) {%>
-        <div class="container">
+        
+        <div class="event-container">
             <div class="text-content">
-                <p class="title">
-                    <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>
-                     says  
-                </p>
+                <!-- <h4 class="mb-0">Event Details</h4> -->
+                <div class="d-flex">
+                    <b>Address</b> 
+                    <p>
+                        <%= event.street_number %> <%= event.street_name %> <%= event.suburb %> <%= event.city  %> <%=event.state  %> <%=event.country %>
+                    </p>
+                </div>
 
-                <p class="d-flex">From  <b class="ml-2"> <%= event.start_date %></b> at  <%= event.start_time %></p>
-                <p class="d-flex">To  <b class="ml-2"> <%= event.start_date %></b> at  <%= event.end_time %></p>
+                <div class="d-flex">
+                    <b>Start Date</b>  
+                    <p> <%= new Date(event.start_date).toDateString() %> at  <%= event.start_time.slice(0, -9) %></p>
+                </div>
 
-                <h4 class="mb-0">Event Description</h4>
-                <p class="my-0">
-                    <%= event.event_description %>
-                </p>
+                <div class="d-flex">
+                    <b>End Date</b>  
+                    <p> <%= new Date(event.end_date).toDateString() %> at  <%= event.end_time.slice(0, -9) %></p>
+                </div>
+
+                <div class="my-0">
+                    <b class="mb-0">Event Description</b>
+                    <p> <%= event.event_description %> </p>
+                </div>
 
                 <div class="mt-1">
-                    <% if (user.username == event.added_by) {%>
-                        <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn bg-brand mt-2 update-btn">Update</a>
+                    <% if ( user.username == event.added_by) {%>
+                        <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn btn-primary mt-2 update-btn">Update</a>
                     <%} %>
 
-                    <% if (!event.is_published) {%>
-                        <button data-href="/publish_contribution/<%= event.description_id  %>/" data-event="contribution"  class="btn bg-brand mt-2 btn-action">Publish</button>
+                    <% if (user.is_admin && !event.is_posted) {%>
+                        <button data-href="/post_event/<%= event.event_id %>/<%= event.description_id  %>/" data-event="event" class="btn bg-primary mt-2 btn-action">Post</button>
                     <%} %>
 
                     <% if (user.is_admin || user.username == event.added_by) {%>
-                        <button data-href="/delete_contribution/<%= event.description_id  %>/"  data-event="contribution" class="btn bg-danger mt-2 btn-action">Delete</button>
+                        <button data-href="/delete_event/<%= event.event_id %>/" data-event="event" class="btn bg-danger mt-2 btn-action">Delete</button>
                     <%} %>
                     
-                    <% if (user.is_admin || user.username != event.added_by) {%>
-                        <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-danger mt-2 btn-report">Report Contribution</button>
+                    <% if (user.username != event.added_by) {%>
+                        <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn btn-warning mt-2 btn-report">Report Event</button>
                     <%} %>
                 </div>
-                
-            </div>
-
+            </div>  
             <div class="media">
                 <!-- images carousel -->
                 <!-- <h4 class="my-1">Event Photos</h4> -->
@@ -254,8 +202,8 @@
                     <%} %>
                 </div>
 
-                <!-- <h4 class="my-0">Event Videos</h4> -->
-                <div class="event-video">
+                <!-- <h4 class="my-1">Event Videos</h4> -->
+            <div class="event-video">
                     <% for ( let video of event.media) {%>
                         <% if (video.type == "video") {%>
                             <video width='auto' height='250' controls>
@@ -264,36 +212,107 @@
                             </video>
                         <%} %>
                     <%} %>
-                </div>
-
+            </div>
                 <!-- video element -->
             </div>
         </div>
-    <%} %>
 
-    <div class="update-section d-flex d-none">
-        <div class="mt-1">
-            <a href="/event/add-description/<%= event.event_name %>/<%= event.event_id %>" class="btn bg-brand mt-2">Add description</a>
-        </div>
-    </div>
+        <!-- other users contribution -->
+        <%  for (let event of contribution ) {%>
+            <div class="event-container my-2">
+                <div class="text-content">
+                    <p class="title mx-0">
+                        <a href="/user_profile/<%= event.added_by %>/" class="link"><%= event.added_by %></a>
+                        says  
+                    </p>
 
-    <div class="popup" id="report-section">
-        <div class="content">
-            <div class="close-btn" onclick="togglePopup(reportSection, 'active')">&times;</div>
-            <form action="" id="report-form" method="POST">
-                <div class="d-none">
-                    <input type="text" name="event_name" id="event-name">
-                    <input type="text" name="description_id" id="description-id">
-                    <input type="text" name="is_contribution" id="is-contribution">
+                    <div class="d-flex">
+                        <b class="">From</b>  
+                        <%= new Date(event.start_date).toDateString() %> at <%= event.start_time.slice(0, -9) %>
+                    </div>
+
+                    <div class="d-flex">
+                        <b class=""> To </b> 
+                        <%= new Date(event.end_date).toDateString() %> at <%= event.end_time.slice(0, -9) %>
+                    </div>
+
+                    <b class="mb-0 b">Event Description</b>
+                    <p class="my-0">
+                        <%= event.event_description %>
+                    </p>
+
+                    <div class="mt-1">
+                        <% if (user.username == event.added_by) {%>
+                            <a href="/event/update/<%= event.event_name %>/<%= event.description_id  %>/" class="btn btn-primary mt-2 update-btn">Update</a>
+                        <%} %>
+
+                        <% if (!event.is_published) {%>
+                            <button data-href="/publish_contribution/<%= event.description_id  %>/" data-event="contribution"  class="btn btn-primary mt-2 btn-action">Publish</button>
+                        <%} %>
+
+                        <% if (user.is_admin || user.username == event.added_by) {%>
+                            <button data-href="/delete_contribution/<%= event.description_id  %>/"  data-event="contribution" class="btn bg-danger mt-2 btn-action">Delete</button>
+                        <%} %>
+                        
+                        <% if (user.is_admin || user.username != event.added_by) {%>
+                            <button data-id="<%= event.description_id  %>" data-cont="<%= event.is_contribution %>" data-event="<%= event.event_name %>" class="btn bg-warning mt-2 btn-report">Report Contribution</button>
+                        <%} %>
+                    </div>
+                    
                 </div>
-                <label for="reason">Reason for Reporting</label>
-                <textarea name="reason" id="" cols="30" rows="10" placeholder="Reason for reporting event" value="" required></textarea>
 
-                <button type="submit" class="btn bg-brand" id="btn-form">Report Event</button>
-            </form>
+                <div class="media">
+                    <!-- images carousel -->
+                    <!-- <h4 class="my-1">Event Photos</h4> -->
+                    <div class="event-photo">
+                        <% for ( let image of event.media) {%>
+                            <% if (image.type == "image") {%>
+                                <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
+                            <%} %>
+                        <%} %>
+                    </div>
 
+                    <!-- <h4 class="my-0">Event Videos</h4> -->
+                    <div class="event-video">
+                        <% for ( let video of event.media) {%>
+                            <% if (video.type == "video") {%>
+                                <video width='auto' height='250' controls>
+                                    <source src="../../.<%= video.media %>" type='video/mp4'>
+                                    Your browser does not support the video tag.
+                                </video>
+                            <%} %>
+                        <%} %>
+                    </div>
+
+                    <!-- video element -->
+                </div>
+            </div>
+        <%} %>
+
+        <div class="update-section d-flex d-none">
+            <div class="mt-1">
+                <a href="/event/add-description/<%= event.event_name %>/<%= event.event_id %>" class="btn btn-secondary mt-2">Add description</a>
+            </div>
         </div>
-    </div>
+
+        <div class="popup" id="report-section">
+            <div class="content">
+                <div class="close-btn" onclick="togglePopup(reportSection, 'active')">&times;</div>
+                <form action="" id="report-form" method="POST">
+                    <div class="d-none">
+                        <input type="text" name="event_name" id="event-name">
+                        <input type="text" name="description_id" id="description-id">
+                        <input type="text" name="is_contribution" id="is-contribution">
+                    </div>
+                    <label for="reason">Reason for Reporting</label>
+                    <textarea name="reason" id="" cols="30" rows="10" placeholder="Reason for reporting event" value="" required></textarea>
+
+                    <button type="submit" class="btn bg-warning" id="btn-form">Report Event</button>
+                </form>
+
+            </div>
+        </div>
+    </div>  
     <script>
         // hide or display the update event button
         let updateButton = document.querySelector(".update-btn");

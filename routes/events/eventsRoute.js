@@ -52,3 +52,6 @@ router.post('/report-events/delete/:report_id/', isAuthenticated, allowOnly(acce
 router.get('/reported-events/:report_id/', isAuthenticated, allowOnly(accessLevels.user, events.getReportedEvent));
 
 module.exports = router;
+
+// TODO:
+// Add author access to delete routes.
