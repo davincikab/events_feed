@@ -27,10 +27,12 @@
                     <li class="nav-item">
                         <a class="nav-link d-none" id="update-event" href="#">Update Event</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="saved-events">Saved Events</a> 
                     </li>
                     <%} else { %>
+                        
                         <li class="nav-item">
                             <a class="nav-link" id="user-name" href="/map">
                                 View Map
@@ -45,6 +47,11 @@
                             </a>
                         </li>
                     <%} %>
+                    
+                <li class="nav-item">
+                    <a class="nav-link" href="/refer_people">Refer for Points</a> 
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" id="user-name" data-admin="<%= user.is_admin %>" href="/user_profile/<%= user.username %>/"><%= user.username %></a>   
                 </li>

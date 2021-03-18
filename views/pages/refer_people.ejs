@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/design.css">
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .copy-code {
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partial/header') %>
+    <%- include ('../partial/spinner') %>
+    <div class="container my-2 text-center">
+        <div class="alert alert-success d-none" role="alert" id="alert">
+           
+        </div>
+
+        <div class="h4">
+            Invite Your Friends and Collegues to Earn Points.
+            <p>10 Points Per Referral</p>
+        </div>
+
+        <form class="form-inline d-flex" id="invite-form">
+            <input type="email" name="email" id="email" placeholder="Email ..." class="form-control mx-2" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+        
+        <p>Or</p>
+
+        <div class="copy-code d-flex">
+            <div class="form-control mx-2"><%= host %>referal/<%= uuid %></div>
+            <button class="btn btn-primary" id="copy">Copy</button>
+        </div>
+
+        <%- include ('../partial/messages') %>
+
+        <script>
+            $('#spinner-message').text("Loading Invite code ...");
+            setTimeout(function(e) {
+                $('#spinner').addClass("d-none");
+            }, 3000);
+
+            // submit event
+            $("#invite-form").on("submit", function(e) {
+                $('#spinner-message').text("Sending Mail ...");
+                $('#spinner').toggleClass("d-none");
+
+                e.preventDefault();
+
+                // get mail
+                var data = {
+                    uuid:"<%= uuid %>",
+                    email:$('#email').val()
+                };
+
+                // send mail
+                $.ajax({
+                    url:'/send_invite-email',
+                    type:'POST',
+                    data:data,
+                    success:function(response) {
+                        console.log(response);
+
+                        // notify the user
+                        $('#spinner').toggleClass("d-none");
+                        $("#invite-form")[0].reset();
+
+                        $('#alert').addClass('alert-success').toggleClass("d-none").text(response.message);
+                    },
+                    error:function(err) {
+                        console.error(err);
+
+                        // notify the user
+                        $('#spinner').toggleClass("d-none");
+                        $('#alert').addClass('alert-success').toggleClass("d-none").text(response.message);
+                    }
+                });
+
+            });
+        </script>
+    <div>
+</body>
+</html>
