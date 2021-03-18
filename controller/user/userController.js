@@ -3,7 +3,12 @@ const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../
 
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
-const { request } = require("express");
+const { v4: uuidv4 } = require('uuid');
+const nodemailer = require("nodemailer");
+
+// config dotenv module
+require('dotenv').config();
+
 
 exports.login = function(req, res) {
     res.render("pages/login");
@@ -307,4 +312,72 @@ exports.getReportedAccount = function(req, res, next) {
 
         res.render("pages/reported-accounts-details", context)
     });
+}
+
+// SEND REFFERAL mails
+exports.referPeople = function(req, res) {
+    let context = {
+        user:req.user,
+        uuid:uuidv4(),
+        host:'http://localhost:3000/',
+        section:'Refer for Points'
+    };
+
+    res.render("pages/refer_people", context)
+}
+
+exports.sendEmailInvite = async function(req, res) {
+    let { uuid, email } = req.body;
+
+    req.user = {
+        username:'mwangi'
+    };
+
+    // transport layer
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    // markup
+    const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
+        "<p>Click the link  below to create your account</p>" +
+        "<div><a href='http://localhost:3000/referal/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
+
+    // mailing options
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Invitation to World Event Tracker',
+        html: markUp
+    }
+
+    console.log("Sending Mail");
+
+    transporter.sendMail(mailOptions, function(err, info) {
+        console.log("Response");
+        if(err) {
+            console.log("Response: "+ err);
+            res.status(500).send({
+                error:err
+            });
+
+            return;
+        }
+
+        // add the entry to the database
+        console.log("response: " + info.response);
+        res.status(200).send({
+            message:'Mail Successfully sent'
+        });
+
+    });
+}
+
+// add the uuid to the database
+exports.commitLink = function(req, res) {
+    // 
 }
