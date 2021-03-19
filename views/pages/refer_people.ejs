@@ -31,15 +31,16 @@
             <p>10 Points Per Referral</p>
         </div>
 
-        <form class="form-inline d-flex" id="invite-form">
-            <input type="email" name="email" id="email" placeholder="Email ..." class="form-control mx-2" required>
+        <form class="form-inline d-flex w-100" id="invite-form">
+            <input type="email" name="email" id="email" placeholder="Email ..." class="form-control mx-2 w-75" required>
             <button type="submit" class="btn btn-primary">Send</button>
         </form>
         
         <p>Or</p>
 
-        <div class="copy-code d-flex">
-            <div class="form-control mx-2" id="invite-link"><%= host %>referral/<%= uuid %></div>
+        <div class="copy-code d-flex w-100">
+            <div class="form-control mx-2 d-none" ><%= host %>referral/<%= uuid %></div>
+            <input type="text" name="" id="invite-link" class="w-100" value="<%= host %>referral/<%= uuid %>" readonly>
             <button class="btn btn-primary" id="copy-btn">Copy</button>
         </div>
 
@@ -93,7 +94,10 @@
                 // 
                 let copyText =  document.getElementById("invite-link");
                 copyText.select();
+                copyText.setSelectionRange(0, 99999)
                 document.execCommand("copy");
+
+                alert("Text Copied to Clipboard");
             });
         </script>
     <div>
