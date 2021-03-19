@@ -9,6 +9,8 @@ exports.getAllEvents = function(req, res) {
     // console.log(req.body);
     let query = req.query;
     if(req.user.is_admin) {
+        // 
+        console.log("Admin");
         eventLocationModel.getAllEvents(query, function(err, events) {
             if(err) {
                 res.send(err);
@@ -17,6 +19,7 @@ exports.getAllEvents = function(req, res) {
             addMediaFiles(events);
         });
     } else {
+        console.log("Basic Users");
         eventLocationModel.getPostedEvents(query, function(err, events) {
             if(err) {
                 res.send(err);

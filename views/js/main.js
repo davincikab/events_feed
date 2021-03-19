@@ -150,6 +150,7 @@ geocoderControl.on('result', function({result}) {
 
 // ______________________ Get Events from the database ______________________________________________________
 function loadEvents(timeFrame) {
+	
 	$.ajax({
 		url:'/events/',
 		type:'GET',
@@ -167,9 +168,11 @@ function loadEvents(timeFrame) {
 			}
 
 			createEventMarkers(allEvents);
+			$('#spinner').toggleClass("d-none");
 		},
 		error:function(error) {
 			console.log(error);
+			$('#spinner').toggleClass("d-none");
 		}
 	});
 } 
@@ -974,6 +977,7 @@ eventFilters.forEach(timeFilter => {
 		console.log(time);
 		updateEventMarkers();
 
+		$('#spinner').toggleClass("d-none");
 		loadEvents(time);
 	});
 

@@ -25,6 +25,7 @@ eventLocationModel.getAllEvents = function(timeFrame, result) {
     let { from, to } = timeFrame;
 
     if(from == to) {
+        console.log("Current Events");
         connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE ed.start_date < ? AND ed.end_date > ?',[from, to], function (error, results, fields) {
             if (error) throw error;
             // console.log('The solution is: ', results[0]);
@@ -45,8 +46,18 @@ eventLocationModel.getAllEvents = function(timeFrame, result) {
 
 eventLocationModel.getPostedEvents = function(timeFrame, result) {
     let { from, to } = timeFrame;
+    if(from == to) {
+        connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.is_posted=? AND ed.is_published=? AND ed.start_date < ? AND ed.end_date > ?',[true, true, from, to], function (error, results, fields) {
+            if (error) throw error;
+            // console.log('The solution is: ', results[0]);
+    
+            result(null, results);
+        });
 
-    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.is_posted=? AND ed.is_published=?',[true, true], function (error, results, fields) {
+        return;
+    }
+
+    connection.query('SELECT * FROM event_location AS el LEFT JOIN event_description AS ed ON el.event_id = ed.event_id WHERE el.is_posted=? AND ed.is_published=? AND ed.start_date BETWEEN ? AND ?',[true, true, from, to], function (error, results, fields) {
         if (error) throw error;
         // console.log('The solution is: ', results[0]);
 
