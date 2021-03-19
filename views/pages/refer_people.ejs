@@ -39,8 +39,8 @@
         <p>Or</p>
 
         <div class="copy-code d-flex">
-            <div class="form-control mx-2"><%= host %>referal/<%= uuid %></div>
-            <button class="btn btn-primary" id="copy">Copy</button>
+            <div class="form-control mx-2" id="invite-link"><%= host %>referral/<%= uuid %></div>
+            <button class="btn btn-primary" id="copy-btn">Copy</button>
         </div>
 
         <%- include ('../partial/messages') %>
@@ -87,6 +87,13 @@
                     }
                 });
 
+            });
+
+            $("#copy-btn").on("click", function(e) {
+                // 
+                let copyText =  document.getElementById("invite-link");
+                copyText.select();
+                document.execCommand("copy");
             });
         </script>
     <div>

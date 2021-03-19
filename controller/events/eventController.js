@@ -1,6 +1,6 @@
 // get event model
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
-const userModel = require("../../models/user/userModel");
+const { userModel } = require("../../models/user/userModel");
 const { request } = require("express");
 const { reportAccount } = require("../user/userController");
 

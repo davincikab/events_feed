@@ -1,4 +1,4 @@
-const userModel = require("../../models/user/userModel");
+const { userModel, referralModel } = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
@@ -323,7 +323,42 @@ exports.referPeople = function(req, res) {
         section:'Refer for Points'
     };
 
-    res.render("pages/refer_people", context)
+    // save the uuid to db
+    let referral = new referralModel({
+        userId:req.user.user_id,
+        uuid:context.uuid
+    });
+
+    referralModel.createReferral(referral, function(err, result) {
+        if(err) res.send(err);
+
+        res.render("pages/refer_people", context)
+    });
+
+}
+
+exports.getReferral = function(req, res) {
+    let { referral_uuid } = req.params;
+
+    // check if the uuid exist
+    referralModel.checkReferalId(referral_uuid, function(err, result) {
+        if(err) {
+           res.send(err);
+        }
+
+        console.log(result);
+
+        if(!result[0]) {
+            res.status(404).send('Invalid referal link');
+            return;
+        }
+
+        // store th referall to the session
+        req.session.referral_uuid = referral_uuid;
+
+        // redirect the user to login page
+        res.redirect("/register");
+    })
 }
 
 exports.sendEmailInvite = async function(req, res) {

@@ -152,5 +152,32 @@ userModel.getUserProfile = function(userId, result) {
     });
 }
 
+
+// referral model
+const referralModel = function(referral) {
+    this.uuid = referral.uuid;
+    this.userId = referral.userId
+};
+
+referralModel.createReferral = function(referral, result) {
+    connection.query('INSERT INTO user_referral SET?', referral, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+
+}
+
+referralModel.checkReferalId = function(referral_uuid, result) {
+    connection.query('SELECT * FROM user_referral WHERE uuid = ?', referral_uuid, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+
+}
+
+
+
 // report an account
-module.exports = userModel;
+module.exports = { referralModel, userModel };
