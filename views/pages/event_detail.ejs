@@ -57,11 +57,11 @@
         }
 
         .media img {
-            height: 150px;
+            /* height: 150px;
             width: 100%;
             border-radius: 1em;
             box-shadow: 1px 1px 0.2em #525;
-            object-fit: cover;
+            object-fit: cover; */
         }
 
         .bg-brand {
@@ -131,7 +131,7 @@
                 padding: 0;
             }
             .media img {
-                height: 100px;
+                /* height: 100px; */
                 width:auto;
             }
         }
@@ -192,27 +192,36 @@
                 </div>
             </div>  
             <div class="media">
-                <!-- images carousel -->
-                <!-- <h4 class="my-1">Event Photos</h4> -->
-                <div class="event-photo">
-                    <% for ( let image of event.media) {%>
-                        <% if (image.type == "image") {%>
-                            <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
+            <div id="carousel<%= event.description_id %>" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <% for (let index in event.media) { let media = event.media[index]; %>
+                        <% if(index == 0) {%>
+                            <div class="carousel-item active">
+                        <%} else {%>
+                            <div class="carousel-item">
                         <%} %>
+
+                            <% if (media.type == "image") {%>
+                                <img src="../../.<%= media.media %>" class="d-block w-100" alt="<%= event.event_name %>">
+                            <%} else {%>
+                                <video width='auto' height='250' controls>
+                                    <source src="../../.<%= media.media %>" type='video/mp4'>
+                                    Your browser does not support the video tag.
+                                </video>
+                            <%} %>
+                        </div>
                     <%} %>
                 </div>
 
-                <!-- <h4 class="my-1">Event Videos</h4> -->
-            <div class="event-video">
-                    <% for ( let video of event.media) {%>
-                        <% if (video.type == "video") {%>
-                            <video width='auto' height='250' controls>
-                                <source src="../../.<%= video.media %>" type='video/mp4'>
-                                Your browser does not support the video tag.
-                            </video>
-                        <%} %>
-                    <%} %>
-            </div>
+                <a class="carousel-control-prev" href="#carousel<%= event.description_id %>" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next " href="#carousel<%= event.description_id %>" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
                 <!-- video element -->
             </div>
         </div>
@@ -262,28 +271,36 @@
                 </div>
 
                 <div class="media">
-                    <!-- images carousel -->
-                    <!-- <h4 class="my-1">Event Photos</h4> -->
-                    <div class="event-photo">
-                        <% for ( let image of event.media) {%>
-                            <% if (image.type == "image") {%>
-                                <!-- <img src="../../.<%= image.media %>" alt="<%= event.event_name %>"> -->
-                            <%} %>
-                        <%} %>
-                    </div>
+                    <div id="carousel<%= event.description_id %>" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <% for (let index in event.media) { let media = event.media[index]; %>
+                                <% if(index == 0) {%>
+                                    <div class="carousel-item active">
+                                <%} else {%>
+                                    <div class="carousel-item">
+                                <%} %>
 
-                    <!-- <h4 class="my-0">Event Videos</h4> -->
-                    <div class="event-video">
-                        <% for ( let video of event.media) {%>
-                            <% if (video.type == "video") {%>
-                                <video width='auto' height='250' controls>
-                                    <source src="../../.<%= video.media %>" type='video/mp4'>
-                                    Your browser does not support the video tag.
-                                </video>
+                                    <% if (media.type == "image") {%>
+                                        <img src="../../.<%= media.media %>" class="d-block w-100" alt="<%= event.event_name %>">
+                                    <%} else {%>
+                                        <video width='auto' height='250' controls>
+                                            <source src="../../.<%= media.media %>" type='video/mp4'>
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    <%} %>
+                                </div>
                             <%} %>
-                        <%} %>
-                    </div>
+                        </div>
 
+                        <a class="carousel-control-prev" href="#carousel<%= event.description_id %>" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </a>
+                          <a class="carousel-control-next " href="#carousel<%= event.description_id %>" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                    </div>
                     <!-- video element -->
                 </div>
             </div>
