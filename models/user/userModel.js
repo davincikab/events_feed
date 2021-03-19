@@ -169,12 +169,20 @@ referralModel.createReferral = function(referral, result) {
 }
 
 referralModel.checkReferalId = function(referral_uuid, result) {
-    connection.query('SELECT * FROM user_referral WHERE uuid = ?', referral_uuid, function(err, response) {
+    connection.query('SELECT * FROM user_referral WHERE uuid = ? AND is_active=?', [referral_uuid, true], function(err, response) {
         if(err) throw err;
 
         result(null, response);
     });
 
+}
+
+referralModel.inActivateCode = function(uuid, result) {
+    connection.query('UPDATE `user_referral` SET `is_active`=? WHERE uuid=?', [false, uuid], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    })
 }
 
 

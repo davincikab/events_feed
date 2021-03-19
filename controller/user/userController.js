@@ -15,6 +15,7 @@ exports.login = function(req, res) {
 }
 
 exports.register = function(req, res){
+    console.log(req.session.referral_uuid);
     res.render("pages/register", {
         username:'',
         email:'',
@@ -105,12 +106,41 @@ exports.post_register = function(req, res, next) {
                         // add the data to the database
                         userModel.createUser(user, function(err, response) {
                             if(err) throw err;
+                            
+                            // get the 
+                            if(req.session.referral_uuid) {
+                                let { referral_uuid } = req.session;
 
-                            // flash message
-                            req.flash('success_msg','You have now registered!')
+                                // get the referral link by id
+                                referralModel.checkReferalId(referral_uuid, function(err, response) {
+                                    if(err) throw err;
 
-                            // redirect the user to login page
-                            res.redirect("/login");
+                                    // get the user id
+                                    let { userId } = response[0];
+
+                                    // add 10 points to the user
+                                    userModel.updatePoints(userId, 10, function(err, results) {
+                                        if(err) res.send(err);
+
+                                        delete req.session.referral_uuid;
+
+                                        // inactivate the referral link
+                                        referralModel.inActivateCode(referral_uuid, function(err, results) {
+                                            if(err) res.send(err);
+
+                                            // flash message
+                                            req.flash('success_msg','You have now registered!')
+
+                                            // redirect the user to login page
+                                            res.redirect("/login");
+                                        });
+
+                                       
+                                    })
+                                });
+                            }
+
+                            
                         })
 
                     })
@@ -345,8 +375,6 @@ exports.getReferral = function(req, res) {
         if(err) {
            res.send(err);
         }
-
-        console.log(result);
 
         if(!result[0]) {
             res.status(404).send('Invalid referal link');
