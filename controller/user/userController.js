@@ -408,7 +408,7 @@ exports.sendEmailInvite = async function(req, res) {
     // markup
     const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
         "<p>Click the link  below to create your account</p>" +
-        "<div><a href='http://localhost:3000/referal/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
+        "<div><a href='http://localhost:3000/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
 
     // mailing options
     const mailOptions = {
