@@ -138,7 +138,13 @@ exports.post_register = function(req, res, next) {
                                        
                                     })
                                 });
-                            }
+                            } else {
+                                 // flash message
+                                 req.flash('success_msg','You have now registered!')
+
+                                 // redirect the user to login page
+                                 res.redirect("/login");
+                            }                           
 
                             
                         })
