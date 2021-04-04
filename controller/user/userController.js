@@ -408,6 +408,9 @@ exports.sendEmailInvite = async function(req, res) {
         auth: {
             user: process.env.EMAIL,
             pass: process.env.EMAIL_PASSWORD
+        },
+        tls:{
+            rejectUnauthorized:true
         }
     });
 
