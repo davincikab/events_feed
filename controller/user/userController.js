@@ -431,7 +431,7 @@ exports.sendEmailInvite = async function(req, res) {
         if(err) {
             console.log("Response: "+ err);
             res.status(500).send({
-                error:err
+                error:"Failed to send the mail. Kindly check your email address or network connection."
             });
 
             return;
