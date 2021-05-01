@@ -30,4 +30,17 @@ userRouter.post("/report-account/:username/:reported_by/", isAuthenticated, allo
 userRouter.post("/reported-account/remove/:report_id/",isAuthenticated, allowOnly(accessLevels.admin, user.deleteReport));
 userRouter.get("/reported-accounts/:report_id/", isAuthenticated, allowOnly(accessLevels.admin, user.getReportedAccount));
 
+
+// password reset page
+userRouter.get("/forgot_password", user.forgotPassword);
+userRouter.post("/forgot_password", user.postForgotPassword);
+
+userRouter.get("/reset_password/", user.resetPassword);
+userRouter.post("/reset_password/", user.postResetPassword);
+
+// userRouter.get("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
+// userRouter.post("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
+// userRouter.
+// userRouter.
+
 module.exports = userRouter;

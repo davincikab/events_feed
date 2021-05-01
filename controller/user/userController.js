@@ -297,3 +297,22 @@ exports.getReportedAccount = function(req, res, next) {
         res.render("pages/reported-accounts-details", context)
     });
 }
+
+exports.forgotPassword = function(req, res) {
+    res.render("pages/account/forgot_password")
+}
+
+exports.postForgotPassword = function(req, res) {
+    // get the email address
+    let { mail } = req.body;
+
+    res.render("pages/account/forgot_password", context);
+}
+
+exports.resetPassword = function(req, res) {
+    res.render("pages/account/reset_password")
+}
+
+exports.postResetPassword = function(req, res) {
+    res.render("pages/account/reset_password")
+}
