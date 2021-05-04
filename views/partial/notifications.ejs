@@ -1,0 +1,8 @@
+<div class="notification-tab">
+    <%  for (let notification of notifications ) {%>
+        <div class="message-item">
+            <p><%= notification.text %></p>
+            <span><%= notification.create_on %></span>
+        </div>
+    <% }%>
+</div>

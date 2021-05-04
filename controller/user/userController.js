@@ -1,15 +1,21 @@
-const userModel = require("../../models/user/userModel");
+const { userModel, referralModel } = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
-const { request } = require("express");
+const { v4: uuidv4 } = require('uuid');
+const nodemailer = require("nodemailer");
+
+// config dotenv module
+require('dotenv').config();
+
 
 exports.login = function(req, res) {
     res.render("pages/login");
 }
 
 exports.register = function(req, res){
+    console.log(req.session.referral_uuid);
     res.render("pages/register", {
         username:'',
         email:'',
@@ -100,12 +106,47 @@ exports.post_register = function(req, res, next) {
                         // add the data to the database
                         userModel.createUser(user, function(err, response) {
                             if(err) throw err;
+                            
+                            // get the 
+                            if(req.session.referral_uuid) {
+                                let { referral_uuid } = req.session;
 
-                            // flash message
-                            req.flash('success_msg','You have now registered!')
+                                // get the referral link by id
+                                referralModel.checkReferalId(referral_uuid, function(err, response) {
+                                    if(err) throw err;
 
-                            // redirect the user to login page
-                            res.redirect("/login");
+                                    // get the user id
+                                    let { userId } = response[0];
+
+                                    // add 10 points to the user
+                                    userModel.updatePoints(userId, 10, function(err, results) {
+                                        if(err) res.send(err);
+
+                                        delete req.session.referral_uuid;
+
+                                        // inactivate the referral link
+                                        referralModel.inActivateCode(referral_uuid, function(err, results) {
+                                            if(err) res.send(err);
+
+                                            // flash message
+                                            req.flash('success_msg','You have now registered!')
+
+                                            // redirect the user to login page
+                                            res.redirect("/login");
+                                        });
+
+                                       
+                                    })
+                                });
+                            } else {
+                                 // flash message
+                                 req.flash('success_msg','You have now registered!')
+
+                                 // redirect the user to login page
+                                 res.redirect("/login");
+                            }                           
+
+                            
                         })
 
                     })
@@ -192,18 +233,29 @@ exports.userEvents = function(req, res) {
                     res.send(err);
                 }
 
-                let context = {
-                    user:req.user,
-                    userprofile:userprofile[0],
-                    section:'user profile',
-                    events:results.filter(event => !event.is_contribution),
-                    contributions:results.filter(event => event.is_contribution),
-                    following:[],
-                    followers:[]
-                }
+                // add user profile (points)
+                let userId = userprofile[0].user_id;
+                userModel.getUserProfile(userId, function(err, profile) {
+                    if(err) {
+                        res.send(err);
+                    }
+
+                    let context = {
+                        user:req.user,
+                        userprofile:userprofile[0],
+                        profile:profile[0],
+                        section:'user profile',
+                        events:results.filter(event => !event.is_contribution),
+                        contributions:results.filter(event => event.is_contribution),
+                        following:[],
+                        followers:[]
+                    }
+                    
+                    // res.send(context);
+                    res.render("pages/user_profile", context);
+
+                });
                 
-                // res.send(context);
-                res.render("pages/user_profile", context);
             });
 
         });
@@ -298,21 +350,133 @@ exports.getReportedAccount = function(req, res, next) {
     });
 }
 
-exports.forgotPassword = function(req, res) {
-    res.render("pages/account/forgot_password")
+// SEND REFFERAL mails
+exports.referPeople = function(req, res) {
+    let context = {
+        user:req.user,
+        uuid:uuidv4(),
+        host:'http://localhost:3000/',
+        section:'Refer for Points'
+    };
+
+    // save the uuid to db
+    let referral = new referralModel({
+        userId:req.user.user_id,
+        uuid:context.uuid
+    });
+
+    referralModel.createReferral(referral, function(err, result) {
+        if(err) res.send(err);
+
+        res.render("pages/refer_people", context)
+    });
+
 }
 
-exports.postForgotPassword = function(req, res) {
-    // get the email address
-    let { mail } = req.body;
+exports.getReferral = function(req, res) {
+    let { referral_uuid } = req.params;
+
+    // check if the uuid exist
+    referralModel.checkReferalId(referral_uuid, function(err, result) {
+        if(err) {
+           res.send(err);
+        }
+
+        if(!result[0]) {
+            res.status(404).send('Invalid referal link');
+            return;
+        }
+
+        // store th referall to the session
+        req.session.referral_uuid = referral_uuid;
+
+        // redirect the user to login page
+        res.redirect("/register");
+    })
+}
+
+exports.sendEmailInvite = async function(req, res) {
+    let { uuid, email } = req.body;
+
+    req.user = {
+        username:'mwangi'
+    };
+
+    // transport layer
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    // markup
+    const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
+        "<p>Click the link  below to create your account</p>" +
+        "<div><a href='http://localhost:3000/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
+
+    // mailing options
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Invitation to World Event Tracker',
+        html: markUp
+    }
+
+    console.log("Sending Mail");
+
+    transporter.sendMail(mailOptions, function(err, info) {
+        console.log("Response");
+        if(err) {
+            console.log("Response: "+ err);
+            res.status(500).send({
+                error:err
+            });
+
+            return;
+        }
+
+        // add the entry to the database
+        console.log("response: " + info.response);
+        res.status(200).send({
+            message:'Mail Successfully sent'
+        });
+
+    });
+}
+
+// add the uuid to the database
+exports.commitLink = function(req, res) {
+    // 
+}
+
+// forgot password
+exports.forgotPassword = function(req, res) {
+    console.log(req.user);
+
+    // 
+    let context = {
+        section:"",
+        notification:[],
+        user:req.user
+    };
 
     res.render("pages/account/forgot_password", context);
 }
 
+exports.postForgotPassword = function(req, res) {
+    res.render("pages/account/forgot_password");
+}
+
+// 
 exports.resetPassword = function(req, res) {
-    res.render("pages/account/reset_password")
+    res.render("pages/account/reset_password");
 }
 
 exports.postResetPassword = function(req, res) {
-    res.render("pages/account/reset_password")
+    res.render("pages/account/reset_password");
 }
+
+
+// Password 

@@ -35,8 +35,8 @@
                 <input type="date" name="end_date" placeholder="End Date" value="<%= event.end_date %>" required>
                 <br>
                 <input type="time" name="end_time" placeholder="End Time"  value="<%= event.end_time %>" required>
-				<br>
-                <textarea placeholder="Describe the event" name="event_description" row=12 required><%= event.event_description %>
+                <br>
+                <textarea placeholder="Describe the event" name="event_description" row=12 value="<%= event.description %>" required>
                 </textarea>
                 <br>
                 <label for="event-media">Add pictures</label>
@@ -47,14 +47,8 @@
                 <br>
                 <input type="file" name="video" id="video" accept="video/*" required multiple>
                 <br>
-				<!-- <input type="submit" name="add-event" value="Add Event"> -->
-				
-				<% if (event.event_description) {%>
-					<button type="submit" name="add-event">Update Event</button>
-				<%} else { %>
-					<button type="submit" name="add-event">Contribute</button>
-				<%} %>
-               
+                <!-- <input type="submit" name="add-event" value="Add Event"> -->
+                <button type="submit" name="add-event">Add Event</button>
             </form>
         </div>
     </div>

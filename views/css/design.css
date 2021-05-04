@@ -1,12 +1,13 @@
 body {
 	margin: 0; 
 	padding: 0;
+	overflow-x: hidden;
 	font-family:Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
 }
 
 p {
-	margin:0;
+	margin:0.25rem !important;
 	font-family: inherit;
 }
 
@@ -79,11 +80,11 @@ p {
 
 .top-bar {
 	width: 100vw;
-    background-color: #000e69;
-    display: flex;
+    background-color: #000e69 !important;
+    /* display: flex;
     justify-content: flex-start;
 	align-items: flex-start;
-	padding:0.4em 0em;
+	padding:0.4em 0em; */
 }
 
 .h1 {
@@ -99,20 +100,9 @@ p {
 	display: none;
 }
 
-.navbar-toggler {
-	position: absolute;
-	top: 0.5%;
-    right: 0;
-    font-size: 1.3em;
-}
 
-.navbar-toggler:hover {
-	background-color: transparent !important;
-}
-
-.top-bar, .head-menu, .user-account{
+.top-bar, .head-menu, .user-account {
 	display: flex;
-	flex-direction:column;
 }
 
 .head-menu {
@@ -134,9 +124,10 @@ p {
 	border-radius: 50%;
 }
 
-.nav-item {
-	width:100%;
-	font-size: 1.2em;
+.nav-item .nav-link {
+	color: var(--white) !important;
+	/* width:100%;
+	font-size: 1.2em; */
 }
 
 .menu {position: fixed; right: 20px; top: 5px; }
@@ -144,10 +135,10 @@ p {
 
 .container {
     /* text-align: center; */
-    margin: 50px auto 0;
+    /* margin: 50px auto 0;
     max-width: 500px;
     box-shadow: 2px 2px 0.3em #ddd;
-    padding: 0.5em 1em;
+    padding: 0.5em 1em; */
 }
 
 
@@ -530,18 +521,9 @@ table {
 		align-items: center;
 	}
 
-	.navbar-toggler {
-		display: none;
-	}
-
 	.head-menu {
 		display: inline-block;
 		flex-direction: row;
-	}
-
-	.nav-item {
-		width: auto;
-		font-size: 1em;
 	}
 
 	.user-account {
@@ -553,6 +535,7 @@ table {
 	.top-bar h1 {
 		display: block;
 	}
+
 	input, textarea{
 		/* font-size: 20px; */
 		width: 90%;

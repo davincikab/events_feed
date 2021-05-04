@@ -58,7 +58,9 @@ var map = new mapboxgl.Map({
 
 // click event lister
 map.on('load', function(e) {
-	loadEvents();
+	loadEvents(
+		[new Date().toISOString(), new Date().toISOString()]
+	);
 
 	map.on('click', function(e) {
 		if(userName.innerText == "") {
@@ -147,10 +149,15 @@ geocoderControl.on('result', function({result}) {
 });
 
 // ______________________ Get Events from the database ______________________________________________________
-function loadEvents() {
+function loadEvents(timeFrame) {
+	
 	$.ajax({
 		url:'/events/',
 		type:'GET',
+		data:{
+			from:timeFrame[0],
+			to:timeFrame[1]
+		},
 		success:function(response) {
 			console.log(response);
 
@@ -161,9 +168,11 @@ function loadEvents() {
 			}
 
 			createEventMarkers(allEvents);
+			$('#spinner').toggleClass("d-none");
 		},
 		error:function(error) {
 			console.log(error);
+			$('#spinner').toggleClass("d-none");
 		}
 	});
 } 
@@ -176,7 +185,7 @@ function createEventMarkers(events) {
 }
 
 function addEventToMap(event) {
-	let lngLat = {lng:event.longitude,lat:event.latitude};
+	let lngLat = { lng:event.longitude, lat:event.latitude };
 
 	// Create popup content
 	var docFrag = document.createDocumentFragment();
@@ -192,9 +201,9 @@ function addEventToMap(event) {
 		"<p>"+ address +"</p>"+
 		"</div>"+
 		"<div class='popup-body'>"+
-		"<p class='item'><b>Start Date</b>" + event.start_date + "</p>"+
-		"<p class='item'><b>End Date</b>" + event.end_date + "</p>"+
-		"<p class='item'><b>Time</b>" + event.start_time +  " - " + event.end_time + "</p>"+
+		"<p class='item'><b>Start Date</b>" + new Date(event.start_date).toDateString() + "</p>"+
+		"<p class='item'><b>End Date</b>" + new Date(event.end_date).toDateString() + "</p>"+
+		"<p class='item'><b>Time</b>" + event.start_time.slice(0, -9) +  " - " + event.end_time.slice(0, -9) + "</p>"+
 		"<p class='item'><b>Added by </b><a class='link' id='user-name' href='/user_profile/" + event.added_by +"/'>"  + event.added_by + "</a></p>"+
 		// "<p class='description'><b>Description</b><br>"+event.event_description + "</p>"+
 		// "<div class='media-section'>"+
@@ -214,6 +223,7 @@ function addEventToMap(event) {
 	button.id = "read-more";
 
 	button.innerHTML = "Read more ...";
+
 	$(button).on("click", function(e) {
 		// expandPopup();
 
@@ -266,14 +276,17 @@ function addEventToMap(event) {
 
 		// display update button and section
 		let username = (userName.innerText).trim();
+
 		if(event.added_by == username) {
 			updateEventObject = event;
 		} 
+
 		else if(event.contribution[0]) {
+
 			let searchEvent = event.contribution.find(ev => ev.added_by == username);
 
 			if(searchEvent) {
-				updateEventObject = searchEvent
+				updateEventObject = searchEvent;
 			} else {
 				updateEventObject = {
 					event_id:event.event_id,
@@ -369,9 +382,9 @@ function updateAsideSection(event, address) {
 	"<p>"+ address +"</p>"+
 	"</div>"+
 	"<div class='info-section'>"+
-	"<p class='item'><b>Start Date</b><p>" + event.start_date + "</p></p>"+
-	"<p class='item'><b>End Date</b><p>" + event.end_date + "</p></p>"+
-	"<p class='item'><b>Time</b><p>" + event.start_time +  " - " + event.end_time + "</p></p>"+
+	"<p class='item'><b>Start Date</b><p>" + new Date(event.start_date).toDateString() + "</p></p>"+
+	"<p class='item'><b>End Date</b><p>" + new Date(event.end_date).toDateString() + "</p></p>"+
+	"<p class='item'><b>Time</b><p>" + event.start_time.slice(0, -9) +  " - " + event.end_time.slice(0, -9) + "</p></p>"+
 	// "<p class='item'><b>Added by </b><p>" + event.added_by + "</p></p>"+
 
 	"<p class='item'><b>Added by </b>" +
@@ -389,7 +402,8 @@ function updateAsideSection(event, address) {
 	"</div>";
 	html += descriptionLink;
 
-	html += "<h4 class='text-center'>Contribution</h5>"
+	html += "<h4 class='text-center'>Contribution</h5>";
+
 	// contribution
 	let contributionString = "";
 	event.contribution.forEach(contribution => {
@@ -404,7 +418,7 @@ function updateAsideSection(event, address) {
 			"<div class='info-section'>"+
 				"<p class='item'><b>Start Date</b><p>" +contribution.start_date + "</p></p>"+
 				"<p class='item'><b>End Date</b><p>" +contribution.end_date + "</p></p>"+
-				"<p class='item'><b>Time</b><p>" +contribution.start_time +  " - " +contribution.end_time + "</p></p>"+
+				"<p class='item'><b>Time</b><p>" +contribution.start_time.slice(0, -9) +  " - " + contribution.end_time.slice(0, -9) + "</p></p>"+
 
 				"<p class='item'><b>Added by </b>" +
 					"<p><a class='link' id='user-name' href='/user_profile/'" + contribution.added_by +"'/>"  + contribution.added_by + "</a></p>" +
@@ -433,7 +447,7 @@ function updateEventMarkers() {
 		marker.remove();
 	});
 
-	loadEvents();
+	// loadEvents();
 }
 
 // _______________________________ Update section _____________________________________________________________
@@ -890,5 +904,83 @@ function triggerGeocode(address) {
 
 //  TODO: Style the popup and call loadEvents on add or update;
 
+// toggle filter section
+$("#close-filter").on("click", function(e) {
+	$("#filter-section").removeClass("open");
+});
 
+$("#open-filter").on("click", function(e) {
+	$("#filter-section").addClass("open");
+});
+
+// get events by time
+let DAY_IN_MS = 24 * 60 * 60 * 1000;
+var timeFilterObject = {
+	"earliest":[
+		new Date(0).toISOString(), new Date().toISOString()
+	],
+	"6m-past":[
+		new Date(new Date() - (DAY_IN_MS * 180)).toISOString(), new Date().toISOString()
+	],
+	"1m-past":[
+		new Date(new Date() - (DAY_IN_MS * 30)).toISOString(), new Date().toISOString()
+	],
+	"2wk-past":[
+		new Date(new Date() - (DAY_IN_MS * 14)).toISOString(), new Date().toISOString()
+	],
+	"1wk-past":[
+		new Date(new Date() - (DAY_IN_MS * 7)).toISOString(), new Date().toISOString()
+	],
+	"24hr-past":[
+		new Date(new Date() - (DAY_IN_MS)).toISOString(), new Date().toISOString()
+	],
+	"current":[new Date().toISOString(), new Date().toISOString()],
+	"all":[new Date(0).toISOString(), new Date(66400000000000).toISOString()],
+	"next-24hr":[
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS)).toISOString()
+	],
+	"next-1wk":[
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 7)).toISOString()
+	],
+	"next-2wk":[
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 14)).toISOString()
+	],
+	"next-1m":[
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 30)).toISOString()
+	],
+	"next-6m":[
+		new Date().toISOString(), new Date(new Date().getTime() + (DAY_IN_MS * 180)).toISOString()
+	],
+	"latest":[
+		new Date(new Date().getTime() + (DAY_IN_MS * 180)).toISOString(), new Date(8640000000000000).toISOString()
+	]
+};
+
+
+var eventFilters = document.querySelectorAll(".filters label");
+eventFilters.forEach(timeFilter => {
+	$(timeFilter).on("click", function(e) {
+		// toggle event filters
+		eventFilters.forEach(tmF => $(tmF).removeClass("active"));
+
+		// add active class
+		$(timeFilter).toggleClass("active");
+
+		// get the htmlFor
+		let timeKey =$(this).attr('for');
+		console.log(timeKey);
+
+		// get the time
+		let time = timeFilterObject[timeKey];
+
+		// load the data within the given period
+		console.log(time);
+		updateEventMarkers();
+
+		$('#spinner').toggleClass("d-none");
+		loadEvents(time);
+	});
+
+
+});
 

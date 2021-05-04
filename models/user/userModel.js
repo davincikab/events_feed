@@ -8,6 +8,11 @@ const userModel = function(user) {
     this.password = user.password
 };
 
+const userProfile = function(user) {
+    this.points = user.points,
+    this.userId = user.userId
+}
+
 // login function
 userModel.login = function(username, password) {
     connection.query();
@@ -15,10 +20,20 @@ userModel.login = function(username, password) {
 
 // register 
 userModel.createUser = function(user, result) {
-    connection.query('INSERT INTO users SET?', user, function(err, response) {
+    connection.query('INSERT INTO users SET?', user, function(err, responseUser) {
         if(err) throw err;
 
-        result(null, response);
+        let userprofile = new userProfile({
+            points:0,
+            userId:responseUser.insertId
+        });
+
+        connection.query('INSERT INTO user_profile SET?', userprofile , function(err, response) {
+            if(err) throw err;
+
+            result(null, responseUser);
+        });
+       
     });
 }  
 
@@ -32,7 +47,7 @@ userModel.findOne = function(username, email, result) {
 }
 
 userModel.findUserByUsername = function(username, result) {
-    connection.query('SELECT username, email, country, account_type, is_locked, is_admin FROM users WHERE username = ?', [username], function(err, response) {
+    connection.query('SELECT user_id, username, email, country, account_type, is_locked, is_admin FROM users WHERE username = ?', [username], function(err, response) {
         if(err) throw err;
 
         console.log(response);
@@ -120,7 +135,57 @@ userModel.getLockedAccounts = function(result) {
     });
 }
 
+// update points:UPDATE `user_profile` SET `points`= `points` + 10 WHERE `userId` = 8
+userModel.updatePoints = function(userId, points, result) {
+    connection.query('UPDATE `user_profile` SET `points`= `points` + ? WHERE `userId` = ?', [points, userId], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+userModel.getUserProfile = function(userId, result) {
+    connection.query('SELECT * FROM `user_profile` WHERE `userId` = ?', userId, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+
+// referral model
+const referralModel = function(referral) {
+    this.uuid = referral.uuid;
+    this.userId = referral.userId
+};
+
+referralModel.createReferral = function(referral, result) {
+    connection.query('INSERT INTO user_referral SET?', referral, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+
+}
+
+referralModel.checkReferalId = function(referral_uuid, result) {
+    connection.query('SELECT * FROM user_referral WHERE uuid = ? AND is_active=?', [referral_uuid, true], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+
+}
+
+referralModel.inActivateCode = function(uuid, result) {
+    connection.query('UPDATE `user_referral` SET `is_active`=? WHERE uuid=?', [false, uuid], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    })
+}
+
 
 
 // report an account
-module.exports = userModel;
+module.exports = { referralModel, userModel };
