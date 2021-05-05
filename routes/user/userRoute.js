@@ -48,7 +48,8 @@ userRouter.post("/update_account/", isAuthenticated, allowOnly(accessLevels.user
 userRouter.get("/change_password/", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 userRouter.post("/change_password/", isAuthenticated, allowOnly(accessLevels.user, user.postChangePassword));
 
-
+userRouter.post("/follow/", isAuthenticated, allowOnly(accessLevels.user, user.follow));
+userRouter.post("/unfollow/", isAuthenticated, allowOnly(accessLevels.user, user.unfollow));
 
 // userRouter.get("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 // userRouter.post("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));

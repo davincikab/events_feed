@@ -3,6 +3,7 @@ const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../
 const { userModel } = require("../../models/user/userModel");
 const { request } = require("express");
 const { reportAccount } = require("../user/userController");
+const { v4: uuidv4 } = require('uuid');
 
 exports.getAllEvents = function(req, res) {
     console.log(req.query);
@@ -263,7 +264,9 @@ function insertMediaFiles(description_id, imageFiles, event_id, username) {
         }
 
         imageFiles.forEach(image => {
-            let path = './uploads/images/' + image.name;
+            let fileName = uuidv4();
+            let extension = image.mimetype.split("/")[1];
+            let path = './uploads/images/' + image.name + '.' + fileName;
 
             image.mv(path, function(err) {
                 if(err) {

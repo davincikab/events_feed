@@ -258,5 +258,52 @@ tokenModel.updateToken = function(token, result) {
 }
 
 
+const followerModel = function(follow) {
+    this.user_id = follow.user_id;
+    this.follower_id = follow.follower_id
+};
+
+followerModel.addFollower = function(followInstance, result) {
+    connection.query("INSERT INTO user_follower SET?", followInstance, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+followerModel.deleteFollower = function(user_id, follower_id, result) {
+    console.log(user_id +" and "+ follower_id);
+    
+    connection.query("DELETE FROM user_follower WHERE user_id=? AND follower_id=?",[user_id, follower_id], function(err, response) {
+        if(err) throw err;
+        
+        result(null, response);
+    });
+}
+
+followerModel.getFollowData = function(user_id, result) {
+    connection.query("SELECT * FROM user_follower WHERE user_id =? OR follower_id=? ", [user_id, user_id], function(err, response) {
+        if(err) throw err;
+        
+        result(null, response);
+    });
+}
+
+followerModel.getFollowers = function(user_id, result) {
+    connection.query("SELECT * FROM user_follower WHERE user_id =?", user_id, function(err, response) {
+        if(err) throw err;
+        
+        result(null, response);
+    });
+}
+
+followerModel.getFollowing = function(follower_id, result) {
+    connection.query("SELECT * FROM user_follower WHERE follower_id =?", follower_id, function(err, response) {
+        if(err) throw err;
+        
+        result(null, response);
+    });
+}
+
 // report an account
-module.exports = { referralModel, userModel, tokenModel };
+module.exports = { referralModel, userModel, tokenModel, followerModel};

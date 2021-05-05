@@ -1,4 +1,4 @@
-const { userModel, referralModel, tokenModel } = require("../../models/user/userModel");
+const { userModel, referralModel, tokenModel, followerModel} = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
@@ -317,7 +317,7 @@ exports.userEvents = function(req, res) {
 
         // user events
         let results = events;
-        console.log(results.map(ev => ev.added_by));
+        // console.log(results.map(ev => ev.added_by));
 
         // user events and contributed events
         // following and followers
@@ -347,20 +347,34 @@ exports.userEvents = function(req, res) {
                     if(err) {
                         res.send(err);
                     }
+
+                    console.log("Following Model");
+                    console.log(userId);
+                    console.log(req.user.user_id);
                     
-                    let context = {
-                        user:req.user,
-                        userprofile:userprofile[0],
-                        profile:profile[0],
-                        section:'user profile',
-                        events:results.filter(event => !event.is_contribution),
-                        contributions:results.filter(event => event.is_contribution),
-                        following:[],
-                        followers:[]
-                    }
+                    followerModel.getFollowData(userId, function(err, response) {
+                        if(err) throw errr;
+                        
+                        console.log("User Id");
+                        console.log(response.find(d => d => d.follower_id == req.user.user_id));
+
+                        let context = {
+                            user:req.user,
+                            userprofile:userprofile[0],
+                            profile:profile[0],
+                            section:'user profile',
+                            events:results.filter(event => !event.is_contribution),
+                            contributions:results.filter(event => event.is_contribution),
+                            followers:response.filter(d => d.user_id == userId),
+                            following:response.filter(d => d.follower_id == userId),
+                            is_following:response.find(d => d.follower_id == req.user.user_id)
+                        };
+                        
+                        // res.send(context);
+                        res.render("pages/user_profile", context);
+                    });
+
                     
-                    // res.send(context);
-                    res.render("pages/user_profile", context);
 
                 });
                 
@@ -590,7 +604,7 @@ exports.postUpdateUserAccount = function(req, res) {
 
             let fileName = uuidv4();
             let extension = image.mimetype.split("/")[1];
-            let path = '/uploads/profile/' + fileName + "." + extension;
+            let path = './uploads/profile/' + fileName + "." + extension;
 
             image.mv(path, function(err) {
                 if(err) {
@@ -759,7 +773,7 @@ function sendPasswordForgotLink(res, email, token) {
     const mailOptions = {
         from: process.env.EMAIL,
         to: email,
-        subject: 'Account Verification',
+        subject: 'Reset Account Password',
         html: markUp
     }
 
@@ -857,5 +871,43 @@ exports.postResetPassword = function(req, res) {
     
 }
 
+// Following
+exports.follow = function(req, res) {
+    // get the user_id 
+    let { user_id, follower_id } = req.body;
 
-// Password 
+    console.log(req.body);
+    console.log("Following");
+    console.log(user_id);
+    console.log(follower_id);
+    console.log("Following");
+
+    let followerInstance = new followerModel({
+        user_id,
+        follower_id
+    });
+
+    followerModel.addFollower(followerInstance, function(err, response) {
+        if(err) throw err;
+
+        return res.status(200).send({msg:"Following request successfull"});
+    });
+}
+
+// unfollow
+exports.unfollow = function(req, res) {
+    // get the user_id 
+    let { user_id, follower_id } = req.body;
+
+    console.log("Unfollowing");
+    console.log(user_id);
+    console.log(follower_id);
+    console.log("Unfollowing");
+    
+    followerModel.deleteFollower(user_id, follower_id, function(err, response) {
+        if(err) throw err;
+
+        // console.log(response);
+        return res.status(200).send({msg:"Unfollowed request successfull"});
+    });
+}
