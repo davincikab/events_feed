@@ -28,7 +28,9 @@ userModel.createUser = function(user, result) {
 
         let userprofile = new userProfile({
             points:0,
-            userId:responseUser.insertId
+            userId:responseUser.insertId,
+            image:"/profile/user.png",
+            job:""
         });
 
         connection.query('INSERT INTO user_profile SET?', userprofile , function(err, response) {
@@ -51,6 +53,14 @@ userModel.findOne = function(username, email, result) {
 
 userModel.updateUserDetails = function(user_id, country, result) {
     connection.query('UPDATE users SET country=? WHERE user_id=?', [country, user_id], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+userModel.updateIsActive = function(email, result) {
+    connection.query('UPDATE users SET is_active=? WHERE email=?', [true, email], function(err, response) {
         if(err) throw err;
 
         result(null, response);
@@ -212,7 +222,41 @@ referralModel.inActivateCode = function(uuid, result) {
     })
 }
 
+const tokenModel = function(token) {
+    this.token = token.token;
+    this.email = token.email;
+    this.expiration = token.expiration;
+    this.is_expired = token.is_expired;
+}
+
+tokenModel.createToken = function(token, result) {
+    connection.query("INSERT INTO tokens SET?", token, function(err, Response) {
+        if(err) throw err;
+
+        result(null, response);
+    });   
+}
+
+tokenModel.isActiveToken = function(token, result) {
+    let time = new Date().toISOString();
+
+    connection.query("SELECT * FROM tokens WHERE token = ? AND expiration >?", [token, time], function(err, response) {
+        if(err) throw err;
+
+        console.log(response[0]);
+        
+        result(null, response);
+    });
+}
+
+tokenModel.updateToken = function(token, result) {
+    connection.query("UPDATE tokens SET is_expired=? WHERE token=?", [true, token], function(err, Response) {
+        if(err) throw err;
+
+        result(null, response);
+    });   
+}
 
 
 // report an account
-module.exports = { referralModel, userModel };
+module.exports = { referralModel, userModel, tokenModel };

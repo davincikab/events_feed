@@ -7,6 +7,7 @@ const { allowOnly, accessLevels  } = require("../../config/roles");
 const userRouter = express.Router();
 
 userRouter.get("/register", user.register);
+userRouter.get("/verify/:token/", user.verifyAccount);
 userRouter.get("/login", user.login);
 userRouter.get("/logout", function(req, res) {
     req.logout();

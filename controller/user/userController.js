@@ -1,14 +1,23 @@
-const { userModel, referralModel } = require("../../models/user/userModel");
+const { userModel, referralModel, tokenModel } = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require("nodemailer");
+const { response } = require("express");
 
 // config dotenv module
 require('dotenv').config();
 
+// nodemailer transport layer
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 exports.login = function(req, res) {
     res.render("pages/login");
@@ -95,6 +104,19 @@ exports.post_register = function(req, res, next) {
                     password:password,
                 });
 
+                // token instance
+                let currentDate = new Date();
+                currentDate.setDate(currentDate.getDate() + 24)
+
+                // create the token
+                let token = new tokenModel({
+                    token:uuidv4(),
+                    email:user.email,
+                    expiration:currentDate.toISOString(),
+                    is_expired:false
+                });
+
+
                 // encrypt password
                 bcrypt.genSalt(10, function(err, salt) {
                     bcrypt.hash(user.password, salt, function(err, encrypted_password) {
@@ -133,17 +155,31 @@ exports.post_register = function(req, res, next) {
 
                                             // redirect the user to login page
                                             res.redirect("/login");
+
+                                            tokenModel.createToken(token, function(err, result) {
+                                                if(err) throw err;
+
+                                                // send a verification mail
+                                                sendVerificationMail(res, user.email, token.token);
+                                            });
+
+                                            
                                         });
 
                                        
                                     })
                                 });
                             } else {
-                                 // flash message
-                                 req.flash('success_msg','You have now registered!')
+                                // flash message
+                                req.flash('success_msg','You have now registered!')
 
-                                 // redirect the user to login page
-                                 res.redirect("/login");
+                                tokenModel.createToken(token, function(err, result) {
+                                    if(err) throw err;
+
+                                    // send a verification mail
+                                    sendVerificationMail(res, user.email, token.token);
+                                });
+                                
                             }                           
 
                             
@@ -156,6 +192,78 @@ exports.post_register = function(req, res, next) {
             
         });
     }
+    
+}
+
+
+function sendVerificationMail(res, email, token) {
+    console.log("http://localhost:3000/verify/" + token);
+    
+    const markUp = "<p>You have successfully registered with us</p>" +
+    "<p>Click the link  below to activate your account</p>" +
+    "<div><a href='http://localhost:3000/verify/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Verify Account</a></div>";
+
+    // mailing options
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Account Verification',
+        html: markUp
+    }
+
+    transporter.sendMail(mailOptions, function(err, info) {
+        console.log("Response");
+        if(err) {
+            console.log("Response: "+ err);
+            res.status(500).send({
+                error:err
+            });
+
+            return;
+        }
+
+        // add the entry to the database
+        console.log("response: " + info.response);
+        res.status(200).send({
+            message:'An email has been sent with a link to verify your account !'
+        });
+
+    });
+}
+
+exports.verifyAccount = function(req, res) {
+    // get the token
+    let { token } = req.params;
+
+    console.log(token);
+    
+    // validate the token
+    tokenModel.isActiveToken(token, function(err, token) {
+        if(err) throw err;
+
+        if(token[0]) {
+             // expire the token
+            tokenModel.updateToken(token, function(err, result) {
+                if(err) throw err;
+
+                let { email } = token[0];
+
+                // update account active status
+                userModel.updateIsActive(email, function(err, user) {
+                    if(err) throw err;
+
+                    // redirect to login
+                    res.redirect("/login")
+                });
+
+            })
+        } else {
+            // invalid link response
+            return res.send("<h1>Invalid link!<h1>");
+        }
+    });
+
+   
     
 }
 
@@ -401,15 +509,6 @@ exports.sendEmailInvite = async function(req, res) {
     req.user = {
         username:'mwangi'
     };
-
-    // transport layer
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
 
     // markup
     const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
