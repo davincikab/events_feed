@@ -453,13 +453,76 @@ exports.commitLink = function(req, res) {
 
 // update user profile
 exports.updateUserAccount = function(req, res) {
-    let context = {
-        section:"",
-        notification:[],
-        user:req.user
-    };
+    // get user profile
+    userModel.getUserProfile(req.user.user_id, function(err, response) {
+        if(err) throw err;
 
-    res.render("pages/account/update_account", context);
+        let context = {
+            section:"",
+            notification:[],
+            user:{...req.user, ...response[0]}
+        };
+
+        req.user.image = context.user.image;
+    
+        res.render("pages/account/update_account", context);
+    });
+
+}
+
+exports.postUpdateUserAccount = function(req, res) {
+    // get the data
+    let {country, job } = req.body;
+    console.log(req.body);
+    console.log(req.files);
+
+    let imageFiles = Object.values(req.files);
+
+    console.log(imageFiles);
+
+    // update the user
+    userModel.updateUserDetails(req.user.user_id, country, function(err, result) {
+        if(err) throw err;
+
+        if(imageFiles.length > 0) {
+            let image = imageFiles[0];
+            
+            // console.log(image);
+
+            let fileName = uuidv4();
+            let extension = image.mimetype.split("/")[1];
+            let path = '/uploads/profile/' + fileName + "." + extension;
+
+            image.mv(path, function(err) {
+                if(err) {
+                    console.log(err);
+
+                    // let the user know the image were not uploaded
+                    return ;
+                }
+
+                updateProfile(path);
+            });
+
+        } else {
+            let image = req.user.image;
+
+            // update the profile
+            updateProfile(image);
+        }   
+
+        function updateProfile(image) {
+            userModel.updateProfile(req.user.user_id, job, image, function(err, result) {
+                if(err) throw err;
+
+                // message for account update
+
+                // redirect to account profile
+                return res.redirect("/user_profile/" + req.user.username);
+            });
+        }
+    });
+   
 }
 
 exports.changePassword = function(req, res) {
@@ -518,9 +581,6 @@ exports.postChangePassword = function(req, res) {
                 bcrypt.hash(password, salt, function(err, encrypted_password) {
                     if(err) throw err;
 
-                    // update with the encrypted data
-                    // user.password = encrypted_password;
-
                     // save to db redirect to profile 
                     userModel.updatePassword(encrypted_password, req.user.user_id, function(err, response) {
                         if(err) throw err;
@@ -550,15 +610,29 @@ exports.forgotPassword = function(req, res) {
 }
 
 exports.postForgotPassword = function(req, res) {
+    // check if the mail is registered to a user
+    // send the password recovery to the mail
+    // on success return a http response
+    res.send("An email has been sent with a link to change your password");
+
     res.render("pages/account/forgot_password");
 }
 
 // 
 exports.resetPassword = function(req, res) {
+    // validate the password reset link
+    // render the forgot password commit
     res.render("pages/account/reset_password");
 }
 
 exports.postResetPassword = function(req, res) {
+    // validate the link
+    // extract the user details from the link
+    // compare the a password
+    // check password length
+    // hash the password 
+    // save the new password to db
+    // redirect to login
     res.render("pages/account/reset_password");
 }
 

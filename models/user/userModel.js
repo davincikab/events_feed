@@ -9,8 +9,11 @@ const userModel = function(user) {
 };
 
 const userProfile = function(user) {
-    this.points = user.points,
-    this.userId = user.userId
+    this.points = user.points;
+    this.userId = user.userId;
+    this.image = user.image;
+    this.job = user.job;
+
 }
 
 // login function
@@ -46,12 +49,28 @@ userModel.findOne = function(username, email, result) {
     });
 }
 
+userModel.updateUserDetails = function(user_id, country, result) {
+    connection.query('UPDATE users SET country=? WHERE user_id=?', [country, user_id], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+userModel.updateProfile = function(user_id, job, image, result) {
+    connection.query('UPDATE user_profile SET job=?, image=? WHERE userId=?', [job, image, user_id], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
 userModel.updatePassword = function(password, user_id, result) {
     connection.query('UPDATE users SET password=? WHERE user_id', [password, user_id], function(err, response) {
         if(err) throw err;
 
         result(null, response);
-    })    
+    });   
 }
 
 userModel.findUserByUsername = function(username, result) {
