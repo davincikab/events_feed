@@ -51,6 +51,9 @@ userRouter.post("/change_password/", isAuthenticated, allowOnly(accessLevels.use
 userRouter.post("/follow/", isAuthenticated, allowOnly(accessLevels.user, user.follow));
 userRouter.post("/unfollow/", isAuthenticated, allowOnly(accessLevels.user, user.unfollow));
 
+userRouter.post("/add_notification/",isAuthenticated, allowOnly(accessLevels.user, user.addNotification));
+userRouter.post("/read_notification/", isAuthenticated, allowOnly(accessLevels.user, user.markAsRead));
+
 // userRouter.get("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 // userRouter.post("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 // userRouter.

@@ -305,5 +305,33 @@ followerModel.getFollowing = function(follower_id, result) {
     });
 }
 
+const notificationModel = function(notification) {
+    this.is_read = notification.is_read;
+    this.text = notification.text;
+    this.created_on = notification.created_on;
+    this.user_id = notificaton.user_id;
+}
+
+
+notificationModel.addNotification = function(notificaton, result) {
+    connection.query("INSERT INTO notifications SET?", notificaton, function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+notificationModel.markAsRead = function(notificaton_id, result) {
+    connection.query("UPDATE notifications SET is_read=? WHERE id=?", [1, notificaton_id], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    });
+}
+
+notificationModel.getUserNotification = function(user_id, result) {
+
+}
+
 // report an account
-module.exports = { referralModel, userModel, tokenModel, followerModel};
+module.exports = { referralModel, userModel, tokenModel, followerModel, notificationModel};

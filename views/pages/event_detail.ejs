@@ -170,7 +170,11 @@
 
                 <div class="my-0">
                     <b class="mb-0">Event Description</b>
-                    <p> <%= event.event_description %> </p>
+                    <p>Posted by:  <%= new Date(event.created_on) %> </p>
+                </div>
+
+                <div class="created_on">
+                    <%= event.event_description %>
                 </div>
 
                 <div class="mt-1">

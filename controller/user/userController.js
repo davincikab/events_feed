@@ -1,4 +1,4 @@
-const { userModel, referralModel, tokenModel, followerModel} = require("../../models/user/userModel");
+const { userModel, referralModel, tokenModel, followerModel, notificationModel} = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
 const bcrypt = require('bcrypt');
@@ -909,5 +909,22 @@ exports.unfollow = function(req, res) {
 
         // console.log(response);
         return res.status(200).send({msg:"Unfollowed request successfull"});
+    });
+}
+
+// notificaiton
+exports.markAsRead = function(req, res) {
+    notificationModel.addNotification(notification, function(err, response) {
+        if(err) throw err;
+
+        return
+    });
+}
+
+exports.markAsRead = function(req, res) {
+    notificationModel.markAsRead(notification_id, function(err, response) {
+        if(err) throw err; 
+        
+        return
     });
 }
