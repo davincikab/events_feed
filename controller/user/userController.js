@@ -681,7 +681,7 @@ exports.postChangePassword = function(req, res) {
                     if(err) throw err;
 
                     // save to db redirect to profile 
-                    userModel.updatePassword(encrypted_password, req.user.user_id, function(err, response) {
+                    userModel.updatePassword(encrypted_password, req.user.email, function(err, response) {
                         if(err) throw err;
 
                         res.redirect("/user_profile/" + req.user.username);
@@ -702,37 +702,159 @@ exports.forgotPassword = function(req, res) {
     let context = {
         section:"",
         notification:[],
-        user:req.user
+        user:undefined
     };
 
     res.render("pages/account/forgot_password", context);
 }
 
 exports.postForgotPassword = function(req, res) {
-    // check if the mail is registered to a user
-    // send the password recovery to the mail
-    // on success return a http response
-    res.send("An email has been sent with a link to change your password");
+    let { email } = req.body;
 
-    res.render("pages/account/forgot_password");
+    // check if the mail is registered to a user
+    userModel.findOne('', email, function(err, users) {
+        if(err) throw err;
+        
+        if(users[0]) {
+            // token expiry date
+            let currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + 1);
+            
+            // create a token
+            let token = new tokenModel({
+                token:uuidv4(),
+                email:users[0].email,
+                expiration:currentDate.toISOString(),
+                is_expired:false
+            });
+
+            tokenModel.createToken(token, function(err, response) {
+                if(err) throw err;
+
+                // send the password recovery to the mail
+                sendPasswordForgotLink(res, token.email, token.token);
+            });
+
+            
+
+        } else {
+            let errors = [{msg:"Email is not registered"}];
+            let context = {
+                errors
+            };
+
+            res.render("pages/account/forgot_password", context);
+        }
+    });
+
 }
 
-// 
+function sendPasswordForgotLink(res, email, token) {
+    console.log("http://localhost:3000/reset_password/" + token);
+    
+    const markUp = "<p>Click the link  below to to reset your password</p>" +
+    "<div><a href='http://localhost:3000/reset_password/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Reset Password</a></div>";
+
+    // mailing options
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Account Verification',
+        html: markUp
+    }
+
+    transporter.sendMail(mailOptions, function(err, info) {
+        console.log("Response");
+        if(err) {
+            console.log("Response: "+ err);
+            res.status(500).send({
+                error:err
+            });
+
+            return;
+        }
+
+        // add the entry to the database
+        console.log("response: " + info.response);
+
+        // on success return a http response
+        res.status(200).send("An email has been sent with a link to reset your password");
+       
+    });
+}
+
+// reset password section
 exports.resetPassword = function(req, res) {
     // validate the password reset link
-    // render the forgot password commit
-    res.render("pages/account/reset_password");
+    let { token } = req.params;
+
+    tokenModel.isActiveToken(token, function(err, token) {
+        if(err) throw err;
+
+        if(token[0]) {
+            req.email = token[0].email;
+            req.token = token[0].token;
+
+            // render the forgot password commit
+            res.render("pages/account/reset_password");
+        } else {
+            res.send("Invalid Link");
+        }
+    });
+    
 }
 
 exports.postResetPassword = function(req, res) {
-    // validate the link
     // extract the user details from the link
-    // compare the a password
-    // check password length
-    // hash the password 
-    // save the new password to db
-    // redirect to login
-    res.render("pages/account/reset_password");
+    let email = req.email;
+    let token = req.token;
+    let errors = [];
+
+    // get the passwrord
+    let { password, password2 } = req.body;
+
+    // check if the two password are similar
+    if(password != password2) {
+        errors.push({msg:"Passwords do not match"});
+    }
+
+    if(password.length < 8) {
+        errors.push({msg:"Password should have 8 characters or more"});
+    }
+
+    let context  = {
+        errors,
+        password,
+        password2
+    };
+
+    if(errors.length > 0) {
+        return res.render("pages/account/reset_password", context);
+    } else {
+         // hash the password 
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, encrypted_password) {
+                if(err) throw err;
+
+                // save to db redirect to profile 
+                userModel.updatePassword(encrypted_password, email, function(err, response) {
+                    if(err) throw err;
+
+                     // update the token
+                    tokenModel.updateToken(token, function(err, response) {
+                        if(err) throw err;
+
+                        // redirect to login
+                        return res.redirect("/login/");
+                    });
+
+                });
+
+            })
+        });       
+        
+    }
+    
 }
 
 

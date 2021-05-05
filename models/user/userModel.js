@@ -43,7 +43,7 @@ userModel.createUser = function(user, result) {
 }  
 
 userModel.findOne = function(username, email, result) {
-    connection.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], function(err, response) {
+    connection.query('SELECT * FROM users WHERE username = ? OR email = ? AND is_active=?', [username, email, true], function(err, response) {
         if(err) throw err;
 
         console.log(response);
@@ -75,8 +75,8 @@ userModel.updateProfile = function(user_id, job, image, result) {
     });
 }
 
-userModel.updatePassword = function(password, user_id, result) {
-    connection.query('UPDATE users SET password=? WHERE user_id', [password, user_id], function(err, response) {
+userModel.updatePassword = function(password, email, result) {
+    connection.query('UPDATE users SET password=? WHERE email=?', [password, email], function(err, response) {
         if(err) throw err;
 
         result(null, response);
@@ -250,7 +250,7 @@ tokenModel.isActiveToken = function(token, result) {
 }
 
 tokenModel.updateToken = function(token, result) {
-    connection.query("UPDATE tokens SET is_expired=? WHERE token=?", [true, token], function(err, Response) {
+    connection.query("UPDATE tokens SET is_expired=? WHERE token=?", [1, token], function(err, Response) {
         if(err) throw err;
 
         result(null, response);

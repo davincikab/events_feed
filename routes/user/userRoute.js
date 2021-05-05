@@ -11,6 +11,8 @@ userRouter.get("/verify/:token/", user.verifyAccount);
 userRouter.get("/login", user.login);
 userRouter.get("/logout", function(req, res) {
     req.logout();
+    delete req.user;
+    
     // req.flash('success_msg','Now logged out');
     res.redirect("/login");
 });
@@ -36,8 +38,8 @@ userRouter.get("/reported-accounts/:report_id/", isAuthenticated, allowOnly(acce
 userRouter.get("/forgot_password", user.forgotPassword);
 userRouter.post("/forgot_password", user.postForgotPassword);
 
-userRouter.get("/reset_password/", user.resetPassword);
-userRouter.post("/reset_password/", user.postResetPassword);
+userRouter.get("/reset_password/:token/", user.resetPassword);
+userRouter.post("/reset_password/:token/", user.postResetPassword);
 
 // user account management
 userRouter.get("/update_account/", isAuthenticated, allowOnly(accessLevels.user, user.updateUserAccount));
