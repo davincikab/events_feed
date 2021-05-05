@@ -46,6 +46,14 @@ userModel.findOne = function(username, email, result) {
     });
 }
 
+userModel.updatePassword = function(password, user_id, result) {
+    connection.query('UPDATE users SET password=? WHERE user_id', [password, user_id], function(err, response) {
+        if(err) throw err;
+
+        result(null, response);
+    })    
+}
+
 userModel.findUserByUsername = function(username, result) {
     connection.query('SELECT user_id, username, email, country, account_type, is_locked, is_admin FROM users WHERE username = ?', [username], function(err, response) {
         if(err) throw err;

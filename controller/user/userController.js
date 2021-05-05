@@ -239,7 +239,7 @@ exports.userEvents = function(req, res) {
                     if(err) {
                         res.send(err);
                     }
-
+                    
                     let context = {
                         user:req.user,
                         userprofile:userprofile[0],
@@ -449,6 +449,90 @@ exports.sendEmailInvite = async function(req, res) {
 // add the uuid to the database
 exports.commitLink = function(req, res) {
     // 
+}
+
+// update user profile
+exports.updateUserAccount = function(req, res) {
+    let context = {
+        section:"",
+        notification:[],
+        user:req.user
+    };
+
+    res.render("pages/account/update_account", context);
+}
+
+exports.changePassword = function(req, res) {
+    let context = {
+        section:"",
+        notification:[],
+        user:req.user,
+        errors:[],
+        old_password:"",
+        password:"",
+        password2:""
+    };
+
+    res.render("pages/account/change_password", context);
+}
+
+exports.postChangePassword = function(req, res) {
+    let { old_password, password, password2 } = req.body;
+    console.log(req.body);
+
+    let errors = [];
+
+    // compare the old password with the one saved on the db
+    bcrypt.compare(old_password, req.user.password, (err, isMatch) => {
+        if(err) {
+            throw err;
+        };
+
+        if(!isMatch) {
+            errors.push({msg:"Incorrect Password"});
+            console.log('Incorrect Password');
+        }
+
+        // check if the two password are similar
+        if(password != password2) {
+            errors.push({msg:"Passwords do not match"});
+        }
+
+        if(password.length < 8) {
+            errors.push({msg:"Password should have 8 characters or more"});
+        }
+
+        let context  = {
+            errors,
+            old_password,
+            password,
+            password2
+        };
+
+        if(errors.length > 0) {
+            console.log(errors);
+            res.render("pages/account/change_password", context);
+        } else {
+            // encrypt the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, function(err, encrypted_password) {
+                    if(err) throw err;
+
+                    // update with the encrypted data
+                    // user.password = encrypted_password;
+
+                    // save to db redirect to profile 
+                    userModel.updatePassword(encrypted_password, req.user.user_id, function(err, response) {
+                        if(err) throw err;
+
+                        res.redirect("/user_profile/" + req.user.username);
+                    });
+
+                })
+            });
+        }
+    });
+   
 }
 
 // forgot password

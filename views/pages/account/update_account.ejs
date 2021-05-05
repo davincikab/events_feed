@@ -9,41 +9,36 @@
 <body>
     <%- include('../../partial/header') %>
     <div class="container">
-        <div class="">
-            <p>Edit Account</p>
-        
-            <div class="form-group">
-                <div class="img-section">
-                </div>
+        <div class="row">
+            <div class="col-md-8">
+                <form action="" method="post">
+                    <p>Edit Account</p>
+
+                    <div class="form-group">
+                        <label for="">Country</label>
+                        <input type="text" name="country" id="country" value="<%= user.country %>" class="form-control">
+                    </div>
                 
-                <button class="btn btn-success">Update Picture</button>
+                    <div class="form-group">
+                        <label for="">Job</label>
+                        <input type="text" name="job" id="job" value="<%= user.job %>" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Profile Picture</label>
+                        <span><%= user.image %></span>
+                        <input type="file" name="image" id="image" value="<%= user.job %>" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
             </div>
-        
-            <div class="form-group">
-                <label for="">Email</label>
-                <span><%= user.email %></span>
-                <a class="btn btn-success">Change Email</a>
+
+            <div class="col-md-4">
+                <a class="btn btn-success" href="/change_password/">Change Password</a>
             </div>
-        
-            <div class="form-group">
-                <label for="">Password</label>
-                <span><%= notification.text %></span>
-                <a class="btn btn-success">Change Password</a>
-            </div>
-        
-            <div class="form-group">
-                <label for="">Country</label>
-                <span><%= user.country %></span>
-                <a class="btn btn-success">Change Country</a>
-            </div>
-        
-            <div class="form-group">
-                <label for="">Job</label>
-                <span><%= user.jon %></span>
-                <a class="btn btn-success">Add</a>
-            </div>
-        
-            <button class="btn btn-success">Back</button>
         </div>
     <div>
 </body>

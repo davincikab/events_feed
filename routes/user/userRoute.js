@@ -38,6 +38,15 @@ userRouter.post("/forgot_password", user.postForgotPassword);
 userRouter.get("/reset_password/", user.resetPassword);
 userRouter.post("/reset_password/", user.postResetPassword);
 
+// user account management
+userRouter.get("/update_account/", isAuthenticated, allowOnly(accessLevels.user, user.updateUserAccount));
+userRouter.post("/update_account/", isAuthenticated, allowOnly(accessLevels.user, user.postUpdateUserAccount));
+
+userRouter.get("/change_password/", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
+userRouter.post("/change_password/", isAuthenticated, allowOnly(accessLevels.user, user.postChangePassword));
+
+
+
 // userRouter.get("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 // userRouter.post("/change_password", isAuthenticated, allowOnly(accessLevels.user, user.changePassword));
 // userRouter.
