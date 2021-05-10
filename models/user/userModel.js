@@ -322,6 +322,7 @@ notificationModel.addNotification = function(notificaton, result) {
 }
 
 notificationModel.markAsRead = function(notificaton_id, result) {
+
     connection.query("UPDATE notifications SET is_read=? WHERE id=?", [1, notificaton_id], function(err, response) {
         if(err) throw err;
 
@@ -330,7 +331,11 @@ notificationModel.markAsRead = function(notificaton_id, result) {
 }
 
 notificationModel.getUserNotification = function(user_id, result) {
+    connection.query("SELECT * FROM notifications WHERE user_id=? AND is_read=?", [user_id, false], function(err, response) {
+        if(err) throw err;
 
+        result(null, response);
+    });
 }
 
 // report an account

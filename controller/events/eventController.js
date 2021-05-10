@@ -169,7 +169,8 @@ exports.getEventById = function(req, res) {
                 event:response.find(event => event.is_contribution == 0),
                 contribution:response.filter(event => event.is_contribution == 1),
                 user:req.user,
-                section:'event_details'
+                section:'event_details',
+                notifications:req.notifications,
             }
 
             // res.send(context);
@@ -332,7 +333,8 @@ exports.getEventDescription = function(req, res) {
         let context = {
             user:req.user,
             section:'update event',
-            event:results[0]
+            event:results[0],
+            notifications:req.notifications,
         };
         
         // res.send(context);
@@ -353,6 +355,7 @@ exports.addEventDescription = function(req, res) {
 
         let context = {
             user:req.user,
+            notifications:req.notifications,
             section:'Creat Event',
             event:{
                 event_name:results[0].event_name,
@@ -488,7 +491,8 @@ exports.dashboard = function(req, res, next) {
                                 reportedAccounts:reportedAccounts.length,
                                 reportEvents:reportedEvents.length,
                                 reportedContribution:reportedContribution.length,
-                                section:'Dashboard'
+                                section:'Dashboard',
+                                notifications:req.notifications,
                             };
                         
                             res.render('pages/dashboard', context);  
@@ -512,6 +516,7 @@ exports.getReportedEvents = function(req, res, next) {
         let context = {
             user:req.user,
             events:result,
+            notifications:req.notifications,
             section:'Reported Events'
         };
 
@@ -528,6 +533,7 @@ exports.getReportedContributions = function(req, res, next) {
         let context = {
             user:req.user,
             events:result,
+            notifications:req.notifications,
             section:'Reported Contribution'
         };
 
@@ -581,7 +587,8 @@ exports.getReportedEvent = function(req, res, next) {
         let context = {
             user:req.user,
             report:result[0] ? result[0] : {},
-            section:'Report Detail'
+            section:'Report Detail',
+            notifications:req.notifications,
         };
 
         res.render("pages/report_details", context)

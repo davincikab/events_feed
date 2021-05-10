@@ -41,9 +41,11 @@
                     <%} %>
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard" id="notification-tab">
+                        <a class="nav-link" href="#" id="notification-link">
                             Notifications
-                            <span class="badge bg-danger">4</span>
+                            <span class="badge bg-danger">
+                                <%= notifications.length %>
+                            </span>
                         </a>
                     </li>
                     <% if (user.is_admin) {%>
@@ -114,11 +116,46 @@
     </div> -->
 </nav>
 
-<script>
-    // let toggler = document.querySelector('.navbar-toggler');
-    // var menu = document.querySelector('.head-menu');
+<%- include('./notifications') %>
 
-    // $(toggler).on("click", function(e) {
-    //     menu.classList.toggle("open");
-    // });
+<script>
+    let toggler = document.querySelector('#notification-link');
+    var notificationTab = document.querySelector('.notification-tab');
+
+    toggler.onclick = function(e) {
+        console.log("Toggle Location");
+
+        e.preventDefault();
+        notificationTab.classList.toggle("open");
+    }
+
+    // mark as read
+    var buttonMarkAsRead = document.querySelectorAll(".btn-read");
+    buttonMarkAsRead.forEach(button => {
+        button.onclick = function(e) {
+            console.log(button.dataset);
+            let { notification } = button.dataset;
+
+            // console.log(e.target);
+            markAsRead(notification);
+        }
+    });
+
+    function markAsRead(notification_id) {
+        // toggle spinner
+
+        $.ajax({
+            url:'/read_notification/' + notification_id + '/',
+            type:'POST',
+            dataType:"JSON",
+            success:function(response) {
+                console.log(response);
+
+                window.location.reload();
+            },
+            error:function(error) {
+                console.error(error);
+            }
+        })
+    }
 </script>

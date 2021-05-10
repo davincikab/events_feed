@@ -1,8 +1,49 @@
-<div class="notification-tab">
+<style> 
+    .notification-tab {
+        position: absolute;
+        display: none;
+        top: 50px;
+        z-index: 3;
+        left: 50%;
+        background: white;
+        border-radius: 6px;
+    }
+
+    .notification-tab.open {
+        display: block;
+    }
+
+    .message-item {
+        display: flex;
+        align-items: center;
+        padding:0.5em 0.37em;
+        border-bottom: 1px solid #ddd;
+        justify-content: space-between;
+    }
+
+    .message-item:hover {
+        background-color: rgba(245, 245, 245, 0.637);
+    }
+
+    .btn-read {
+        cursor: pointer;
+    }
+</style>
+<div class="notification-tab" id="notification-tab">
     <%  for (let notification of notifications ) {%>
         <div class="message-item">
-            <p><%= notification.text %></p>
-            <span><%= notification.create_on %></span>
+            <div class="mr-3">
+                <p><%= notification.text %></p>
+                <span class="text-muted"><%= new Date(notification.created_on).toDateString() %></span>
+            </div>
+
+            <div class="btn-read" data-notification="<%= notification.id %>">
+                <% if (notification.is_read) {%>
+                    <i class="fa fa-envelope-open"></i>
+                <% } else {%>
+                    <i class="fa fa-envelope"></i>
+                <% }%>
+            </div>
         </div>
     <% }%>
 </div>

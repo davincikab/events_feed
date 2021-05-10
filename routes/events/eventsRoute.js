@@ -26,8 +26,10 @@ router.get("/", (req, res, next) => {
 router.get("/map", isAuthenticated, (req, res) => {
     let context = {
         section:'map',
-        user:req.user
-    }
+        user:req.user,
+        notifications:req.notifications
+    };
+    
     res.render("pages/map", context)
 });
 

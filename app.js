@@ -9,6 +9,10 @@ var MySQLStore = require('express-mysql-session')(session);
 
 require("./config/passport")(passport);
 
+
+// middleware
+const { notifications } = require("./config/globalMiddleware");
+
 // connection pool
 const connection = require("./db");
 
@@ -68,6 +72,7 @@ app.use((req, res, next) => {
 });
 
 // configure the routes
+app.use(notifications);
 app.use('', userRouter);
 app.use('', router);
 

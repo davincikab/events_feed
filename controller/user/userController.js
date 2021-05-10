@@ -283,7 +283,8 @@ exports.getAllUsers = function(req, res) {
             res.send(err);
         }
 
-        // console.log(response);
+        console.log("Notifications");
+        console.log(req.notifications);
         res.render('pages/accounts', {
             users:response,
             user:req.user,
@@ -294,6 +295,9 @@ exports.getAllUsers = function(req, res) {
     
 exports.userEvents = function(req, res) {
     let username = req.params.username;
+
+    console.log("Notifications");
+    console.log(req.notifications);
 
     if(req.user.is_admin) {
         eventLocationModel.getEventByUser(username, function(err, events) {
@@ -362,6 +366,7 @@ exports.userEvents = function(req, res) {
                             user:req.user,
                             userprofile:userprofile[0],
                             profile:profile[0],
+                            notifications:req.notifications,
                             section:'user profile',
                             events:results.filter(event => !event.is_contribution),
                             contributions:results.filter(event => event.is_contribution),
@@ -416,7 +421,8 @@ exports.getReportedAccounts = function(req, res, next) {
         let context = {
             user:req.user,
             section:'Reported Accounts',
-            users:result
+            users:result,
+            notifications:req.notifications,
         };
 
         res.render('pages/reported_accounts', context)
@@ -465,7 +471,8 @@ exports.getReportedAccount = function(req, res, next) {
         let context = {
             user:req.user,
             report:result,
-            section:'Report Account Detail'
+            section:'Report Account Detail',
+            notifications:req.notifications,
         }
 
         res.render("pages/reported-accounts-details", context)
@@ -478,7 +485,8 @@ exports.referPeople = function(req, res) {
         user:req.user,
         uuid:uuidv4(),
         host:'http://localhost:3000/',
-        section:'Refer for Points'
+        section:'Refer for Points',
+        notifications:req.notifications,
     };
 
     // save the uuid to db
@@ -573,7 +581,8 @@ exports.updateUserAccount = function(req, res) {
         let context = {
             section:"",
             notification:[],
-            user:{...req.user, ...response[0]}
+            user:{...req.user, ...response[0]},
+            notifications:req.notifications,
         };
 
         req.user.image = context.user.image;
@@ -646,7 +655,8 @@ exports.changePassword = function(req, res) {
         errors:[],
         old_password:"",
         password:"",
-        password2:""
+        password2:"",
+        notifications:req.notifications,
     };
 
     res.render("pages/account/change_password", context);
@@ -682,7 +692,8 @@ exports.postChangePassword = function(req, res) {
             errors,
             old_password,
             password,
-            password2
+            password2,
+            notifications:req.notifications,
         };
 
         if(errors.length > 0) {
@@ -715,7 +726,7 @@ exports.forgotPassword = function(req, res) {
     // 
     let context = {
         section:"",
-        notification:[],
+        notifications:[],
         user:undefined
     };
 
@@ -914,17 +925,27 @@ exports.unfollow = function(req, res) {
 
 // notificaiton
 exports.markAsRead = function(req, res) {
+    let { text, user_id } = req.body;
+
+    let notification = new notificationModel({
+        is_read:false,
+        text,
+        user_id,
+    });
+
     notificationModel.addNotification(notification, function(err, response) {
         if(err) throw err;
 
-        return
+        return res.status(200).send({"msg":"success"});
     });
 }
 
 exports.markAsRead = function(req, res) {
+    let { notification_id } = req.params;
+
     notificationModel.markAsRead(notification_id, function(err, response) {
         if(err) throw err; 
         
-        return
+        return res.status(200).send({"msg":"success"});
     });
 }
