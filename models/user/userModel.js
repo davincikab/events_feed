@@ -309,7 +309,7 @@ const notificationModel = function(notification) {
     this.is_read = notification.is_read;
     this.text = notification.text;
     this.created_on = notification.created_on;
-    this.user_id = notificaton.user_id;
+    this.user_id = notification.user_id;
 }
 
 

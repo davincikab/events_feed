@@ -183,7 +183,14 @@
                     <%} %>
 
                     <% if (user.is_admin && !event.is_posted) {%>
-                        <button data-href="/post_event/<%= event.event_id %>/<%= event.description_id  %>/" data-event="event" class="btn bg-primary mt-2 btn-action">Post</button>
+                        <button 
+                            data-href="/post_event/<%= event.event_id %>/<%= event.description_id  %>/<%= event.user_id  %>/" 
+                            data-event="event" 
+                            data-event-name="<%= event.event_name %>"
+                            class="btn bg-primary mt-2 btn-action"
+                        >
+                            Post
+                        </button>
                     <%} %>
 
                     <% if (user.is_admin || user.username == event.added_by) {%>
@@ -260,7 +267,14 @@
                         <%} %>
 
                         <% if (!event.is_published) {%>
-                            <button data-href="/publish_contribution/<%= event.description_id  %>/" data-event="contribution"  class="btn btn-primary mt-2 btn-action">Publish</button>
+                            <button 
+                                data-href="/publish_contribution/<%= event.description_id  %>/<%= event.user_id  %>/" 
+                                data-event="contribution" 
+                                data-event-name="<%= event.event_name %>" 
+                                class="btn btn-primary mt-2 btn-action"
+                            >
+                                Publish
+                            </button>
                         <%} %>
 
                         <% if (user.is_admin || user.username == event.added_by) {%>
@@ -350,17 +364,19 @@
                 console.log( btn.getAttribute("data-href"));
                 let url = btn.getAttribute("data-href");
                 let eventType = btn.getAttribute("data-event");
+                let eventName = btn.getAttribute("data-event-name");
 
                 // send the request
-                executeAction(url, eventType);
+                executeAction(url, eventType, eventName);
             });
         });
 
-        function executeAction(url, eventType) {
+        function executeAction(url, eventType, eventName) {
             console.log("Executing");
             console.log(url);
             $.ajax({
                 url:url,
+                data:{eventName:eventName},
                 type:'POST',
                 success:function(response) {
                     console.log(response);

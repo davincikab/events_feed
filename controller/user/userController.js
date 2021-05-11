@@ -20,7 +20,7 @@ let transporter = nodemailer.createTransport({
 });
 
 exports.login = function(req, res) {
-    res.render("pages/login");
+    res.render("pages/login", {notifications:[]});
 }
 
 exports.register = function(req, res){
@@ -31,7 +31,8 @@ exports.register = function(req, res){
         email2:'',
         country:'',
         password:'',
-        password2:''
+        password2:'',
+        notifications:[]
     });
 }
 
@@ -67,7 +68,8 @@ exports.post_register = function(req, res, next) {
             email2:email2,
             country:country,
             password:password,
-            password2:password2
+            password2:password2,
+            notifications:[]
         });
     } else {
         // check id user with the submited name or email exists in the database
@@ -93,7 +95,8 @@ exports.post_register = function(req, res, next) {
                     email2:email2,
                     country:country,
                     password:password,
-                    password2:password2
+                    password2:password2,
+                    notifications:[]
                 });
             } else {
                 // user instance
@@ -197,11 +200,11 @@ exports.post_register = function(req, res, next) {
 
 
 function sendVerificationMail(res, email, token) {
-    console.log("http://localhost:3000/verify/" + token);
+    console.log("http://localhost:"+ process.env.PORT +"/verify/" + token);
     
     const markUp = "<p>You have successfully registered with us</p>" +
     "<p>Click the link  below to activate your account</p>" +
-    "<div><a href='http://localhost:3000/verify/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Verify Account</a></div>";
+    "<div><a href='http://localhost:"+ process.env.PORT +"/verify/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Verify Account</a></div>";
 
     // mailing options
     const mailOptions = {
@@ -252,8 +255,20 @@ exports.verifyAccount = function(req, res) {
                 userModel.updateIsActive(email, function(err, user) {
                     if(err) throw err;
 
-                    // redirect to login
-                    res.redirect("/login")
+                    // create a notification 
+                    let notification = new notificationModel({
+                        text:"Congratulations! Your account has been activated",
+                        user_id:user.user_id,
+                        is_read:0
+                    });
+
+                    notificationModel.addNotification(notification, function(err, result) {
+                        if(err) throw err;
+
+                        // redirect to login
+                        res.redirect("/login")
+                    });
+                    
                 });
 
             })
@@ -484,7 +499,7 @@ exports.referPeople = function(req, res) {
     let context = {
         user:req.user,
         uuid:uuidv4(),
-        host:'http://localhost:3000/',
+        host:`http://localhost:${process.env.PORT}/`,
         section:'Refer for Points',
         notifications:req.notifications,
     };
@@ -535,7 +550,7 @@ exports.sendEmailInvite = async function(req, res) {
     // markup
     const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
         "<p>Click the link  below to create your account</p>" +
-        "<div><a href='http://localhost:3000/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
+        "<div><a href='http://localhost:"+ process.env.PORT +"/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
 
     // mailing options
     const mailOptions = {
@@ -709,7 +724,19 @@ exports.postChangePassword = function(req, res) {
                     userModel.updatePassword(encrypted_password, req.user.email, function(err, response) {
                         if(err) throw err;
 
-                        res.redirect("/user_profile/" + req.user.username);
+                        let notification = new notificationModel({
+                            text:"Your password has been successfully changed!",
+                            user_id:req.user.user_id,
+                            is_read:0
+                        });
+
+                        notificationModel.addNotification(notification, function(err, result) {
+                            if(err) throw err;
+
+                            res.redirect("/user_profile/" + req.user.username);
+                        });
+
+                        
                     });
 
                 })
@@ -775,10 +802,10 @@ exports.postForgotPassword = function(req, res) {
 }
 
 function sendPasswordForgotLink(res, email, token) {
-    console.log("http://localhost:3000/reset_password/" + token);
+    console.log("http://localhost:"+ process.env.PORT +"/reset_password/" + token);
     
     const markUp = "<p>Click the link  below to to reset your password</p>" +
-    "<div><a href='http://localhost:3000/reset_password/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Reset Password</a></div>";
+    "<div><a href='http://localhost:"+ process.env.PORT +"/reset_password/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Reset Password</a></div>";
 
     // mailing options
     const mailOptions = {
@@ -821,7 +848,7 @@ exports.resetPassword = function(req, res) {
             req.token = token[0].token;
 
             // render the forgot password commit
-            res.render("pages/account/reset_password");
+            res.render("pages/account/reset_password", {notifications:[]});
         } else {
             res.send("Invalid Link");
         }
@@ -901,7 +928,18 @@ exports.follow = function(req, res) {
     followerModel.addFollower(followerInstance, function(err, response) {
         if(err) throw err;
 
-        return res.status(200).send({msg:"Following request successfull"});
+        let notification = new notificationModel({
+            text:"You have a new follower!",
+            user_id:user_id,
+            is_read:0
+        });
+
+        notificationModel.addNotification(notification, function(err, response) {
+            if(err) throw err;
+
+            return res.status(200).send({msg:"Following request successfull"});
+        });
+
     });
 }
 

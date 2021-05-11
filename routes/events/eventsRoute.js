@@ -1,6 +1,7 @@
 const express = require("express");
 const events = require("../../controller/events/eventController");
 const { isAuthenticated } = require("../../config/auth");
+const { notifications } = require("../../config/globalMiddleware");
 const { allowOnly, accessLevels  } = require("../../config/roles");
 
 // express route
@@ -20,7 +21,7 @@ router.post("/update_event_description/", isAuthenticated, events.updateEventDes
 
 // default path
 router.get("/", (req, res, next) => {
-    res.render("pages/index", {user:req.user, section:"home"});
+    res.render("pages/index", {user:req.user, section:"home", notifications:[]});
 });
 
 router.get("/map", isAuthenticated, (req, res) => {
@@ -38,11 +39,11 @@ router.get("/pending_events", isAuthenticated, allowOnly(accessLevels.admin, eve
 router.get("/pending_contribution", isAuthenticated, allowOnly(accessLevels.admin, events.getUnPublishedDescription));
 
 // delete or update events
-router.post("/post_event/:event_id/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.postEvent))
+router.post("/post_event/:event_id/:description_id/:user_id/", isAuthenticated, allowOnly(accessLevels.admin, events.postEvent))
 router.post("/delete_event/:event_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventLocation))
 
 // contribution
-router.post("/publish_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.publishContribution))
+router.post("/publish_contribution/:description_id/:user_id/", isAuthenticated, allowOnly(accessLevels.admin, events.publishContribution))
 router.post("/delete_contribution/:description_id/", isAuthenticated, allowOnly(accessLevels.admin, events.deleteEventContribution))
 
 // reporting

@@ -20,6 +20,9 @@ module.exports = {
                 req.notifications = result;
                 next();
             });
+        } else {
+            req.notifications = [];
+            next();
         }
     }
 }

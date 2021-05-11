@@ -1,9 +1,10 @@
 // get event model
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
-const { userModel } = require("../../models/user/userModel");
+const { userModel, notificationModel } = require("../../models/user/userModel");
 const { request } = require("express");
 const { reportAccount } = require("../user/userController");
 const { v4: uuidv4 } = require('uuid');
+const { text } = require("body-parser");
 
 exports.getAllEvents = function(req, res) {
     console.log(req.query);
@@ -106,8 +107,13 @@ exports.getUnPostedEvents = function(req, res) {
 
 exports.createEventLocation = function(req, res) {
     // console.log(req.body);
-    let eventLocation = new eventLocationModel(req.body.data);
-    eventLocation.added_by = req.user.username;
+    let eventLocation = new eventLocationModel({
+        ...req.body.data,
+        user_id:req.user.user_id,
+        added_by:req.user.username
+    });
+
+    // eventLocation.added_by = req.user.username;
     // console.log(eventLocation);
 
     // create the event location
@@ -200,7 +206,7 @@ exports.getUnPublishedDescription = function(req, res) {
 
 // event description
 exports.createEventDescription = function(req, res) {
-    let imageFiles = Object.values(req.files);
+    let imageFiles = Object.values(req.files || {});
     console.log(imageFiles);
 
     let { event_id } = req.body;
@@ -209,7 +215,10 @@ exports.createEventDescription = function(req, res) {
 
     // console.log("Create a Description");
     // console.log(req.body);
-    let eventDescription = new eventDescriptionModel(req.body);
+    let eventDescription = new eventDescriptionModel({
+        user_id:req.user.user_id,
+        ...req.body
+    });
 
     // update the description object
     eventDescriptionModel.createEventDescription(eventDescription, function(err, response){
@@ -250,6 +259,7 @@ exports.createEventDescription = function(req, res) {
             console.log(points);
 
             res.send(response);
+           
         });
 
        
@@ -267,7 +277,7 @@ function insertMediaFiles(description_id, imageFiles, event_id, username) {
         imageFiles.forEach(image => {
             let fileName = uuidv4();
             let extension = image.mimetype.split("/")[1];
-            let path = './uploads/images/' + image.name + '.' + fileName;
+            let path = './uploads/images/' + fileName + '.' + extension;
 
             image.mv(path, function(err) {
                 if(err) {
@@ -418,8 +428,11 @@ exports.deleteEventLocation = function(req, res, next) {
 }
 
 exports.postEvent = function(req, res, next) {
-    let { event_id, description_id } = req.params;
+    let { event_id, description_id, user_id } = req.params;
+    let {eventName } = req.body;
+
     console.log("Hitting url endpoint");
+    console.log(eventName);
 
     eventLocationModel.postEvent(event_id, function(err, results) {
         if(err) {
@@ -433,20 +446,55 @@ exports.postEvent = function(req, res, next) {
             }
 
             console.log(results);
-            res.send({'message':'success'});
+
+            let notification = new notificationModel({
+                text:"Your event "+ eventName +" has been approved.",
+                user_id:user_id,
+                is_read:0
+            });
+    
+            notificationModel.addNotification(notification, function(err, response) {
+                if(err) throw err;
+    
+                console.log(results);
+                // SEND MAIL NOTIFICATION
+                
+                res.send({'message':'success'});
+            });
+
+            
         });
         
     });
 }
 
 exports.publishContribution = function(req, res, next) {
-    let { description_id } = req.params;
+    let { description_id, user_id } = req.params;
+    let {eventName } = req.body;
+
+    console.log("Hitting url endpoint");
+    console.log(eventName);
+
     eventDescriptionModel.publishEventContribution(description_id, function(err, results) {
         if(err) {
             res.send(err);
         }  
 
-        res.send({'message':'success'});
+        let notification = new notificationModel({
+            text:"Your contribution on "+ eventName +" has been approved.”",
+            user_id:user_id,
+            is_read:0
+        });
+
+        notificationModel.addNotification(notification, function(err, response) {
+            if(err) throw err;
+
+            console.log(results);
+
+            // SEND MAIL NOTIFICATION
+            res.send({'message':'success'});
+        });
+        
     });
 }
 
