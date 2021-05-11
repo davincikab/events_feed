@@ -383,8 +383,8 @@ exports.userEvents = function(req, res) {
                             profile:profile[0],
                             notifications:req.notifications,
                             section:'user profile',
-                            events:results.filter(event => !event.is_contribution),
-                            contributions:results.filter(event => event.is_contribution),
+                            events:results.filter(event => !event.is_contribution) || [],
+                            contributions:results.filter(event => event.is_contribution) || [],
                             followers:response.filter(d => d.user_id == userId),
                             following:response.filter(d => d.follower_id == userId),
                             is_following:response.find(d => d.follower_id == req.user.user_id)
