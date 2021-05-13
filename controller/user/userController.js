@@ -1,6 +1,7 @@
 const { userModel, referralModel, tokenModel, followerModel, notificationModel} = require("../../models/user/userModel");
 const { eventLocationModel, eventDescriptionModel, eventMedia} = require("../../models/events/eventsModel");
 
+const { toDatetime } = require("../../services/timeFormat");
 const bcrypt = require('bcrypt');
 const passport  = require('passport');
 const { v4: uuidv4 } = require('uuid');
@@ -115,7 +116,7 @@ exports.post_register = function(req, res, next) {
                 let token = new tokenModel({
                     token:uuidv4(),
                     email:user.email,
-                    expiration:currentDate.toISOString(),
+                    expiration:toDatetime(currentDate),
                     is_expired:false
                 });
 
@@ -776,7 +777,7 @@ exports.postForgotPassword = function(req, res) {
             let token = new tokenModel({
                 token:uuidv4(),
                 email:users[0].email,
-                expiration:currentDate.toISOString(),
+                expiration:toDatetime(currentDate),
                 is_expired:false
             });
 
@@ -792,7 +793,8 @@ exports.postForgotPassword = function(req, res) {
         } else {
             let errors = [{msg:"Email is not registered"}];
             let context = {
-                errors
+                errors,
+                notifications:[]
             };
 
             res.render("pages/account/forgot_password", context);
