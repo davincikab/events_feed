@@ -111,7 +111,7 @@ exports.post_register = function(req, res, next) {
 
                 // token instance
                 let currentDate = new Date();
-                currentDate.setDate(currentDate.getDate() + 24)
+                currentDate.setHours(currentDate.getHours() + 24)
 
                 // create the token
                 let token = new tokenModel({
@@ -772,7 +772,7 @@ exports.postForgotPassword = function(req, res) {
         if(users[0]) {
             // token expiry date
             let currentDate = new Date();
-            currentDate.setDate(currentDate.getDate() + 1);
+            currentDate.setHours(currentDate.getHourssetHours() + 1);
             
             // create a token
             let token = new tokenModel({

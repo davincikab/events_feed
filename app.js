@@ -4,11 +4,11 @@ const session = require('express-session');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const passport  = require('passport');
+
 const flash = require('connect-flash');
 var MySQLStore = require('express-mysql-session')(session);
 
 require("./config/passport")(passport);
-
 
 // middleware
 const { notifications } = require("./config/globalMiddleware");
