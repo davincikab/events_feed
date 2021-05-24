@@ -772,7 +772,7 @@ exports.postForgotPassword = function(req, res) {
         if(users[0]) {
             // token expiry date
             let currentDate = new Date();
-            currentDate.setHours(currentDate.getHourssetHours() + 1);
+            currentDate.setHours(currentDate.getHours() + 1);
             
             // create a token
             let token = new tokenModel({
