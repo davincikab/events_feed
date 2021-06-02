@@ -161,7 +161,10 @@ exports.post_register = function(req, res, next) {
                                             req.flash('success_msg','You have now registered!')
 
                                             // redirect the user to login page
-                                            res.redirect("/login");
+                                            // res.redirect("/login");
+
+                                            res.status(200).send("Check your email for an activation link");
+
 
                                             tokenModel.createToken(token, function(err, result) {
                                                 if(err) throw err;
@@ -185,6 +188,8 @@ exports.post_register = function(req, res, next) {
 
                                     // send a verification mail
                                     sendVerificationMail(res, user.email, token.token);
+
+                                    res.status(200).send("Check your email for an activation link");
                                 });
                                 
                             }                           
@@ -204,11 +209,11 @@ exports.post_register = function(req, res, next) {
 
 
 function sendVerificationMail(res, email, token) {
-    console.log("http://localhost:"+ process.env.PORT +"/verify/" + token);
+    console.log("" + process.env.DOMAIN+ ":"+ process.env.PORT +"/verify/" + token);
     
     const markUp = "<p>You have successfully registered with us</p>" +
     "<p>Click the link  below to activate your account</p>" +
-    "<div><a href='http://localhost:"+ process.env.PORT +"/verify/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Verify Account</a></div>";
+    "<div><a href='" + process.env.DOMAIN+ ":"+ process.env.PORT +"/verify/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Verify Account</a></div>";
 
     // mailing options
     const mailOptions = {
@@ -249,6 +254,8 @@ exports.verifyAccount = function(req, res) {
         if(err) throw err;
 
         if(token[0]) {
+            console.log("Activation link");
+            console.log(token);
              // expire the token
             tokenModel.updateToken(token, function(err, result) {
                 if(err) throw err;
@@ -256,22 +263,29 @@ exports.verifyAccount = function(req, res) {
                 let { email } = token[0];
 
                 // update account active status
-                userModel.updateIsActive(email, function(err, user) {
+                userModel.updateIsActive(email, function(err, response) {
                     if(err) throw err;
 
-                    // create a notification 
-                    let notification = new notificationModel({
-                        text:"Congratulations! Your account has been activated",
-                        user_id:user.user_id,
-                        is_read:0
-                    });
-
-                    notificationModel.addNotification(notification, function(err, result) {
+                    userModel.findOne('', email, function(err, userResponse) {
                         if(err) throw err;
+                        
+                        let user = userResponse[0] ? userResponse[0] : {};
 
-                        // redirect to login
-                        res.redirect("/login")
+                        // create a notification 
+                        let notification = new notificationModel({
+                            text:"Congratulations! Your account has been activated",
+                            user_id:user.user_id,
+                            is_read:0
+                        });
+    
+                        notificationModel.addNotification(notification, function(err, result) {
+                            if(err) throw err;
+    
+                            // redirect to login
+                            res.redirect("/login")
+                        });
                     });
+
                     
                 });
 
@@ -559,7 +573,7 @@ exports.sendEmailInvite = async function(req, res) {
     // markup
     const markUp = "<p><b>" + req.user.username + "</b> is inviting you to join World Event Tracker. </p>" +
         "<p>Click the link  below to create your account</p>" +
-        "<div><a href='http://localhost:"+ process.env.PORT +"/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
+        "<div><a href='"+ process.env.DOMAIN + ":"+ process.env.PORT +"/referral/" + uuid + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Join Now</a></div>";
 
     // mailing options
     const mailOptions = {
@@ -815,7 +829,7 @@ function sendPasswordForgotLink(res, email, token) {
     console.log("http://localhost:"+ process.env.PORT +"/reset_password/" + token);
     
     const markUp = "<p>Click the link  below to to reset your password</p>" +
-    "<div><a href='http://localhost:"+ process.env.PORT +"/reset_password/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Reset Password</a></div>";
+    "<div><a href='"+ process.env.DOMAIN +":"+ process.env.PORT +"/reset_password/" + token + "' style='text-decoration:none; background-color:#477CD8; color:white; padding:0.5em 0.75em'>Reset Password</a></div>";
 
     // mailing options
     const mailOptions = {

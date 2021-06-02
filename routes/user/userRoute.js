@@ -31,6 +31,10 @@ userRouter.get("/accounts", isAuthenticated, allowOnly(accessLevels.admin, user.
 userRouter.post("/lock_account/:username/", isAuthenticated, allowOnly(accessLevels.admin, user.lockAccount))
 userRouter.post("/unlock_account/:username/", isAuthenticated, allowOnly(accessLevels.admin, user.unlockAccount))
 
+// referral
+userRouter.get("/refer_people", isAuthenticated, user.referPeople)
+userRouter.post("/send_invite-email", user.sendEmailInvite);
+userRouter.get("/referral/:referral_uuid/", user.getReferral);
 
 // report user account
 userRouter.get("/reported-accounts/", isAuthenticated, allowOnly(accessLevels.user, user.getReportedAccounts));

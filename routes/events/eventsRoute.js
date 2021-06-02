@@ -1,7 +1,6 @@
 const express = require("express");
 const events = require("../../controller/events/eventController");
 const { isAuthenticated } = require("../../config/auth");
-const { notifications } = require("../../config/globalMiddleware");
 const { allowOnly, accessLevels  } = require("../../config/roles");
 
 // express route

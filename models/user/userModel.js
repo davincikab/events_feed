@@ -78,7 +78,7 @@ userModel.updateProfile = function(user_id, job, image, result) {
 userModel.updatePassword = function(password, email, result) {
     console.log(password);
     console.log(email);
-    
+
     connection.query('UPDATE users SET password=? WHERE email=?', [password, email], function(err, response) {
         if(err) throw err;
 
@@ -324,7 +324,7 @@ const notificationModel = function(notification) {
 
 
 notificationModel.addNotification = function(notificaton, result) {
-    connection.query("INSERT INTO notifications SET?", notificaton, function(err, response) {
+    connection.query("INSERT INTO notifications SET? ", notificaton, function(err, response) {
         if(err) throw err;
 
         result(null, response);
