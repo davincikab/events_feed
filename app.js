@@ -78,5 +78,5 @@ app.use('', router);
 
 // listen on a given port
 app.listen(process.env.PORT, function() {
-    console.log("App listening at port " + process.env.PORT);
+    console.log("Application listening at port " + process.env.PORT);
 });
