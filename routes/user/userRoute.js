@@ -1,4 +1,5 @@
 const express = require("express");
+const passport  = require('passport');
 
 const user = require("../../controller/user/userController");
 const { isAuthenticated } = require("../../config/auth");
@@ -19,7 +20,11 @@ userRouter.get("/logout", function(req, res) {
 
 userRouter.get("/user_profile/:username/", isAuthenticated, user.userEvents);
 
-userRouter.post("/login", user.post_login);
+userRouter.post("/login", passport.authenticate('local', {
+    successRedirect:"/map",
+    failureRedirect:"/login",
+    failureFlash:true
+}));
 
 userRouter.post("/register", user.post_register);
 userRouter.get("/accounts", isAuthenticated, allowOnly(accessLevels.admin, user.getAllUsers));

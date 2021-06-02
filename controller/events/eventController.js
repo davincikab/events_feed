@@ -100,7 +100,8 @@ exports.getUnPostedEvents = function(req, res) {
         res.render("pages/pending_events", {
             events:response,
             user:req.user,
-            section:"Pending Events"
+            section:"Pending Events",
+            notifications:req.notifications
         });
     });
 }
@@ -199,7 +200,8 @@ exports.getUnPublishedDescription = function(req, res) {
         res.render("pages/pending_contribution", {
             events:response,
             user:req.user,
-            section:"Pending Contribution"
+            section:"Pending Contribution",
+            notifications:req.notifications
         });
     });
 }

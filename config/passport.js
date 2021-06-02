@@ -6,12 +6,15 @@ module.exports = function(passport) {
     passport.use(
         new LocalStrategy({usernameField:'email'}, (email, password, done) => {
             userModel.findOne('', email, function(err, users) {
-                if(err) throw err;
+                if(err) {
+                    console.log("error");
+                    throw err;
+                }
 
                 // console.log(users);
                 if(!users[0]) {
-                    return done(null, false, {message : 'email is not registered'});
-                }
+                    return done(null, false, {message : 'Wrong username/password'});
+                } 
 
                 let user = users[0];
 
@@ -26,7 +29,8 @@ module.exports = function(passport) {
                     if(isMatch) {
                         return done(null, user)
                     } else {
-                        return done(null, false, {message: 'Incorrect password'});
+                        console.log("Incorrect Password");
+                        return done(null, false, {message: 'Wrong username/password',errors : ['Incorrect Password']});
                     }
 
                 })

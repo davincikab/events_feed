@@ -22,6 +22,8 @@ let transporter = nodemailer.createTransport({
 });
 
 exports.login = function(req, res) {
+    console.log(req.flash('message'));
+
     res.render("pages/login", {notifications:[]});
 }
 
@@ -284,13 +286,17 @@ exports.verifyAccount = function(req, res) {
     
 }
 
+// authenticate user using passport local strategy
 exports.post_login = function(req, res, next) {
-    // authenticate user using passport local strategy
-    passport.authenticate('local',{
-        successRedirect : '/map',
-        failureRedirect : '/login',
-        failureFlash : true,
-    })(req,res,next);
+    console.log("Loggging In");
+
+    res.redirect('/map');
+    
+    // passport.authenticate('local',{
+    //     successRedirect : '/map',
+    //     failureRedirect : '/login',
+    //     failureFlash : true,
+    // });
 }
 
 exports.getAllUsers = function(req, res) {
@@ -305,7 +311,8 @@ exports.getAllUsers = function(req, res) {
         res.render('pages/accounts', {
             users:response,
             user:req.user,
-            section:'Accounts'
+            section:'Accounts',
+            notifications:req.notifications
         });
     });
 }
@@ -772,7 +779,7 @@ exports.postForgotPassword = function(req, res) {
         if(users[0]) {
             // token expiry date
             let currentDate = new Date();
-            currentDate.setHours(currentDate.getHours() + 1);
+            currentDate.setHours(currentDate.getHours() + 24);
             
             // create a token
             let token = new tokenModel({
@@ -843,15 +850,15 @@ exports.resetPassword = function(req, res) {
     // validate the password reset link
     let { token } = req.params;
 
-    tokenModel.isActiveToken(token, function(err, token) {
+    tokenModel.isActiveToken(token, function(err, tokenResponse) {
         if(err) throw err;
 
-        if(token[0]) {
-            req.email = token[0].email;
-            req.token = token[0].token;
+        if(tokenResponse[0]) {
+            let { email, token } = tokenResponse[0];
+            req.session.token = tokenResponse[0];
 
             // render the forgot password commit
-            res.render("pages/account/reset_password", {notifications:[]});
+            res.render("pages/account/reset_password", {email, token, notifications:[]});
         } else {
             res.send("Invalid Link");
         }
@@ -861,12 +868,15 @@ exports.resetPassword = function(req, res) {
 
 exports.postResetPassword = function(req, res) {
     // extract the user details from the link
-    let email = req.email;
-    let token = req.token;
     let errors = [];
 
+    console.log("req session");
+    console.log(req.session.token);
+
+    console.log(req.body);
+
     // get the passwrord
-    let { password, password2 } = req.body;
+    let { password, password2, email, token } = req.body;
 
     // check if the two password are similar
     if(password != password2) {
@@ -891,13 +901,19 @@ exports.postResetPassword = function(req, res) {
             bcrypt.hash(password, salt, function(err, encrypted_password) {
                 if(err) throw err;
 
+                console.log("password hash");
+                console.log(req.email);
+
                 // save to db redirect to profile 
                 userModel.updatePassword(encrypted_password, email, function(err, response) {
                     if(err) throw err;
 
+                    console.log("password update");
+
                      // update the token
                     tokenModel.updateToken(token, function(err, response) {
                         if(err) throw err;
+                        console.log("token update");
 
                         // redirect to login
                         return res.redirect("/login/");

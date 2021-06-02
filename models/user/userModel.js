@@ -76,9 +76,14 @@ userModel.updateProfile = function(user_id, job, image, result) {
 }
 
 userModel.updatePassword = function(password, email, result) {
+    console.log(password);
+    console.log(email);
+    
     connection.query('UPDATE users SET password=? WHERE email=?', [password, email], function(err, response) {
         if(err) throw err;
 
+        console.log("password updated");
+        console.log(response);
         result(null, response);
     });   
 }
@@ -240,7 +245,7 @@ tokenModel.createToken = function(token, result) {
 tokenModel.isActiveToken = function(token, result) {
     let time = new Date().toISOString();
 
-    connection.query("SELECT * FROM tokens WHERE token = ? AND expiration >?", [token, time], function(err, response) {
+    connection.query("SELECT * FROM tokens WHERE token=? AND expiration>?", [token, time], function(err, response) {
         if(err) throw err;
 
         console.log(response[0]);
@@ -250,8 +255,13 @@ tokenModel.isActiveToken = function(token, result) {
 }
 
 tokenModel.updateToken = function(token, result) {
-    connection.query("UPDATE tokens SET is_expired=? WHERE token=?", [1, token], function(err, Response) {
+    connection.query("UPDATE tokens SET is_expired=? WHERE token=?", [1, token], function(err, response) {
         if(err) throw err;
+
+        console.log("db token updated");
+        console.log("$2b$10$SrC8jXG3/1J3/VRMskjLPu/3s4B9VZUR4Jyz3.cGfIUbM0Y5bEmUW");
+        
+        console.log(response);
 
         result(null, response);
     });   
